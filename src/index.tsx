@@ -13,14 +13,6 @@ const App = () => {
 
   // const projects = useProjects();
 
-  // if (!projects.isProjectsReady) {
-  //   return <h3>Loading...</h3>;
-  // }
-
-  // const isRegistryAdmin = RegistrySDK.isRegistryAdmin(context.accountId);
-
-  // console.log(isRegistryAdmin);
-
   const AppContent = () => (
     <>
       <Nav />
