@@ -1,0 +1,19 @@
+{
+  "isIndex": true,
+  "mainnetAccount": "potlock.near",
+  "testnetAccount": "alem-lib.testnet",
+  "name": "PotLock",
+  "description": "App description",
+  "linktree": {
+    "website": "github.com/wpdas/alem"
+  },
+  "image": {
+    "ipfs_cid": "bafkreicjdgat5xsw7vxbosoyygermawhkfi2by3ovg7c6tumrayn4rimty"
+  },
+  "tags": [
+    "alem",
+    "dapp",
+    "near",
+    "bos"
+  ]
+}

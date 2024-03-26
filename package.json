@@ -1,0 +1,24 @@
+{
+  "name": "alem-app",
+  "version": "1.0.0",
+  "description": "The base template for Create Alem dApp",
+  "repository": "git@github.com:wpdas/create-alem-dapp.git",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=development alem dev",
+    "build": "alem build",
+    "deploy:mainnet": "npm run build; alem deploy",
+    "deploy:testnet": "npm run build; alem deploy --network testnet"
+  },
+  "dependencies": {
+    "alem": "1.0.0-alpha.1"
+  },
+  "devDependencies": {
+    "@types/styled-components": "^5.1.26",
+    "lint-staged": "^13.2.1",
+    "prettier": "^2.8.8"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": "prettier --write --ignore-unknown"
+  }
+}
