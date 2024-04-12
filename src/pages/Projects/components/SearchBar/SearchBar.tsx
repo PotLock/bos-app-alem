@@ -94,7 +94,7 @@ const SearchBar = () => {
   }
 
   const sortHighestToLowest = (projects: Project[]) => {
-    const sort = (a, b) => {
+    const sort = (a: any, b: any) => {
       return parseFloat(b.total) - parseFloat(a.total);
     };
     const projectLength = projects.length;
@@ -113,7 +113,7 @@ const SearchBar = () => {
   };
 
   const sortLowestToHighest = (projects: Project[]) => {
-    const sort = (a, b) => {
+    const sort = (a: any, b: any) => {
       return parseFloat(b.total) - parseFloat(a.total);
     };
     const projectLength = projects.length;
@@ -208,7 +208,7 @@ const SearchBar = () => {
     setFilteredProjects(results);
   };
 
-  const handleTag = (key) => {
+  const handleTag = (key: any) => {
     //console.log(tagsList[key].value);
     const tags = tagsList;
     tags[key].selected = !tagsList[key].selected;
