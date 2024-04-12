@@ -1,7 +1,7 @@
-import Card from "../../../../components/Card/Card";
-import { ContainerHeader, Header, OnBottom, ProjectList, Title } from "./styles";
-import getProjects from "../../../../services/getProjects";
 import { useEffect, useMemo, useState } from "alem";
+import Card from "@app/components/Card/Card";
+import { ContainerHeader, Header, OnBottom, ProjectList, Title } from "./styles";
+import getProjects from "@app/services/getProjects";
 import { Project } from "@app/types";
 import CardSkeleton from "../CardSkeleton";
 
@@ -14,7 +14,6 @@ const FeaturedProjects = () => {
   useEffect(() => {
     if (projectsData) {
       const { featuredProjects } = projectsData;
-      console.log(featuredProjects);
       setProjects(featuredProjects);
     }
   }, [projectsData]);

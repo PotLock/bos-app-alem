@@ -1,4 +1,4 @@
-import { Big, RouteLink, Social, State, VM, Widget, context, useEffect, useMemo, useState } from "alem";
+import { Big, RouteLink, Social, State, Widget, context, useEffect, useMemo, useState } from "alem";
 import CardSkeleton from "../../pages/Projects/components/CardSkeleton";
 import {
   Amount,
@@ -107,21 +107,21 @@ const Card = (props: any) => {
   };
 
   const backgroundImageStyle = {
-    objectFit: "cover",
+    objectFit: "cover" as any,
     left: 0,
     top: 0,
     height: "168px",
     borderRadius: "6px 6px 0px 0px",
-    pointerEvents: "none",
+    pointerEvents: "none" as any,
   };
 
   const profileImageStyle = {
     width: "40px",
     height: "40px",
-    position: "absolute",
+    position: "absolute" as any,
     bottom: "-10px",
     left: "14px",
-    pointerEvents: "none",
+    pointerEvents: "none" as any,
   };
 
   const tags = getTagsFromSocialProfileData(profile);
