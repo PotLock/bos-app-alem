@@ -1,11 +1,10 @@
-import { Social, State, VM, Widget, context, useEffect, useMemo, useState } from "alem";
-import CardSkeleton from "../CardSkeleton";
+import { Big, RouteLink, Social, State, VM, Widget, context, useEffect, useMemo, useState } from "alem";
+import CardSkeleton from "../../pages/Projects/components/CardSkeleton";
 import {
   Amount,
   AmountDescriptor,
   BackgroundImageContainer,
   CardContainer,
-  CardLink,
   DonationButton,
   DonationsInfoContainer,
   DonationsInfoItem,
@@ -20,13 +19,13 @@ import {
   Tags,
   Title,
 } from "./styles";
-import PotSDK from "../../../../SDK/pot";
-import DonateSDK from "../../../../SDK/donate";
-import hrefWithParams from "../../../../utils/hrefWithParams";
-import ipfsUrlFromCid from "../../../../utils/ipfsUrlFromCid";
-import yoctosToNear from "../../../../utils/yoctosToNear";
-import yoctosToUsdWithFallback from "../../../../utils/yoctosToUsdWithFallback";
-import getTagsFromSocialProfileData from "../../../../utils/getTagsFromSocialProfileData";
+import PotSDK from "@app/SDK/pot";
+import DonateSDK from "@app/SDK/donate";
+import ipfsUrlFromCid from "@app/utils/ipfsUrlFromCid";
+import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
+import routesPath from "@app/routes/routesPath";
+import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
+import yoctosToNear from "@app/utils/yoctosToNear";
 
 const Card = (props: any) => {
   const { potId, payoutDetails } = props;
@@ -94,8 +93,6 @@ const Card = (props: any) => {
     return [totalDonationAmountNear.toString(), donors.length];
   }, [donationsForProject]);
 
-  const projectUrl = hrefWithParams(`?tab=project&projectId=${projectId}`);
-
   const getImageSrc = (image: any) => {
     // console.log(image);
     const defaultImageUrl = "https://ipfs.near.social/ipfs/bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";
@@ -133,7 +130,7 @@ const Card = (props: any) => {
 
   return (
     <>
-      <CardLink href={projectUrl} key={projectId}>
+      <RouteLink to={routesPath.PROJECT_DETAIL_TAB} params={{ projectId }}>
         <CardContainer>
           <HeaderContainer className="pt-0 position-relative">
             <BackgroundImageContainer>
@@ -200,7 +197,7 @@ const Card = (props: any) => {
           </Info>
           <DonationsInfoContainer>
             <DonationsInfoItem>
-              <Amount>{totalAmountNear ? yoctosToUsdWithFallback(totalAmountNear, true) : "-"}</Amount>
+              <Amount>{totalAmountNear ? yoctosToUsdWithFallback(totalAmountNear) : "-"}</Amount>
               <AmountDescriptor>Raised</AmountDescriptor>
             </DonationsInfoItem>
             {payoutDetails && (
@@ -224,11 +221,11 @@ const Card = (props: any) => {
           {payoutDetails && (
             <MatchingSection>
               <MatchingTitle>Estimated matched amount</MatchingTitle>
-              <MatchingAmount>{yoctosToNear(payoutDetails.matchingAmount, true) || "- N"}</MatchingAmount>
+              <MatchingAmount>{yoctosToNear(payoutDetails.matchingAmount) || "- N"}</MatchingAmount>
             </MatchingSection>
           )}
         </CardContainer>
-      </CardLink>
+      </RouteLink>
     </>
   );
 };

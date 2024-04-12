@@ -7,6 +7,7 @@ export type Project = {
   status: string;
   submitted_ms: number;
   review_notes: string;
+  registrant_id?: string;
   linktree: {
     github?: string;
     telegram?: string;

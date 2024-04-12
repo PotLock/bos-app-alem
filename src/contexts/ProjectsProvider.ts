@@ -23,7 +23,7 @@ export type ProjectsContextProps = {
 };
 
 const ProjectsProvider = () => {
-  const { setDefaultData, updateData } = createContext<ProjectsContextProps>("projects-context");
+  const { setDefaultData, updateData, getSelf } = createContext<ProjectsContextProps>("projects-context");
 
   // Set default data
   setDefaultData({
@@ -36,7 +36,7 @@ const ProjectsProvider = () => {
     },
 
     init: () => {
-      const self = useContext<ProjectsContextProps>("projects-context");
+      const self = getSelf();
 
       // Fetch data and update the context state
       if (self && !self.isProjectsReady) {
@@ -75,7 +75,7 @@ const ProjectsProvider = () => {
   });
 
   // Auto init
-  const self = useContext<ProjectsContextProps>("projects-context");
+  const self = getSelf();
   if (!self.isProjectsReady) {
     self.init();
   }

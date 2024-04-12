@@ -9,7 +9,7 @@ export const ContainerHeader = styled.div<{ tab: string }>`
   @media screen and (min-width: 740px) and (max-width: 1400px) {
     padding-top: 120px;
   }
-  // mobile
+  /* mobile */
   @media screen and (max-width: 739px) {
     padding-top: 40px;
   }
@@ -36,17 +36,17 @@ export const ProjectList = styled.div<{ maxCols?: number }>`
   display: grid;
   gap: 31px;
 
-  // For mobile devices (1 column)
+  /* For mobile devices (1 column) */
   @media screen and (max-width: 739px) {
     grid-template-columns: repeat(1, 1fr);
   }
 
-  // For tablet devices (2 columns)
+  /* For tablet devices (2 columns) */
   @media screen and (min-width: 740px) and (max-width: 1023px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  // For desktop devices (3 columns)
+  /* For desktop devices (3 columns) */
   @media screen and (min-width: 1024px) {
     grid-template-columns: repeat(${!props.maxCols || props.maxCols > 2 ? "3" : "2"}, 1fr);
   }

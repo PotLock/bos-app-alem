@@ -52,27 +52,29 @@ export const NavRightMobile = styled.div`
   }
 `;
 
-export const NavLogo = styled("Link")`
-  display: flex;
-  gap: 7px;
-  align-items: baseline;
-  text-align: center;
-  color: #2e2e2e;
-  font-size: 23.95px;
-  font-weight: 700;
-  line-height: 23.95px;
-  word-wrap: break-word;
-  margin-right: 48px;
-  text-decoration: none;
-  @media screen and (max-width: 480px) {
-    font-size: 20px;
-    margin-right: 1rem;
-  }
-  :hover {
+export const NavLogo = styled.div`
+  a {
+    display: flex;
+    gap: 7px;
+    align-items: baseline;
+    text-align: center;
+    color: #2e2e2e;
+    font-size: 23.95px;
+    font-weight: 700;
+    line-height: 23.95px;
+    word-wrap: break-word;
+    margin-right: 48px;
     text-decoration: none;
-  }
-  img {
-    height: 1em;
+    @media screen and (max-width: 480px) {
+      font-size: 20px;
+      margin-right: 1rem;
+    }
+    :hover {
+      text-decoration: none;
+    }
+    img {
+      height: 1em;
+    }
   }
 `;
 
@@ -86,22 +88,25 @@ export const NavTabs = styled.div`
   }
 `;
 
-export const NavTab = styled("Link")`
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  color: ${(props) => (props.selected ? "#2E2E2E" : "#7B7B7B")};
-  font-size: 14px;
-  font-weight: ${(props) => (props.selected ? 500 : 400)};
-  line-height: 16px;
-  word-wrap: break-word;
-  text-decoration: none;
-  position: relative;
-
-  :not(:last-child) {
+export const NavTab = styled.div<{ disabled?: boolean; selected?: boolean }>`
+  a {
     margin-right: 32px;
-  }
-
-  :hover {
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+    color: ${(props) => (props.selected ? "#2E2E2E" : "#7B7B7B")};
+    font-size: 14px;
+    font-weight: ${(props) => (props.selected ? 500 : 400)};
+    line-height: 16px;
+    word-wrap: break-word;
     text-decoration: none;
+    position: relative;
+
+    :not(:last-child) {
+      margin-right: 32px;
+    }
+
+    :hover {
+      text-decoration: none;
+    }
   }
 `;
 

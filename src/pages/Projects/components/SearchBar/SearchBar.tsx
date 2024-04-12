@@ -22,18 +22,26 @@ import getProjects from "../../../../services/getProjects";
 import RegistrySDK from "../../../../SDK/registry";
 
 const SearchBar = () => {
-  const { allProjects: projects } = getProjects();
-
-  if (!projects) {
-    return "";
-  }
-
   const isRegistryAdmin = RegistrySDK.isRegistryAdmin(context.accountId);
 
   const [totalDonation, setTotalDonation] = useState(0);
   const [totalDonated, setTotalDonated] = useState("0");
-  const [filteredProjects, setFilteredProjects] = useState(projects);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [sort, setSort] = useState("Sort");
+
+  const projectsData = getProjects();
+  useEffect(() => {
+    if (projects.length === 0) {
+      const { allProjects } = projectsData;
+      setProjects(allProjects);
+      setFilteredProjects(allProjects);
+    }
+  }, [projectsData]);
+
+  if (!projects) {
+    return "";
+  }
 
   const [tagsList, setTagsList] = useState([
     {

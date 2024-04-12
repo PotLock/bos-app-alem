@@ -1,4 +1,4 @@
-import { props, useState } from "alem";
+import { RouteLink, props, useParams, useState } from "alem";
 import {
   Banner,
   BannerAlertSvg,
@@ -17,9 +17,11 @@ import {
 } from "./styles";
 import NavItem from "../Cart/NavItem/NavItem";
 import hrefWithParams from "../../utils/hrefWithParams";
+import routesPath from "@app/routes/routesPath";
 
 const Nav = () => {
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
+  const params = useParams();
 
   const tabOptions = [
     { href: null, newTab: null, text: "Projects", link: "projects", disabled: false },
@@ -71,28 +73,33 @@ const Nav = () => {
       )}
       <NavContainer>
         <NavLeft>
-          <NavLogo href={hrefWithParams(`?tab=projects`)}>
-            <img
-              src="https://ipfs.near.social/ipfs/bafkreiafms2jag3gjbypfceafz2uvs66o25qc7m6u6hkxfyrzfoeyvj7ru"
-              alt="logo"
-            />
-            POTLOCK
+          <NavLogo>
+            <RouteLink to={routesPath.PROJECTS_LIST_TAB}>
+              <>
+                <img
+                  src="https://ipfs.near.social/ipfs/bafkreiafms2jag3gjbypfceafz2uvs66o25qc7m6u6hkxfyrzfoeyvj7ru"
+                  alt="logo"
+                />
+                POTLOCK
+              </>
+            </RouteLink>
           </NavLogo>
         </NavLeft>
         <NavRight>
           <NavTabs>
             {(tabOptions ?? []).map((tab) => {
               return (
-                <NavTab
-                  href={tab.href ?? hrefWithParams(`?tab=${tab.link}`)}
-                  disabled={tab.disabled}
-                  target={tab.newTab ? "_blank" : ""}
-                  onClick={(e: any) => {
-                    if (tab.disabled) e.preventDefault();
-                  }}
-                  selected={props.tab === tab.link}
-                >
-                  {tab.text}
+                <NavTab disabled={tab.disabled} selected={tab.link === params.tab}>
+                  <RouteLink
+                    href={tab.href}
+                    to={tab.link}
+                    target={tab.newTab ? "_blank" : ""}
+                    onClick={(e: any) => {
+                      if (tab.disabled) e.preventDefault();
+                    }}
+                  >
+                    {tab.text}
+                  </RouteLink>
                 </NavTab>
               );
             })}

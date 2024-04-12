@@ -1,4 +1,4 @@
-import { State } from "alem";
+import { State, useState } from "alem";
 import {
   Button,
   ButtonRegisterProject,
@@ -10,14 +10,24 @@ import {
   HeroContainer,
   Underline,
 } from "./styles";
-import DonationStats from "../DonationStats/DonationStats";
+import DonationStats from "../../pages/Projects/components/DonationStats/DonationStats";
+import getProjects from "@app/services/getProjects";
+import ModalDonation from "@app/modals/ModalDonation";
 
 type Props = {
   donateRandomlyClick: () => void;
 };
 
 const Hero = ({ donateRandomlyClick }: Props) => {
-  State.init({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const projects = getProjects();
+
+  const getRandomProject = () => {
+    if (projects.allProjects) {
+      const randomIndex = Math.floor(Math.random() * projects.allProjects.length);
+      return projects.allProjects[randomIndex]?.registrant_id;
+    }
+  };
 
   return (
     <HeroContainer>
@@ -51,6 +61,16 @@ const Hero = ({ donateRandomlyClick }: Props) => {
         <ButtonsContainer>
           <Button onClick={donateRandomlyClick}>Donate Randomly</Button>
           {/* <ButtonRegisterProject href={"?tab=createproject"}>Register Your Project</ButtonRegisterProject> */}
+          {isModalOpen && (
+            <ModalDonation
+              projectId={getRandomProject()}
+              onClose={() => {
+                setIsModalOpen(false);
+              }}
+            />
+            // TODO: Acima esta quebrando, quando importa ele
+            // <p>Isso encima está quebrando</p>
+          )}
           <ButtonRegisterProject>Register Your Project</ButtonRegisterProject>
         </ButtonsContainer>
         <DonationStats />

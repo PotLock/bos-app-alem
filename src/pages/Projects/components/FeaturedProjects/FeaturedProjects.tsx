@@ -1,9 +1,42 @@
-import Card from "../Card/Card";
+import Card from "../../../../components/Card/Card";
 import { ContainerHeader, Header, OnBottom, ProjectList, Title } from "./styles";
 import getProjects from "../../../../services/getProjects";
+import { useEffect, useMemo, useState } from "alem";
+import { Project } from "@app/types";
+import CardSkeleton from "../CardSkeleton";
 
 const FeaturedProjects = () => {
-  const { featuredProjects } = getProjects();
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  // TODO: Criar um formato para o compilador saber quando é um arquivo
+  // de custom hook e injetar no arquivo
+  const projectsData = getProjects();
+  useEffect(() => {
+    if (projectsData) {
+      const { featuredProjects } = projectsData;
+      console.log(featuredProjects);
+      setProjects(featuredProjects);
+    }
+  }, [projectsData]);
+
+  const LoadingCards = () => (
+    <>
+      <CardSkeleton />
+      <CardSkeleton />
+      <CardSkeleton />
+    </>
+  );
+
+  const projectCards = useMemo(
+    () => (
+      <>
+        {projects.map((project: any) => {
+          return <Card projectId={project.id} allowDonate={true} />;
+        })}
+      </>
+    ),
+    [projects],
+  );
 
   return (
     <ContainerHeader tab="">
@@ -11,11 +44,7 @@ const FeaturedProjects = () => {
         <Title>Featured projects</Title>
       </Header>
 
-      <ProjectList>
-        {featuredProjects.map((project: any) => {
-          return <Card projectId={project.id} allowDonate={true} />;
-        })}
-      </ProjectList>
+      <ProjectList>{projects.length === 0 ? <LoadingCards /> : <>{projectCards}</>}</ProjectList>
       <OnBottom></OnBottom>
     </ContainerHeader>
   );

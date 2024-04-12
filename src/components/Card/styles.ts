@@ -1,11 +1,5 @@
 import styled from "styled-components";
 
-export const CardLink = styled("Link")`
-  &:hover {
-    text-decoration: none;
-  }
-`;
-
 export const CardContainer = styled.div`
   display: flex;
   flex-direction: column;

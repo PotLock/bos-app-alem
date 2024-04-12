@@ -15,5 +15,14 @@
     "dapp",
     "near",
     "bos"
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@app/": "src/"
+    }
+  },
+  "options": {
+    "keepRoute": false
+  }
 }

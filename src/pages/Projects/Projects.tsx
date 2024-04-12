@@ -1,6 +1,7 @@
-import Hero from "./components/Hero/Hero";
+import Hero from "@app/components/Hero/Hero";
 import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
 import SearchBar from "./components/SearchBar/SearchBar";
+// import getProjects from "@app/services/getProjects";
 // import ProjectsProvider from "../../contexts/ProjectsProvider";
 
 const ProjectsPage = () => {
@@ -15,8 +16,6 @@ const ProjectsPage = () => {
 
   return (
     <>
-      {/* TODO: ISSO ABAIXO QUEBRA */}
-      {/* <Hero donateRandomlyClick={() => {}} /> */}
       <Hero donateRandomlyClick={fakeCall} />
       <FeaturedProjects />
       <SearchBar />

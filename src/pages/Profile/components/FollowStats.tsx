@@ -5,10 +5,9 @@ import styled from "styled-components";
 type Props = {
   projectId: string;
   accountId: string;
-  following: any;
 };
 
-const FollowStats = ({ projectId: _projectId, accountId: _accountId, following }: Props) => {
+const FollowStats = ({ projectId: _projectId, accountId: _accountId }: Props) => {
   const projectId = _projectId;
   const accountId = projectId || _accountId;
 
@@ -18,10 +17,10 @@ const FollowStats = ({ projectId: _projectId, accountId: _accountId, following }
 
   // TODO: Bug => Está mesclando a string e tranformando em apenas uma chamada de Social.keys.
   // Ver arquivo erro10.txt
-  // const following = Social.keys(`${accountId}/graph/follow/*`, "final", {
-  //   return_type: "BlockHeight",
-  //   values_only: true,
-  // });
+  const following = Social.keys(`${accountId}/graph/follow/*`, "final", {
+    return_type: "BlockHeight",
+    values_only: true,
+  });
 
   const followers = Social.keys(`*/graph/follow/${accountId}`, "final", {
     return_type: "BlockHeight",

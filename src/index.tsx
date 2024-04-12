@@ -1,7 +1,8 @@
-import { loadExternalStyles } from "alem";
+import { RouterContext, loadExternalStyles } from "alem";
 import Spinner from "./components/Spinner";
-import Nav from "./components/Nav/Nav";
-import Routes from "./routes/Routes";
+
+import Main from "./Main";
+// import ProjectsProvider from "./contexts/ProjectsProvider";
 
 const App = () => {
   const fontsLoaded = loadExternalStyles([
@@ -13,16 +14,16 @@ const App = () => {
 
   // const projects = useProjects();
 
-  const AppContent = () => (
-    <>
-      <Nav />
-      <div className="app-content">
-        <Routes />
-      </div>
-    </>
-  );
+  // if (!projects.isProjectsReady) {
+  //   return <h3>Loading...</h3>;
+  // }
 
-  return <div className="app-container">{fontsLoaded ? <AppContent /> : <Spinner />}</div>;
+  // const isRegistryAdmin = RegistrySDK.isRegistryAdmin(context.accountId);
+
+  // console.log(isRegistryAdmin);
+  RouterContext();
+
+  return <div className="app-container">{fontsLoaded ? <Main /> : <Spinner />}</div>;
 };
 
 export default App;

@@ -76,13 +76,6 @@ const BannerHeader = ({ showFollowers, project, projectId, accountId: _accountId
     }
   `;
 
-  // TEMP: está quebrando dentro do FollowStats. Preciso de mais tempo
-  // para arrumar o compilador. Ver erro10.txt
-  const following = Social.keys(`${accountId}/graph/follow/*`, "final", {
-    return_type: "BlockHeight",
-    values_only: true,
-  });
-
   return (
     <Container className="pt-0 position-relative" style={{ ...containerStyle }}>
       <BackgroundImageContainer>
@@ -155,7 +148,7 @@ const BannerHeader = ({ showFollowers, project, projectId, accountId: _accountId
               </svg>
               <div> VERIFIED</div>
             </Verified>
-            <FollowStats following={following} accountId={projectId || accountId} projectId={projectId} />
+            <FollowStats accountId={projectId || accountId} projectId={projectId} />
           </ProfileStats>
         )}
       </ProfileWraper>

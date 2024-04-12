@@ -114,7 +114,8 @@ const Feed = (compProps: Props) => {
       return undefined;
     }
     const accountId = item.path.split("/")[0];
-    return `${accountId}/post/main` === item.path ? { accountId, blockHeight: item.blockHeight } : undefined;
+    const parentPost = { accountId, blockHeight: item.blockHeight };
+    return `${accountId}/post/main` === item.path ? parentPost : undefined;
   };
 
   const renderRepost = (a) => {
