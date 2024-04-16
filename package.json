@@ -5,13 +5,13 @@
   "repository": "git@github.com:wpdas/create-alem-dapp.git",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_ENV=development alem dev",
+    "start": "alem dev",
     "build": "alem build",
     "deploy:mainnet": "npm run build; alem deploy",
     "deploy:testnet": "npm run build; alem deploy --network testnet"
   },
   "dependencies": {
-    "alem": "1.0.0-beta.17"
+    "alem": "1.0.0-beta.18"
   },
   "devDependencies": {
     "@types/styled-components": "^5.1.26",
