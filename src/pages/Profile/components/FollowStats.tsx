@@ -3,7 +3,7 @@ import hrefWithParams from "../../../utils/hrefWithParams";
 import styled from "styled-components";
 
 type Props = {
-  projectId: string;
+  projectId?: string;
   accountId: string;
 };
 

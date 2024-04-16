@@ -9,8 +9,8 @@ import Select from "../../../../components/Inputs/Select/Select";
 import Tabs from "../Tabs";
 
 type Props = {
-  projectId: string;
-  project: Project;
+  projectId?: string;
+  project?: Project;
   profile: any;
   nav: string;
   navOptions: any;
@@ -48,7 +48,7 @@ const Body = ({ projectId, project, profile, nav, navOptions }: Props) => {
   const value = { text: props.project.status, value: props.project.status };
 
   const onChangeHandler = (status: any) => {
-    if (status.value != project.status) {
+    if (project && status.value != project.status) {
       setStatusReview({ ...statusReview, newStatus: status.value, modalOpen: true });
     }
   };

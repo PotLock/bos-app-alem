@@ -3,10 +3,11 @@ import getTagsFromSocialProfileData from "../../../utils/getTagsFromSocialProfil
 import { Social } from "alem";
 
 type Props = {
-  projectId: string;
+  projectId?: string;
+  profile?: any;
 };
 
-const ProfileTags = ({ projectId }: Props) => {
+const ProfileTags = ({ projectId, profile }: Props) => {
   // const Tags = ({ projectId }: Props) => {
   const TagsContainer = styled.div`
     display: flex;
@@ -25,9 +26,9 @@ const ProfileTags = ({ projectId }: Props) => {
     box-shadow: 0px -1px 0px 0px #dbdbdb inset, 0px 0px 0px 0.5px #dbdbdb;
   `;
 
-  const profile = Social.getr(`${projectId}/profile`);
+  const projectProfile = Social.getr(`${projectId}/profile`);
 
-  const tags = getTagsFromSocialProfileData(profile) as string[];
+  const tags = (profile ? getTagsFromSocialProfileData(projectProfile) : Object.keys(profile.tags || {})) as string[];
   if (!tags.length) return "No tags";
 
   return (

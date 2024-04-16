@@ -10,13 +10,13 @@ import DonationsInfo from "../../../Project/components/DonationsInfo/DonationsIn
 
 type Props = {
   profile: any;
-  accountId: string;
-  projectId: string;
+  accountId?: string;
+  projectId?: string;
 };
 
 const BodyHeader = ({ profile, accountId, projectId }: Props) => {
   const name = profile.name;
-  const policy = Near.view(projectId, "get_policy", {}) as any;
+  const policy = projectId ? Near.view(projectId, "get_policy", {}) : (false as any);
   const isDao = !!policy;
 
   const userHasPermissions = useMemo(() => {
@@ -29,7 +29,7 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
     const kind = "call";
     const action = "AddProposal";
     // Check if the user is allowed to perform the action
-    const allowed = userRoles.some(({ permissions }) => {
+    const allowed = userRoles.some(({ permissions }: { permissions: string }) => {
       return (
         permissions.includes(`${kind}:${action}`) ||
         permissions.includes(`${kind}:*`) ||
@@ -44,6 +44,8 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
   const isPermissionedMember = isDao && userHasPermissions;
   const canEdit = isOwner || isPermissionedMember;
 
+  const id = projectId || accountId || "";
+
   return (
     <Header>
       <Container>
@@ -51,13 +53,8 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
           <NameContainer>
             <Name>{name.length > 25 ? name.slice(0, 25).trim() + "..." : name}</Name>
             <AccountInfoContainer>
-              <AccountId>
-                @{" "}
-                {(projectId || accountId).length > 15
-                  ? (projectId || accountId).slice(0, 15).trim() + "..."
-                  : projectId || accountId}
-              </AccountId>
-              <CopyIcon textToCopy={projectId ? projectId : accountId} customStyle="height: 18px;" />
+              <AccountId>@ {id.length > 15 ? id.slice(0, 15).trim() + "..." : id}</AccountId>
+              <CopyIcon textToCopy={id} customStyle="height: 18px;" />
             </AccountInfoContainer>
             {canEdit && (
               <Button
@@ -79,7 +76,7 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
           <ProfileTags projectId={projectId} />
           <Linktree projectId={projectId} accountId={accountId} />
         </Info>
-        {projectId && <DonationsInfo accountId={projectId || accountId} projectId={projectId} />}
+        {projectId && <DonationsInfo accountId={id} projectId={projectId} />}
       </Container>
     </Header>
   );
