@@ -11,17 +11,25 @@ const PotSDK = {
       return config.owner === accountId || config.admins.includes(accountId);
     }
   },
+  isRoundActive: (potId) => {
+    return Near.asyncView(potId, "is_round_active", {});
+  },
   getMatchingPoolDonations: (potId) => {
+    // TODO: paginate
     return Near.view(potId, "get_matching_pool_donations", {});
   },
   asyncGetMatchingPoolDonations: (potId) => {
     return Near.asyncView(potId, "get_matching_pool_donations", {});
   },
-  getPublicRoundDonations: (potId) => {
-    return Near.view(potId, "get_public_round_donations", {});
+  getPublicRoundDonations: (potId, args) => {
+    return Near.view(potId, "get_public_round_donations", {
+      ...(args || {}),
+    });
   },
-  asyncGetPublicRoundDonations: (potId) => {
-    return Near.asyncView(potId, "get_public_round_donations", {});
+  asyncGetPublicRoundDonations: (potId, args) => {
+    return Near.asyncView(potId, "get_public_round_donations", {
+      ...(args || {}),
+    });
   },
   getDonationsForDonor: (potId, accountId) => {
     return Near.view(potId, "get_donations_for_donor", { donor_id: accountId });
@@ -43,6 +51,9 @@ const PotSDK = {
   },
   getApplicationByProjectId: (potId, projectId) => {
     return Near.view(potId, "get_application_by_project_id", { project_id: projectId });
+  },
+  asyncGetApplicationByProjectId: (potId, projectId) => {
+    return Near.asyncView(potId, "get_application_by_project_id", { project_id: projectId });
   },
   getApprovedApplications: (potId) => {
     return Near.view(potId, "get_approved_applications", {});

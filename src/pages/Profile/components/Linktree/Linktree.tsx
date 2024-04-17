@@ -1,8 +1,8 @@
 import { Social } from "alem";
-import GithubSvg from "../../../../assets/svgs/github";
-import NearSvg from "../../../../assets/svgs/near";
-import TwitterSvg from "../../../../assets/svgs/twitter";
-import WebsiteSvg from "../../../../assets/svgs/website";
+import GithubSvg from "@app/assets/svgs/github";
+import NearSvg from "@app/assets/svgs/near";
+import TwitterSvg from "@app/assets/svgs/twitter";
+import WebsiteSvg from "@app/assets/svgs/website";
 import { LinktreeContainer, LinktreeItemContainer } from "./styled";
 
 type Props = {

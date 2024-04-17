@@ -1,6 +1,5 @@
 import { Near, context, useMemo } from "alem";
 import { AccountId, AccountInfoContainer, Container, Header, Info, Name, NameContainer } from "./styles";
-import { ownerId } from "../../../../constants";
 import CopyIcon from "../../../Project/components/CopyIcon";
 import Button from "../../../../components/Button";
 import hrefWithParams from "../../../../utils/hrefWithParams";

@@ -1,8 +1,9 @@
-import { Social, State, Widget, context, state } from "alem";
+import { Social, State, Widget, context, props, state } from "alem";
+import OverlayTrigger from "./OverlayTrigger";
 
 type Props = {
-  profile: any;
-  accountId: string;
+  profile?: any;
+  accountId?: string;
   style?: React.CSSProperties;
   imageClassName?: string;
   image?: string;
@@ -93,23 +94,7 @@ const ProfileImage = ({
     </div>
   );
 
-  const overlayTriggerProps = { accountId, children: inner };
-
-  // if (_tooltip) {
-  // <Widget loading={inner} src="mob.near/widget/Profile.OverlayTrigger" props={overlayTriggerProps} />;
-  // <Widget src="mob.near/widget/Profile.OverlayTrigger" />;
-  // }
-
-  // return <>oi</>;
-
-  return <>{inner}</>;
-
-  // TODO: BUG => Essa condição quebra. Parse resolve?
-  // return _tooltip ? (
-  // <Widget loading={inner} src="mob.near/widget/Profile.OverlayTrigger" props={overlayTriggerProps} />;
-  // ) : (
-  //   inner
-  // );
+  return props.tooltip ? <OverlayTrigger accountId={accountId}>{inner}</OverlayTrigger> : inner;
 };
 
 export default ProfileImage;

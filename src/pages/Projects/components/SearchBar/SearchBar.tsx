@@ -11,15 +11,15 @@ import {
   SearchIcon,
   Title,
 } from "./styles";
-import DonateSDK from "../../../../SDK/donate";
-import yoctosToUsd from "../../../../utils/yoctosToUsd";
-import getTagsFromSocialProfileData from "../../../../utils/getTagsFromSocialProfileData";
+import DonateSDK from "@app/SDK/donate";
+import yoctosToUsd from "@app/utils/yoctosToUsd";
+import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
 import Tags from "../Tags/Tags";
 import AllProjects from "../AllProjects/AllProjects";
-import { Project } from "../../../../types";
-import getTeamMembersFromSocialProfileData from "../../../../utils/getTeamMembersFromSocialProfileData";
-import getProjects from "../../../../services/getProjects";
-import RegistrySDK from "../../../../SDK/registry";
+import { Project } from "@app/types";
+import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
+import getProjects from "@app/services/getProjects";
+import RegistrySDK from "@app/SDK/registry";
 
 const SearchBar = () => {
   const isRegistryAdmin = RegistrySDK.isRegistryAdmin(context.accountId);

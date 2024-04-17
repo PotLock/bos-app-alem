@@ -1,8 +1,7 @@
-import { VM, props } from "alem";
+import { VM, props, useMemo } from "alem";
 import styled from "styled-components";
-import Card from "../../../components/Card/Card";
-import { useMemo } from "react";
-import { Project } from "../../../types";
+import Card from "@app/components/Card/Card";
+import { Project } from "@app/types";
 
 type Props = {
   shouldShuffle: boolean;

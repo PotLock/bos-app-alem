@@ -1,5 +1,4 @@
 import { Social, context, useParams } from "alem";
-import { ownerId } from "../../constants";
 // import ProjectOptions from "./utils/projectOptions";
 import getProjectByProjectId from "../../services/getProjectByProjectId";
 import PotFactorySDK from "../../SDK/potfactory";

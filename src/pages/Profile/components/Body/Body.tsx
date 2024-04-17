@@ -1,6 +1,6 @@
 import { Near, Widget, context, props, useState } from "alem";
 import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
-import { PROJECT_STATUSES, SUPPORTED_FTS, ownerId } from "../../../../constants";
+import constants from "@app/constants";
 import RegistrySDK from "../../../../SDK/registry";
 import BannerHeader from "../BannerHeader/BannerHeader";
 import { Project } from "../../../../types";
@@ -18,6 +18,7 @@ type Props = {
 
 const Body = ({ projectId, project, profile, nav, navOptions }: Props) => {
   const accountId = props.accountId ?? context.accountId;
+  const { PROJECT_STATUSES, SUPPORTED_FTS } = constants;
 
   const [statusReview, setStatusReview] = useState({ modalOpen: false, notes: "", newStatus: "" });
 
