@@ -4,8 +4,8 @@ import Body from "../Profile/components/Body/Body";
 import donorOptions from "./utils/donorOptions";
 
 const DonorPage = () => {
-  const { accountId: passedAccountId, nav } = useParams();
-  const accountId = passedAccountId || context.accountId;
+  const { accountId: _accountId, nav } = useParams();
+  const accountId = _accountId || context.accountId;
 
   const profile = Social.getr(`${accountId}/profile`);
 

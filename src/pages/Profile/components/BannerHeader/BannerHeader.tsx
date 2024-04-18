@@ -9,7 +9,7 @@ import {
   Verified,
 } from "./styles";
 import CameraSvg from "../../../../assets/svgs/camera";
-import ProfileImage from "../../../Project/components/ProfileImage";
+import ProfileImage from "@app/components/ProfileImage";
 import FollowStats from "../FollowStats";
 import statuses from "./statuses";
 

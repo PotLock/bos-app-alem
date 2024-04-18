@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-const Container = styled.div`
+export const Container = styled.div`
   padding-top: 0;
   position: relative;
 `;
 
-const ProfileWraper = styled.div`
+export const ProfileWraper = styled.div`
   display: flex;
   padding-left: 4rem;
   align-items: end;
@@ -17,7 +17,7 @@ const ProfileWraper = styled.div`
   }
 `;
 
-const ProfileStats = styled.div`
+export const ProfileStats = styled.div`
   position: relative;
   z-index: 1;
   display: flex;
@@ -29,7 +29,7 @@ const ProfileStats = styled.div`
     gap: 10px;
   }
 `;
-const Verified = styled.div`
+export const Verified = styled.div`
   opacity: 1;
   display: flex;
   align-items: center;
@@ -59,7 +59,7 @@ const Verified = styled.div`
   }
 `;
 
-const ProfileImageContainer = styled.div`
+export const ProfileImageContainer = styled.div`
   background: white;
   border-radius: 50%;
   padding: 6px;
@@ -122,7 +122,7 @@ const ProfileImageContainer = styled.div`
   }
 `;
 
-const BackgroundImageContainer = styled.div`
+export const BackgroundImageContainer = styled.div`
   position: relative;
   width: 100%;
   height: 318px;
@@ -170,5 +170,3 @@ const BackgroundImageContainer = styled.div`
     }
   }
 `;
-
-export { BackgroundImageContainer, Container, ProfileImageContainer, ProfileStats, ProfileWraper, Verified };
