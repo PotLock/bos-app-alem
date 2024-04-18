@@ -73,7 +73,7 @@ const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
   const profileName = profile?.name || projectId;
 
   const pages: any = {
-    form: FormDirect,
+    form: FormDirect, // TODO: checar o botao Loading... que fica so assim nesse estado
     formPot: FormPot,
     // confirm: ConfirmDirect,
     // confirmPot: ConfirmPot,
