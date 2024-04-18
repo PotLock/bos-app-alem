@@ -72,6 +72,9 @@ const Funding = styled.div`
     justify-content: left;
     svg {
       width: 1.5em;
+      path {
+        fill: #2e2e2e;
+      }
     }
   }
   .date {
