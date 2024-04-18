@@ -1,5 +1,5 @@
 import { Container, DropdownLabelWrapper, FundingSrc, ImgIcon, Funding, SearchBar, Sort, Stats } from "./styles";
-import { Widget, useState, useEffect, useParams, useMemo, Big } from "alem";
+import { Widget, useState, useEffect, useParams, useMemo, Big, Near } from "alem";
 import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
 import NearSvg from "@app/assets/svgs/near";
 import DonateSDK from "@app/SDK/donate";
@@ -34,7 +34,7 @@ const Donations = () => {
   const [directDonations, setDirectDonations] = useState<any>(null);
   const [filteredDonations, setFilteredDonations] = useState<any>(null);
 
-  const { accountId, potId } = useParams();
+  const { accountId } = useParams();
 
   // Get all Pots
   const pots = PotFactorySDK.getPots();
@@ -58,7 +58,6 @@ const Donations = () => {
   }
 
   // Sum up all donations
-
   const [totalDonations, sponsorships, matchingRoundDonations] = useMemo(() => {
     const potDonationsValue = Object.values(potDonations).flat();
 
@@ -66,6 +65,7 @@ const Donations = () => {
     const matchingRoundDonations = potDonationsValue.filter((donation: any) => donation.type === "matched");
     const allDonations = [...(directDonations || []), ...potDonationsValue];
     allDonations.sort((a: any, b: any) => (b.donated_at || b.donated_at_ms) - (a.donated_at || a.donated_at_ms));
+    setFilteredDonations(allDonations);
     return [allDonations, sponsorships, matchingRoundDonations];
   }, [potDonations, directDonations]);
 
@@ -157,14 +157,17 @@ const Donations = () => {
   const DropdownLabel = () => {
     const digit = sortList[sort].count.toString().length;
     return (
-      <DropdownLabelWrapper
-        style={{
-          width: `${24 + (digit - 1) * 6}px`,
-          height: `${24 + (digit - 1) * 6}px`,
-        }}
-      >
+      <DropdownLabelWrapper>
         <div className="label">{sortList[sort].label}</div>
-        <div className="count">{sortList[sort].count}</div>
+        <div
+          className="count"
+          style={{
+            width: `${24 + (digit - 1) * 6}px`,
+            height: `${24 + (digit - 1) * 6}px`,
+          }}
+        >
+          {sortList[sort].count}
+        </div>
       </DropdownLabelWrapper>
     );
   };
@@ -182,11 +185,10 @@ const Donations = () => {
           </div>
         )}
         <div className="dropdown">
-          {/* FilterMenuCustomStyle: `left:auto; right:0;`, */}
-
           <Dropdown
             handleSortChange={handleSortChange}
             sortList={Object.values(sortList)}
+            FilterMenuCustomClass="dropdown-menu-custom"
             showCount={true}
             sortVal={<DropdownLabel />}
           />
@@ -229,61 +231,64 @@ const Donations = () => {
             type="text"
           />
         </SearchBar>
-        {filteredDonations.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE).map((donation: any) => {
-          const {
-            total_amount,
-            amount,
-            pot_id,
-            recipient_id,
-            project_id,
-            paid_at,
-            base_currency,
-            ft_id,
-            type,
-            donated_at,
-            donated_at_ms,
-          } = donation;
+        {filteredDonations?.length > 0 ? (
+          filteredDonations.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE).map((donation: any) => {
+            const {
+              total_amount,
+              amount,
+              pot_id,
+              recipient_id,
+              project_id,
+              paid_at,
+              base_currency,
+              ft_id,
+              type,
+              donated_at,
+              donated_at_ms,
+            } = donation;
 
-          const ftId = ft_id || base_currency;
+            const ftId = ft_id || base_currency;
 
-          const donationAmount = parseFloat(
-            Big(total_amount || amount)
-              .div(Big(10).pow(ftId === "near" ? 24 : ftMetadata[ftId]?.decimals || 24))
-              .toFixed(2),
-          );
+            const donationAmount = parseFloat(
+              Big(total_amount || amount)
+                .div(Big(10).pow(ftId === "near" ? 24 : ftMetadata[ftId]?.decimals || 24))
+                .toFixed(2),
+            );
 
-          const isPot = type === "sponsorship";
+            const isPot = type === "sponsorship";
 
-          const url = isPot ? `?tab=pot&potId=${pot_id}` : `?tab=project&projectId=${project_id || recipient_id}`;
+            const url = isPot ? `?tab=pot&potId=${pot_id}` : `?tab=project&projectId=${project_id || recipient_id}`;
 
-          const name = _address(getName(donation), 15);
+            const name = _address(getName(donation), 15);
 
-          return (
-            <div className="funding-row">
-              <FundingSrc>
-                {isPot ? (
-                  <PotIcon className="profile-image" />
-                ) : (
-                  <ProfileImage accountId={recipient_id || project_id} />
-                )}
-                <div className="funding-src">
-                  <a href={hrefWithParams(url)} target="_blank">
-                    {isPot && <span className="pot-name"> Sponsor :</span>} {name}
-                  </a>
-                  <div className="type">{sortList[type].label?.slice(0, -1)}</div>
+            return (
+              <div className="funding-row">
+                <FundingSrc>
+                  {isPot ? (
+                    <PotIcon className="profile-image" />
+                  ) : (
+                    <ProfileImage accountId={recipient_id || project_id} style={{}} />
+                  )}
+                  <div className="funding-src">
+                    <a href={hrefWithParams(url)} target="_blank">
+                      {isPot && <span className="pot-name"> Sponsor :</span>} {name}
+                    </a>
+                    <div className="type">{sortList[type].label?.slice(0, -1)}</div>
+                  </div>
+                </FundingSrc>
+                <div className="price tab">
+                  <div className="near-icon">
+                    {ftId === "near" ? <NearSvg /> : <ImgIcon src={ftMetadata[ftId]?.icon} />}
+                  </div>
+                  {addTrailingZeros(donationAmount)}
                 </div>
-              </FundingSrc>
-              <div className="price tab">
-                <div className="near-icon">
-                  {ftId === "near" ? <NearSvg /> : <ImgIcon src={ftMetadata[ftId]?.icon} />}
-                </div>
-                {addTrailingZeros(donationAmount)}
+                <div className="tab date">{getTimePassed(donated_at_ms || donated_at || paid_at, true)} ago</div>
               </div>
-              <div className="tab date">{getTimePassed(donated_at_ms || donated_at || paid_at, true)} ago</div>
-            </div>
-          );
-        })}
-        {filteredDonations.length === 0 && <div className="funding-row">No Donations</div>}
+            );
+          })
+        ) : (
+          <div className="funding-row">No Donations</div>
+        )}
       </Funding>
       <Pagination
         data={filteredDonations}

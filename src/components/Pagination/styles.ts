@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   gap: 1rem;
   justify-content: center;
@@ -68,5 +68,3 @@ const Container = styled.div`
     }
   }
 `;
-
-export { Container };

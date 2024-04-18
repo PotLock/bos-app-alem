@@ -186,6 +186,10 @@ const Stats = styled.div`
   }
   .dropdown {
     margin-left: auto;
+    .dropdown-menu-custom {
+      left: auto;
+      right: 0;
+    }
     @media screen and (max-width: 480px) {
       margin-right: auto;
       margin-left: 0;
