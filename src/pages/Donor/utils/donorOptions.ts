@@ -1,5 +1,5 @@
 import hrefWithParams from "../../../utils/hrefWithParams";
-import Feed from "../NavPages/Feed/Feed";
+import Feed from "../../Project/NavPages/Feed/Feed";
 
 // TODO: Use SimpleRouter instead
 const donorOptions = (accountId: string) => [

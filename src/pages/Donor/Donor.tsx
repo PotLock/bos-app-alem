@@ -15,10 +15,7 @@ const Donor = () => {
         nav={nav ?? "donations"}
         navOptions={donorOptions(accountId)}
         profile={profile}
-        project={{}}
-        projectId={""}
         //    profile,
-        //    tags,
         //    accounts: [accountId],
         //    donations: allDonations,
         //    totalDonationAmountNear,

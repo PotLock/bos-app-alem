@@ -75,7 +75,7 @@ const Body = ({ projectId, project, profile, nav, navOptions }: Props) => {
 
         <Details>
           {/* Selected Nav Page / Component */}
-          <SelectedNavComponent accountId={accountId} projectId={projectId} />
+          <SelectedNavComponent accountId={accountId} projectId={projectId} accounts={[projectId || accountId]} />
         </Details>
       </Container>
 
