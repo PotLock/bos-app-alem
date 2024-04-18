@@ -1,8 +1,14 @@
 ## PotLock - Using Além [WIP]
 
-This is still just a Demo for now.
+PotLock application refactoring using Além.
 
 ### How to use
+
+Create the `.env` file with the following content:
+
+```sh
+NODE_ENV=development
+```
 
 Install dependencies
 
