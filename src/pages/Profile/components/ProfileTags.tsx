@@ -4,10 +4,10 @@ import { Social } from "alem";
 
 type Props = {
   projectId?: string;
-  profile?: any;
+  accountId?: string;
 };
 
-const ProfileTags = ({ projectId, profile }: Props) => {
+const ProfileTags = ({ projectId, accountId }: Props) => {
   // const Tags = ({ projectId }: Props) => {
   const TagsContainer = styled.div`
     display: flex;
@@ -26,9 +26,12 @@ const ProfileTags = ({ projectId, profile }: Props) => {
     box-shadow: 0px -1px 0px 0px #dbdbdb inset, 0px 0px 0px 0.5px #dbdbdb;
   `;
 
-  const projectProfile = Social.getr(`${projectId}/profile`);
+  const projectProfile: any = Social.getr(`${projectId || accountId}/profile`);
 
-  const tags = (profile ? getTagsFromSocialProfileData(projectProfile) : Object.keys(profile.tags || {})) as string[];
+  const tags: string[] = accountId
+    ? Object.keys(projectProfile.tags || {})
+    : getTagsFromSocialProfileData(projectProfile);
+
   if (!tags.length) return "No tags";
 
   return (

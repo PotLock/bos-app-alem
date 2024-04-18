@@ -48,7 +48,7 @@ const BannerHeader = ({ showFollowers, project, projectId, accountId: _accountId
     <Container style={{ ...containerStyle }}>
       <BackgroundImageContainer
         className={editable ? "editable" : ""}
-        style={{ height: backgroundStyle.height ?? "100%" }}
+        style={{ height: backgroundStyle.height ? backgroundStyle.height : "" }}
       >
         <Widget
           src="mob.near/widget/Image"

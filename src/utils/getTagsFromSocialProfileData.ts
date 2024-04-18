@@ -1,5 +1,6 @@
 const getTagsFromSocialProfileData = (profileData: any) => {
   // first try to get tags from plCategories, then category (deprecated/old format), then default to empty array
+
   if (!profileData) return [];
   const DEPRECATED_CATEGORY_MAPPINGS: Record<string, string> = {
     "social-impact": "Social Impact",

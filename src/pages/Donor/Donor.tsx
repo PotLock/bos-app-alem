@@ -3,7 +3,7 @@ import { Wrapper } from "./styles";
 import Body from "../Profile/components/Body/Body";
 import donorOptions from "./utils/donorOptions";
 
-const Donor = () => {
+const DonorPage = () => {
   const { accountId: passedAccountId, nav } = useParams();
   const accountId = passedAccountId || context.accountId;
 
@@ -12,7 +12,7 @@ const Donor = () => {
   return (
     <Wrapper>
       <Body
-        nav={nav ?? "donations"}
+        nav={nav ?? "feed"}
         navOptions={donorOptions(accountId)}
         profile={profile}
         //    profile,
@@ -30,4 +30,4 @@ const Donor = () => {
   );
 };
 
-export default Donor;
+export default DonorPage;

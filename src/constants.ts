@@ -15,7 +15,7 @@ export const SUPPORTED_FTS = {
   NEAR: {
     iconUrl: "https://nftstorage.link/ipfs/bafkreidnqlap4cp5o334lzbhgbabwr6yzkj6albia62l6ipjsasokjm6mi",
     toIndivisible: (amount: any) => new Big(amount).mul(new Big(10).pow(24)),
-    fromIndivisible: (amount: any, decimals: any) =>
+    fromIndivisible: (amount: any, decimals?: any) =>
       Big(amount)
         .div(Big(10).pow(24))
         .toFixed(decimals || 2),

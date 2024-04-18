@@ -1,12 +1,11 @@
 import { Near, context, useMemo } from "alem";
 import { AccountId, AccountInfoContainer, Container, Header, Info, Name, NameContainer } from "./styles";
-import { ownerId } from "../../../../constants";
-import CopyIcon from "../../../Project/components/CopyIcon";
-import Button from "../../../../components/Button";
-import hrefWithParams from "../../../../utils/hrefWithParams";
+import CopyIcon from "@app/pages/Project/components/CopyIcon";
+import Button from "@app/components/Button";
+import hrefWithParams from "@app/utils/hrefWithParams";
 import ProfileTags from "../ProfileTags";
 import Linktree from "../Linktree/Linktree";
-import DonationsInfo from "../../../Project/components/DonationsInfo/DonationsInfo";
+import DonationsInfo from "@app/pages/Project/components/DonationsInfo/DonationsInfo";
 
 type Props = {
   profile: any;
@@ -73,7 +72,7 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
               />
             )}
           </NameContainer>
-          <ProfileTags projectId={projectId} />
+          <ProfileTags projectId={projectId} accountId={accountId} />
           <Linktree projectId={projectId} accountId={accountId} />
         </Info>
         {projectId && <DonationsInfo accountId={id} projectId={projectId} />}
