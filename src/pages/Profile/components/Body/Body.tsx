@@ -1,4 +1,4 @@
-import { Near, Widget, context, props, useState, useParams } from "alem";
+import { Near, context, props, useState, useParams } from "alem";
 import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
 import { PROJECT_STATUSES, SUPPORTED_FTS, ownerId } from "../../../../constants";
 import RegistrySDK from "../../../../SDK/registry";
@@ -7,7 +7,6 @@ import { Project } from "../../../../types";
 import BodyHeader from "../BodyHeader/BodyHeader";
 import Select from "../../../../components/Inputs/Select/Select";
 import Tabs from "../Tabs";
-import Donations from "@app/pages/Donor/NavPages/Donations/Donations";
 
 type Props = {
   projectId?: string;
@@ -78,8 +77,6 @@ const Body = ({ projectId, project, profile, nav, navOptions }: Props) => {
         <Details>
           {/* Selected Nav Page / Component */}
           <SelectedNavComponent accountId={accountId} projectId={projectId} accounts={[projectId || accountId]} />
-
-          {/* <Donations /> */}
         </Details>
       </Container>
 
