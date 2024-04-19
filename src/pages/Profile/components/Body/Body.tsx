@@ -1,13 +1,13 @@
-import { Near, Widget, context, props, useState, useParams } from "alem";
+import { Near, context, props, useState, useParams } from "alem";
 import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
-import { PROJECT_STATUSES, SUPPORTED_FTS, ownerId } from "../../../../constants";
+import constants from "@app/constants";
 import RegistrySDK from "../../../../SDK/registry";
 import BannerHeader from "../BannerHeader/BannerHeader";
 import { Project } from "../../../../types";
 import BodyHeader from "../BodyHeader/BodyHeader";
 import Select from "../../../../components/Inputs/Select/Select";
 import Tabs from "../Tabs";
-import Donations from "@app/pages/Donor/NavPages/Donations/Donations";
+// import Donations from "@app/pages/Donor/NavPages/Donations/Donations";
 
 type Props = {
   projectId?: string;
@@ -20,6 +20,7 @@ type Props = {
 const Body = ({ projectId, project, profile, nav, navOptions }: Props) => {
   const { accountId: _accountId } = useParams();
   const accountId = _accountId ?? context.accountId;
+  const { PROJECT_STATUSES, SUPPORTED_FTS } = constants;
 
   const [statusReview, setStatusReview] = useState({ modalOpen: false, notes: "", newStatus: "" });
 

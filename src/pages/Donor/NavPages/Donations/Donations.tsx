@@ -1,4 +1,3 @@
-import { Container, DropdownLabelWrapper, FundingSrc, ImgIcon, Funding, SearchBar, Sort, Stats } from "./styles";
 import { useState, useEffect, useParams, useMemo, Big, Near } from "alem";
 import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
 import NearOutline from "@app/assets/svgs/near-outline";
@@ -7,17 +6,19 @@ import PotFactorySDK from "@app/SDK/potfactory";
 import PotSDK from "@app/SDK/pot";
 import { PotDetail, Pot } from "@app/types";
 import { getPotDonations, filterDonations, searchDonations, getName, addTrailingZeros } from "./utils";
-import { SUPPORTED_FTS } from "@app/constants";
+import constants from "@app/constants";
 import nearToUsd from "@app/utils/nearToUsd";
 import _address from "@app/utils/_address";
 import PotIcon from "@app/assets/svgs/PotIcon";
-import ProfileImage from "@app/components/ProfileImage";
+import ProfileImage from "@app/components/mob.near/ProfileImage";
 import Pagination from "@app/components/Pagination/Pagination";
 import getTimePassed from "@app/utils/getTimePassed";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import Arrow from "@app/assets/svgs/Arrow";
+import { Container, DropdownLabelWrapper, FundingSrc, ImgIcon, Funding, SearchBar, Sort, Stats } from "./styles";
 
 const Donations = () => {
+  const { SUPPORTED_FTS } = constants;
   const PER_PAGE = 30;
   const [ftMetadata, setFtMetadata] = useState<any>({});
   const [currentPage, setCurrentPage] = useState(1);

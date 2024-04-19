@@ -1,4 +1,4 @@
-import { Project } from "../../../../types";
+import { Project } from "@app/types";
 import ListSection from "../ListSection";
 import { ProjectsContainer } from "./styles";
 

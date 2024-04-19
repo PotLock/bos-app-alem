@@ -2,10 +2,12 @@ import styled from "styled-components";
 
 type Props = {
   children: JSX.Element | JSX.Element[];
-  onOverlayClick?: () => void;
+  onOverlayClick?: (event: any) => void;
+  contentStyle?: any;
+  overlayStyle?: any;
 };
 
-const ModalOverlay = ({ children, onOverlayClick }: Props) => {
+const ModalOverlay = ({ children, onOverlayClick, contentStyle }: Props) => {
   const ModalOverlay = styled.div`
     position: fixed;
     padding: 0 10px;
@@ -34,10 +36,22 @@ const ModalOverlay = ({ children, onOverlayClick }: Props) => {
   `;
 
   return (
-    <ModalOverlay onClick={onOverlayClick}>
-      <ModalContent>{children}</ModalContent>
+    <ModalOverlay style={contentStyle} onClick={onOverlayClick}>
+      <ModalContent style={contentStyle}>{children}</ModalContent>
     </ModalOverlay>
   );
 };
+
+// Propriedades sendo passadas para o Modal:
+// getRandomProject(), -> projectId
+
+// Then the fetch is being done inside the Main -> linha 287 -> isso esta fazendo o fetch de informacoes;
+// PotId, se nao passar, chama ele novamente.
+
+// Form: é para apenas um projeto
+// FormPot: é o display que pode ser usado para doar para varios projetos
+
+// ConfirmDirect: only one
+// CorfirmPot: is for multiple
 
 export default ModalOverlay;
