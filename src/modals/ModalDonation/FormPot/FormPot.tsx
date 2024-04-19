@@ -5,7 +5,7 @@ import AmountInput from "../AmountInput/AmountInput";
 import nearToUsd from "@app/utils/nearToUsd";
 import { CustomButton, Content, CurrentBalance, Form, Label, ProjectAmount, Projects, TotalAmount } from "./styles";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
-import _address from "@app/utils/donorsUtils/_address";
+import _address from "@app/utils/_address";
 import Button from "@app/components/Button";
 
 const ProfileImg = ({ profile }: any) => <ProfileImage profile={profile} style={{}} />;

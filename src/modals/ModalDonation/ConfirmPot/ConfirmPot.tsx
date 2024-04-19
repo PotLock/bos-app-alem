@@ -4,7 +4,7 @@ import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import NearIcon from "@app/assets/svgs/near-icon";
 import nearToUsd from "@app/utils/nearToUsd";
-import _address from "@app/utils/donorsUtils/_address";
+import _address from "@app/utils/_address";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import Button from "@app/components/Button";
 import {
