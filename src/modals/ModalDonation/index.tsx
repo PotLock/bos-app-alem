@@ -1,24 +1,31 @@
+import {
+  Big,
+  Social,
+  State,
+  asyncFetch,
+  context,
+  fetch,
+  props,
+  state,
+  useCache,
+  useEffect,
+  useMemo,
+  useState,
+} from "alem";
 import PotSDK from "@app/SDK/pot";
-import { nadabotContractId } from "@app/constants";
-import { State, context, state, useParams } from "alem";
 import ModalOverlay from "../ModalOverlay";
+import FormDirect from "./FormDirect/FormDirect";
+import PotFactorySDK from "@app/SDK/potfactory";
+import BannerBg from "@app/assets/svgs/banner-bg";
+import { Banner, Container, HeaderIcons } from "./styles";
+import FormPot from "./FormPot/FormPot";
+import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
+import ConfirmPot from "./ConfirmPot/ConfirmPot";
 
-type Props = {
-  projectId?: string;
-  onClose: () => void;
-  multiple?: boolean;
-};
-
-const ModalDonation = (modalProps: Props) => {
+const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
 
-  console.log("Nadabot Contract Id", nadabotContractId);
-
-  const { projectId, onClose, multiple } = modalProps;
-  const { potId } = useParams();
   const potDetail = PotSDK.getConfig(potId);
-
-  const DEFAULT_DONATION_AMOUNT = "1";
 
   const accountId = context.accountId;
 
@@ -43,18 +50,18 @@ const ModalDonation = (modalProps: Props) => {
   });
 
   const {
-    amount,
-    denomination,
-    donationType,
-    showBreakdownm,
-    bypassProtocolFee,
-    bypassChefFee,
-    addNote,
-    donationNote,
-    donationNoteError,
-    allPots,
-    intervalId,
-    nearBalance,
+    // amount,
+    // denomination,
+    // donationType,
+    // showBreakdownm,
+    // bypassProtocolFee,
+    // bypassChefFee,
+    // addNote,
+    // donationNote,
+    // donationNoteError,
+    // allPots,
+    // intervalId,
+    // nearBalance,
     ftBalances,
     denominationOptions,
     selectedDenomination,
@@ -62,11 +69,193 @@ const ModalDonation = (modalProps: Props) => {
     currentPage,
   } = state;
 
-  // TODO: Continuar daqui. Muito complexo!
+  const [activeRounds, setActiveRounds] = useState<any>(null);
+
+  const profile = Social.getr<any>(`${projectId}/profile`);
+  const profileName = profile?.name || projectId;
+
+  const pages: any = {
+    form: FormDirect,
+    formPot: FormPot,
+    confirm: ConfirmDirect,
+    confirmPot: ConfirmPot,
+  };
+
+  const ActivePageComponent = pages[currentPage];
+
+  // get all active pots
+  const pots = useCache(
+    () =>
+      // get all pots
+      PotFactorySDK.asyncGetPots()
+        .then((pots: any) => {
+          const activePots = pots.map((pot: any) =>
+            // if active
+            PotSDK.isRoundActive(pot.id)
+              // check if project had applied
+              .then((isActive: boolean) => isActive && pot.id)
+              .catch((e: any) => {
+                console.error("error checking active round for pot: " + pot.id, e);
+              }),
+          );
+          return Promise.all(activePots);
+        })
+        .catch((e: any) => {
+          console.error("error getting pots: ", e);
+        }),
+    "active-pots",
+  );
+
+  useEffect(() => {
+    if (potId && !activeRounds) {
+      setActiveRounds([potId]);
+      State.update({
+        selectedRound: potId,
+        donationType: multiple ? "auto" : "pot",
+      });
+    } else if (!activeRounds?.length && projectId) {
+      if (!pots) setActiveRounds([]);
+      (pots ?? []).forEach((pot: any, idx: number) => {
+        if (pot) {
+          PotSDK.asyncGetApplicationByProjectId(pot, projectId)
+            .then((application: any) => {
+              if (application.status === "Approved") {
+                setActiveRounds((prev: any) => {
+                  const prevRounds = prev || [];
+                  if (!prevRounds.includes(pot)) {
+                    return [...prevRounds, pot];
+                  }
+                });
+                if (!selectedRound)
+                  State.update({
+                    selectedRound: pot,
+                  });
+              } else if (pots.length - 1 === idx && !activeRounds) {
+                setActiveRounds((prev: any) => [...(prev || [])]);
+              }
+            })
+            .catch((err: any) => {
+              console.log(err);
+              setActiveRounds((prev: any) => [...(prev || [])]);
+            });
+        }
+      });
+    }
+  }, [pots]);
+
+  // Get Ft Balances
+  useEffect(() => {
+    if (!ftBalances && !potId) {
+      asyncFetch(`https://near-mainnet.api.pagoda.co/eapi/v1/accounts/${accountId}/balances/FT`, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "dce81322-81b0-491d-8880-9cfef4c2b3c2",
+        },
+      })
+        .then((ftBalancesRes) => {
+          if (ftBalancesRes) {
+            const ftBalances = ftBalancesRes.body.balances;
+            State.update({
+              ftBalances: ftBalances,
+              denominationOptions: DENOMINATION_OPTIONS.concat(
+                ftBalances
+                  .map(({ amount, contract_account_id, metadata }: any) => ({
+                    amount,
+                    id: contract_account_id,
+                    text: metadata.symbol,
+                    value: metadata.symbol,
+                    icon: metadata.icon,
+                    decimals: metadata.decimals,
+                  }))
+                  .filter((option: any) => option.text.length < 10),
+              ),
+            });
+          }
+        })
+        .catch((err) => console.log("fetching Ft balances faild"));
+    }
+  }, [ftBalances]);
+
+  const nearBalanceRes = fetch(`https://near-mainnet.api.pagoda.co/eapi/v1/accounts/${accountId}/balances/NEAR`, {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": "dce81322-81b0-491d-8880-9cfef4c2b3c2",
+    },
+  });
+
+  const ftBalance = useMemo(() => {
+    if (selectedDenomination.text === "NEAR") {
+      const nearBalance = nearBalanceRes?.body?.balance;
+
+      return nearBalance ? parseFloat(Big(nearBalance.amount).div(Big(10).pow(24)).toFixed(2)) : null;
+    }
+    const balance = denominationOptions.find(
+      // this is where we need the details
+      (option: any) => option.text === selectedDenomination.text,
+    );
+    return balance ? parseFloat(Big(balance.amount).div(Big(10).pow(balance.decimals)).toFixed(2)) : null;
+  }, [selectedDenomination, ftBalances, nearBalanceRes]);
 
   return (
-    <ModalOverlay>
-      <p>oi</p>
+    <ModalOverlay
+      onOverlayClick={(e: any) => {
+        e.stopPropagation();
+      }}
+      contentStyle={{ padding: "0px" }}
+    >
+      <Container>
+        <div>
+          <Banner>
+            <BannerBg className="left-pattern" />
+            <BannerBg className="right-pattern" />
+            <HeaderIcons>
+              {!["form", "formPot"].includes(currentPage) && (
+                <div
+                  className="back-arrow"
+                  onClick={() =>
+                    State.update({
+                      currentPage: multiple ? "formPot" : "form",
+                    })
+                  }
+                >
+                  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 7H3.83L9.42 1.41L8 0L0 8L8 16L9.41 14.59L3.83 9H16V7Z" fill="#FCCFCF" />
+                  </svg>
+                </div>
+              )}
+
+              <svg
+                onClick={() => onClose()}
+                className="close-icon"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z"
+                  fill="#FCCFCF"
+                />
+              </svg>
+            </HeaderIcons>
+            {["confirmPot", "confirm"].includes(currentPage) ? (
+              <div> Confirm donation</div>
+            ) : currentPage === "formPot" ? (
+              <div>Donate to Projects in {potDetail?.pot_name}</div>
+            ) : (
+              <div> Donate to {profileName}</div>
+            )}
+          </Banner>
+        </div>
+        <ActivePageComponent
+          {...props}
+          {...state}
+          accountId={accountId}
+          updateState={State.update}
+          ftBalance={ftBalance}
+          activeRounds={activeRounds}
+          DENOMINATION_OPTION={DENOMINATION_OPTIONS}
+        />
+      </Container>
     </ModalOverlay>
   );
 };

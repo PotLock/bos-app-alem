@@ -1,6 +1,5 @@
-import { VM, props } from "alem";
+import { VM, props, useMemo } from "alem";
 import styled from "styled-components";
-import { useMemo } from "react";
 
 type BreakPoint = {
   breakpoint: number;

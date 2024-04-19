@@ -1,4 +1,3 @@
-import { ownerId } from "../../../constants";
 import hrefWithParams from "../../../utils/hrefWithParams";
 import About from "../NavPages/About/About";
 import Feed from "../NavPages/Feed/Feed";

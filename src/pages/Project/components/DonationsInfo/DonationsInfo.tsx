@@ -1,5 +1,4 @@
 import { Big, useMemo, useState } from "alem";
-import { ownerId } from "../../../../constants";
 import nearToUsd from "../../../../utils/nearToUsd";
 import nearToUsdWithFallback from "../../../../utils/nearToUsdWithFallback";
 import RegistrySDK from "../../../../SDK/registry";

@@ -1,20 +1,8 @@
-// Get the current date in the local time zone
-const currentDate = new Date();
+// TODO: Use "javascript-time-ago" module here
 
-// Calculate the time zone offset in milliseconds
-let localTimeZoneOffsetMinutes = currentDate.getTimezoneOffset();
-localTimeZoneOffsetMinutes = localTimeZoneOffsetMinutes * 60 * 1000;
-
-const oneDayTime = 24 * 60 * 60 * 1000;
-const currentTimestamp = new Date().getTime();
-
-const yesterday = currentTimestamp - oneDayTime;
-const lastWeek = currentTimestamp - oneDayTime * 7;
-const lastMonth = currentTimestamp - oneDayTime * 30;
-const lastYear = currentTimestamp - oneDayTime * 365;
-
-const getTimePassed = (timestamp: number, abbreviate: boolean) => {
+const getTimePassed = (timestamp: number, abbreviate: string) => {
   // Calculate the difference in milliseconds
+  const currentTimestamp = new Date().getTime();
   const timePassed = currentTimestamp - timestamp;
 
   // Convert milliseconds to seconds, minutes, hours, etc.

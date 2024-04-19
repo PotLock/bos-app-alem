@@ -40,7 +40,11 @@ const Dropdown = (componentProps: Props) => {
           </FilterIcon>
         </FilterButton>
         {openFilter && (
-          <FilterMenu onClick={(e) => e.stopPropagation()} className={FilterMenuCustomClass || ""} style={menuStyle}>
+          <FilterMenu
+            onClick={(e: any) => e.stopPropagation()}
+            className={FilterMenuCustomClass || ""}
+            style={menuStyle}
+          >
             {sortList.map((option) => (
               <FilterItem
                 key={option.val}

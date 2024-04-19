@@ -1,4 +1,4 @@
-import { Container, Content, Input, Item, Label, Placeholder, Viewport } from "./styles";
+import { Container, SelectContent, Input, Item, Label, Placeholder, Viewport } from "./styles";
 
 type Props = {
   label?: string;
@@ -55,7 +55,7 @@ const Select = (componentProps: Props) => {
         </Select.Trigger>
 
         <Select.Content asChild={true}>
-          <Content>
+          <SelectContent>
             <Select.Viewport asChild={true}>
               <Viewport>
                 {options.map(({ text, value }) => (
@@ -77,7 +77,7 @@ const Select = (componentProps: Props) => {
                 ))}
               </Viewport>
             </Select.Viewport>
-          </Content>
+          </SelectContent>
         </Select.Content>
       </Select.Root>
     </Container>
