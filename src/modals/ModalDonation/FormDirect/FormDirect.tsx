@@ -60,7 +60,7 @@ const FormDirect = (props: any) => {
   const isFtDonation = selectedDenomination.text !== "NEAR";
 
   const HandleAmoutChange = (amount: any) => {
-    amount = amount.replace(/[^\d.]/g, ""); // remove all non-numeric characters except for decimal
+    amount = amount.replace(/[^0-9.]+/g, ""); // remove all non-numeric characters except for decimal
     if (amount === ".") amount = "0.";
     updateState({ amount, amountError: "" });
     // error if amount is greater than balance
@@ -125,12 +125,11 @@ const FormDirect = (props: any) => {
         {amountError && <Alert error={amountError} />}
         {needsToVerify && <Nadabot />}
         <CustomButton>
-          {/* TODO: Isso pode falhar?! */}
           <Button
             {...{
               type: "primary",
-              disabled: amountError || needsToVerify || !amount,
-              text: isLoading ? "Loading..." : "Proceed to donate",
+              disabled: amountError || needsToVerify || !amount || !accountId,
+              text: !accountId ? "Sign In to Proceed" : isLoading ? "Loading..." : "Proceed to donate",
               onClick: () => updateState({ currentPage: "confirm" }),
             }}
           />

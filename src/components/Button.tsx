@@ -4,7 +4,7 @@ type Props = {
   type?: "primary" | "secondary" | "tertiary";
   disabled?: boolean;
   href?: string;
-  onClick?: () => void;
+  onClick?: (e: any) => void;
   stopPropagation?: boolean;
   style?: React.CSSProperties;
   target?: any;
@@ -73,7 +73,7 @@ const Button = ({ type, disabled, href, onClick, stopPropagation, style, target,
   return (
     <ButtonContainer
       onClick={(e: any) => {
-        if (disabled || onClick) return;
+        // if (disabled || onClick) return;
         if (stopPropagation) e.stopPropagation();
         // e.preventDefault();
         if (onClick) {

@@ -45,7 +45,7 @@ const FormPot = ({
   const projectsContaienrHegiht = projects.length > 4 ? 234 : projectHegiht * projects.length;
 
   const HandleAmoutChange = (amount: any) => {
-    amount = amount.replace(/[^\d.]/g, ""); // remove all non-numeric characters except for decimal
+    amount = amount.replace(/[^0-9.]+/g, ""); // remove all non-numeric characters except for decimal
     if (amount === ".") amount = "0.";
     updateState({ amount, amountError: "" });
     // error if amount is greater than balance

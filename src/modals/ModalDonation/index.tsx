@@ -19,6 +19,7 @@ import PotFactorySDK from "@app/SDK/potfactory";
 import BannerBg from "@app/assets/svgs/banner-bg";
 import { Banner, Container, HeaderIcons } from "./styles";
 import FormPot from "./FormPot/FormPot";
+import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
 
 const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
@@ -73,9 +74,9 @@ const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
   const profileName = profile?.name || projectId;
 
   const pages: any = {
-    form: FormDirect, // TODO: checar o botao Loading... que fica so assim nesse estado
+    form: FormDirect,
     formPot: FormPot,
-    // confirm: ConfirmDirect,
+    confirm: ConfirmDirect,
     // confirmPot: ConfirmPot,
   };
 
