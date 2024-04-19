@@ -16,8 +16,8 @@ const ProjectsPage = () => {
   return (
     <>
       <Hero />
-      {/* <FeaturedProjects /> */}
-      {/* <SearchBar /> */}
+      <FeaturedProjects />
+      <SearchBar />
     </>
   );
 };
