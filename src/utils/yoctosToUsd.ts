@@ -11,7 +11,7 @@ const nearToUsd = useCache(
   "nearToUsd",
 );
 
-const yoctosToUsd = (amount: number) => {
+const yoctosToUsd = (amount: number | string) => {
   return nearToUsd ? "~$" + formatWithCommas(new Big(amount).mul(nearToUsd).div(1e24).toFixed(2)) : "0";
 };
 

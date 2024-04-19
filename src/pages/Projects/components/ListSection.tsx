@@ -1,14 +1,20 @@
 import { VM, props, useMemo } from "alem";
 import styled from "styled-components";
-import Card from "@app/components/Card/Card";
-import { Project } from "@app/types";
 
-type Props = {
-  shouldShuffle: boolean;
-  items: any;
+type BreakPoint = {
+  breakpoint: number;
+  items: number;
 };
 
-const ListSection = ({ shouldShuffle, items }: Props) => {
+type Props = {
+  shouldShuffle?: boolean;
+  renderItem: any;
+  items: any;
+  maxCols?: number;
+  responsive?: BreakPoint[];
+};
+
+const ListSection = ({ shouldShuffle, items, renderItem }: Props) => {
   const responsive = props.responsive || [];
 
   const { Feed } = VM.require("devs.near/widget/Feed");
@@ -58,8 +64,6 @@ const ListSection = ({ shouldShuffle, items }: Props) => {
     `,
     )}
   `;
-
-  const renderItem = (project: Project) => <Card projectId={project.id} allowDonate={true} />;
 
   return <Feed items={_items} Item={renderItem} Layout={Grid} perPage={PAGE_SIZE} />;
 
