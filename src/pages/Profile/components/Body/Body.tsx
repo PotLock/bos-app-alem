@@ -1,4 +1,4 @@
-import { Near, Widget, context, props, useState } from "alem";
+import { Near, Widget, context, props, useState, useParams } from "alem";
 import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
 import { PROJECT_STATUSES, SUPPORTED_FTS, ownerId } from "../../../../constants";
 import RegistrySDK from "../../../../SDK/registry";
@@ -18,7 +18,8 @@ type Props = {
 };
 
 const Body = ({ projectId, project, profile, nav, navOptions }: Props) => {
-  const accountId = props.accountId ?? context.accountId;
+  const { accountId: _accountId } = useParams();
+  const accountId = _accountId ?? context.accountId;
 
   const [statusReview, setStatusReview] = useState({ modalOpen: false, notes: "", newStatus: "" });
 

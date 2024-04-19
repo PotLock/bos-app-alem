@@ -1,7 +1,7 @@
 import { Container, DropdownLabelWrapper, FundingSrc, ImgIcon, Funding, SearchBar, Sort, Stats } from "./styles";
-import { Widget, useState, useEffect, useParams, useMemo, Big, Near } from "alem";
+import { useState, useEffect, useParams, useMemo, Big, Near } from "alem";
 import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
-import NearSvg from "@app/assets/svgs/near";
+import NearOutline from "@app/assets/svgs/near-outline";
 import DonateSDK from "@app/SDK/donate";
 import PotFactorySDK from "@app/SDK/potfactory";
 import PotSDK from "@app/SDK/pot";
@@ -278,7 +278,7 @@ const Donations = () => {
                 </FundingSrc>
                 <div className="price tab">
                   <div className="near-icon">
-                    {ftId === "near" ? <NearSvg /> : <ImgIcon src={ftMetadata[ftId]?.icon} />}
+                    {ftId === "near" ? <NearOutline /> : <ImgIcon src={ftMetadata[ftId]?.icon} />}
                   </div>
                   {addTrailingZeros(donationAmount)}
                 </div>
