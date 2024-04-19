@@ -1,8 +1,8 @@
 import { Social, State, Widget, context, state } from "alem";
 
 type Props = {
-  profile: any;
-  accountId: string;
+  profile?: any;
+  accountId?: string;
   style?: React.CSSProperties;
   imageClassName?: string;
   image?: string;

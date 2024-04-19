@@ -59,7 +59,7 @@ const Feed = (compProps: Props) => {
     blockHeight: a.blockHeight,
   });
 
-  const renderPost = (a) => {
+  const renderPost = (a: any) => {
     if (a.value.type !== "md") {
       return false;
     }
@@ -118,7 +118,7 @@ const Feed = (compProps: Props) => {
     return `${accountId}/post/main` === item.path ? parentPost : undefined;
   };
 
-  const renderRepost = (a) => {
+  const renderRepost = (a: any) => {
     if (a.value.type !== "repost") {
       return false;
     }
@@ -131,16 +131,6 @@ const Feed = (compProps: Props) => {
       return false;
     }
     renderedPosts[item] = true;
-
-    const textMutedStyle = {
-      fontSize: "13px",
-      fontWeight: 700,
-      marginLeft: "24px",
-      marginBottom: "-24px",
-      paddingTop: "4px",
-      position: "relative",
-      zIndex: 1,
-    };
 
     const profileLineProps = {
       accountId: a.accountId,
@@ -164,7 +154,18 @@ const Feed = (compProps: Props) => {
 
     return (
       <div key={JSON.stringify(a)}>
-        <div className="text-muted" style={textMutedStyle}>
+        <div
+          className="text-muted"
+          style={{
+            fontSize: "13px",
+            fontWeight: 700,
+            marginLeft: "24px",
+            marginBottom: "-24px",
+            paddingTop: "4px",
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
           {repostSvg}{" "}
           <span style={{ marginLeft: "8px" }}>
             Reposted by <Widget loading={a.accountId} src="mob.near/widget/N.ProfileLine" />

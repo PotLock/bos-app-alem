@@ -2,11 +2,15 @@ import { Router, createRoute } from "alem";
 import routesPath from "./routesPath";
 import ProjectsPage from "../pages/Projects/Projects";
 import ProjectPage from "../pages/Project/Project";
+import DonorPage from "@app/pages/Donor/Donor";
+import EditProfile from "@app/pages/Profile/Edit";
 
 const Routes = () => {
   const ProjectsRoute = createRoute(routesPath.PROJECTS_LIST_TAB, () => <ProjectsPage />);
   const ProjectRoute = createRoute(routesPath.PROJECT_DETAIL_TAB, () => <ProjectPage />);
-  const routes = [ProjectsRoute, ProjectRoute];
+  const DonorRoute = createRoute(routesPath.PROFILE_TAB, () => <DonorPage />);
+  const EditRoute = createRoute(routesPath.EDIT_PROFILE_TAB, () => <EditProfile />);
+  const routes = [ProjectsRoute, ProjectRoute, DonorRoute, EditRoute];
 
   return <Router routes={routes} parameterName="tab" />;
 };

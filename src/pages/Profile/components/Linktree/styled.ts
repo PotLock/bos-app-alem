@@ -11,6 +11,21 @@ export const LinktreeContainer = styled.div`
 
 export const LinktreeItemContainer = styled.a`
   display: flex;
+  svg {
+    width: 24px;
+    height: 24px;
+    path,
+    rect {
+      transition: all 300ms ease-in-out;
+    }
+    &#near-logo:hover path {
+      fill: white;
+    }
+    :hover path,
+    :hover rect {
+      fill: #292929;
+    }
+  }
 `;
 
 export const LinkText = styled.a<{ disabled?: boolean }>`

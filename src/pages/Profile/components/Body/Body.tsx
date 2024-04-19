@@ -1,4 +1,4 @@
-import { Near, Widget, context, props, useState } from "alem";
+import { Near, Widget, context, props, useState, useParams } from "alem";
 import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
 import { PROJECT_STATUSES, SUPPORTED_FTS, ownerId } from "../../../../constants";
 import RegistrySDK from "../../../../SDK/registry";
@@ -7,17 +7,19 @@ import { Project } from "../../../../types";
 import BodyHeader from "../BodyHeader/BodyHeader";
 import Select from "../../../../components/Inputs/Select/Select";
 import Tabs from "../Tabs";
+import Donations from "@app/pages/Donor/NavPages/Donations/Donations";
 
 type Props = {
-  projectId: string;
-  project: Project;
+  projectId?: string;
+  project?: Project;
   profile: any;
   nav: string;
   navOptions: any;
 };
 
 const Body = ({ projectId, project, profile, nav, navOptions }: Props) => {
-  const accountId = props.accountId ?? context.accountId;
+  const { accountId: _accountId } = useParams();
+  const accountId = _accountId ?? context.accountId;
 
   const [statusReview, setStatusReview] = useState({ modalOpen: false, notes: "", newStatus: "" });
 
@@ -48,7 +50,7 @@ const Body = ({ projectId, project, profile, nav, navOptions }: Props) => {
   const value = { text: props.project.status, value: props.project.status };
 
   const onChangeHandler = (status: any) => {
-    if (status.value != project.status) {
+    if (project && status.value != project.status) {
       setStatusReview({ ...statusReview, newStatus: status.value, modalOpen: true });
     }
   };
@@ -75,7 +77,9 @@ const Body = ({ projectId, project, profile, nav, navOptions }: Props) => {
 
         <Details>
           {/* Selected Nav Page / Component */}
-          <SelectedNavComponent accountId={accountId} projectId={projectId} />
+          <SelectedNavComponent accountId={accountId} projectId={projectId} accounts={[projectId || accountId]} />
+
+          {/* <Donations /> */}
         </Details>
       </Container>
 
