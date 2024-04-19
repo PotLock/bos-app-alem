@@ -20,6 +20,7 @@ import BannerBg from "@app/assets/svgs/banner-bg";
 import { Banner, Container, HeaderIcons } from "./styles";
 import FormPot from "./FormPot/FormPot";
 import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
+import ConfirmPot from "./ConfirmPot/ConfirmPot";
 
 const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
@@ -49,18 +50,18 @@ const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
   });
 
   const {
-    amount,
-    denomination,
-    donationType,
-    showBreakdownm,
-    bypassProtocolFee,
-    bypassChefFee,
-    addNote,
-    donationNote,
-    donationNoteError,
-    allPots,
-    intervalId,
-    nearBalance,
+    // amount,
+    // denomination,
+    // donationType,
+    // showBreakdownm,
+    // bypassProtocolFee,
+    // bypassChefFee,
+    // addNote,
+    // donationNote,
+    // donationNoteError,
+    // allPots,
+    // intervalId,
+    // nearBalance,
     ftBalances,
     denominationOptions,
     selectedDenomination,
@@ -77,7 +78,7 @@ const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
     form: FormDirect,
     formPot: FormPot,
     confirm: ConfirmDirect,
-    // confirmPot: ConfirmPot,
+    confirmPot: ConfirmPot,
   };
 
   const ActivePageComponent = pages[currentPage];
