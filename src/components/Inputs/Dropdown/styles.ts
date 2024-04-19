@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const FilterButton = styled.div`
+const FilterButton = styled.div`
   white-space: nowrap;
   display: flex;
   cursor: pointer;
@@ -18,7 +18,7 @@ export const FilterButton = styled.div`
   }
 `;
 
-export const FilterIcon = styled.div`
+const FilterIcon = styled.div`
   display: flex;
   width: 16px;
   height: 16px;
@@ -26,7 +26,7 @@ export const FilterIcon = styled.div`
   justify-content: center;
 `;
 
-export const FilterMenu = styled.div<{ FilterMenuCustomStyle: any }>`
+const FilterMenu = styled.div`
   position: absolute;
   background: #fff;
   top: 140%;
@@ -40,10 +40,9 @@ export const FilterMenu = styled.div<{ FilterMenuCustomStyle: any }>`
   box-shadow: 0px 12px 20px -4px rgba(123, 123, 123, 0.32), 0px 4px 8px -3px rgba(123, 123, 123, 0.2),
     0px 0px 2px 0px rgba(123, 123, 123, 0.36);
   z-index: 3;
-  ${(props) => props.FilterMenuCustomStyle || ""}
 `;
 
-export const FilterItem = styled.div`
+const FilterItem = styled.div`
   cursor: pointer;
   padding: 8px;
   display: flex;
@@ -64,11 +63,11 @@ export const FilterItem = styled.div`
     color: #7b7b7b;
   }
 `;
-
-export const Screen = styled.div`
+const Screen = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
   left: 0;
   top: 0;
 `;
+export { FilterButton, FilterIcon, FilterItem, FilterMenu, Screen };

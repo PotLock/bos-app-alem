@@ -1,15 +1,35 @@
-import { props, useState } from "alem";
+import { useState } from "alem";
 import { FilterButton, FilterIcon, FilterItem, FilterMenu, Screen } from "./styles";
 
-const Dropdown = ({ sortList, sortVal, title, handleSortChange, FilterMenuCustomStyle, showCount }: any) => {
+type Option = {
+  label: string;
+  val: any;
+  count?: string | number;
+};
+
+type Props = {
+  sortList: Option[];
+  handleSortChange: (option: Option) => void;
+  sortVal?: any;
+  title?: string;
+  FilterMenuCustomClass?: string;
+  showCount?: boolean;
+  menuStyle?: CSSStyleDeclaration;
+  buttonStyle?: CSSStyleDeclaration;
+};
+
+const Dropdown = (componentProps: Props) => {
   const [openFilter, setOpenFilter] = useState(false);
+  const { sortList, sortVal, title, handleSortChange, FilterMenuCustomClass, showCount } = componentProps;
+  const menuStyle = componentProps.menuStyle || {};
+  const buttonStyle = componentProps.buttonStyle || {};
 
   return (
     <>
       {openFilter && <Screen onClick={() => setOpenFilter(false)} />}
       <div style={{ position: "relative" }} onClick={() => setOpenFilter(!openFilter)}>
-        <FilterButton style={props.buttonStyle || {}}>
-          {sortVal || title}
+        <FilterButton style={buttonStyle || {}}>
+          {sortVal || title || ""}
           <FilterIcon>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -21,11 +41,11 @@ const Dropdown = ({ sortList, sortVal, title, handleSortChange, FilterMenuCustom
         </FilterButton>
         {openFilter && (
           <FilterMenu
-            onClick={(e) => e.stopPropagation()}
-            style={props.menuStyle || {}}
-            FilterMenuCustomStyle={FilterMenuCustomStyle}
+            onClick={(e: any) => e.stopPropagation()}
+            className={FilterMenuCustomClass || ""}
+            style={menuStyle}
           >
-            {sortList.map((option: any) => (
+            {sortList.map((option) => (
               <FilterItem
                 key={option.val}
                 onClick={() => {

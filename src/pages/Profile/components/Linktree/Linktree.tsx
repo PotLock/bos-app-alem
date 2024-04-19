@@ -6,18 +6,20 @@ import WebsiteSvg from "@app/assets/svgs/website";
 import { LinktreeContainer, LinktreeItemContainer } from "./styled";
 
 type Props = {
-  projectId: string;
-  accountId: string;
+  projectId?: string;
+  accountId?: string;
 };
 
 const Linktree = ({ projectId, accountId }: Props) => {
-  const profile = Social.getr(`${projectId}/profile`) as any;
+  const id = projectId || accountId || "";
+
+  const profile = Social.getr(`${id}/profile`) as any;
 
   const linktree = profile?.linktree;
 
   if (!linktree) return "";
 
-  const itemIconUrls = {
+  const itemIconUrls: any = {
     github: <GithubSvg />,
     twitter: <TwitterSvg />,
     website: <WebsiteSvg />,
@@ -32,7 +34,7 @@ const Linktree = ({ projectId, accountId }: Props) => {
 
   return (
     <LinktreeContainer>
-      {Object.entries(linktree).map(([k, v], idx) => {
+      {Object.entries(linktree).map(([k, v]) => {
         return k in itemIconUrls && v ? (
           <LinktreeItemContainer
             href={fullUrls[k](v)}

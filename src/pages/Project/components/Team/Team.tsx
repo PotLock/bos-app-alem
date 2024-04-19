@@ -1,6 +1,6 @@
-import { Widget } from "alem";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import ProfileImage from "@app/components/mob.near/ProfileImage";
 import { Col1, Col2, Container, TeamMemberAccountId, TeamMemberItem, TeamMembersContainer, Title } from "./styles";
-import hrefWithParams from "../../../../utils/hrefWithParams";
 
 type Props = {
   team: string[];
@@ -10,13 +10,12 @@ const Team = ({ team: _team }: Props) => {
   const team = _team.filter((item) => item.length > 3);
 
   const ProfileImg = ({ teamMember }: { teamMember: string }) => (
-    <Widget
-      src="mob.near/widget/ProfileImage"
-      props={{
+    <ProfileImage
+      {...{
         accountId: teamMember,
         imageClassName: "",
         style: {},
-        thumbnail: false,
+        thumbnail: "",
         tooltip: true,
       }}
     />
@@ -33,7 +32,8 @@ const Team = ({ team: _team }: Props) => {
             <div>No team members to display</div>
           ) : (
             team.map((teamMember) => {
-              if (teamMember.match(/.near/i).length > 0) {
+              const match = teamMember.match(/.near/i);
+              if (match && match.length > 0) {
                 return (
                   <TeamMemberItem href={hrefWithParams(`?tab=profile&accountId=${teamMember}`)} target="_blank">
                     <ProfileImg teamMember={teamMember} />
