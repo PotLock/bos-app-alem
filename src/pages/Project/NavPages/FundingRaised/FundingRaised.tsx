@@ -5,7 +5,6 @@ import PotlockFunding from "../../components/PotlockFunding/PotlockFunding";
 import { Container, Line, NoResults } from "./styles";
 
 const FundingRaised = (componentProps: any) => {
-  console.log("PROPS:", componentProps);
   const { donations, potPayouts, profile } = componentProps;
   const externalFunding = profile.plFundingSources ? JSON.parse(profile.plFundingSources) : [];
 

@@ -35,6 +35,7 @@ const FollowStats = ({ projectId: _projectId, accountId: _accountId }: Props) =>
   );
 
   const Container = styled.div`
+    margin-left: ${projectId ? "0" : "2rem"};
     display: flex;
     align-items: center;
     font-size: 14px;

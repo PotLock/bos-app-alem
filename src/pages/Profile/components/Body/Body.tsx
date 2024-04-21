@@ -58,7 +58,6 @@ const Body = (props: any) => {
     <Wrapper>
       <BannerHeader showFollowers accountId={projectId || accountId} projectId={projectId} project={props.project} />
       <Container>
-        {/* TODO: {...foo} nao esta sendo injetado em stateful components */}
         <BodyHeader accountId={accountId} projectId={projectId} profile={props.profile} />
         {userIsRegistryAdmin && projectId && (
           <Select
@@ -83,14 +82,15 @@ const Body = (props: any) => {
         <Tabs navOptions={props.navOptions} nav={props.nav} />
 
         <Details>
-          {/* TODO: Bug => as propriedades nao estao sendo passadas */}
-          <SelectedNavComponent
-            accountId={accountId}
-            projectId={projectId}
-            accounts={[projectId || accountId]}
-            donations={props.donations}
-            {...props}
-          />
+          {SelectedNavComponent && (
+            <SelectedNavComponent
+              accountId={accountId}
+              projectId={projectId}
+              accounts={[projectId || accountId]}
+              donations={props.donations}
+              {...props}
+            />
+          )}
         </Details>
       </Container>
 

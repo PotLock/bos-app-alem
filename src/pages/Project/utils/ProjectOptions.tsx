@@ -1,10 +1,10 @@
+import FollowTabs from "@app/pages/Profile/components/FollowTabs/FollowTabs";
 import hrefWithParams from "../../../utils/hrefWithParams";
 import About from "../NavPages/About/About";
 import Feed from "../NavPages/Feed/Feed";
 import FundingRaised from "../NavPages/FundingRaised/FundingRaised";
 import Pots from "../NavPages/Pots/Pots";
 
-// TODO: Use SimpleRouter instead
 const ProjectOptions = (projectId: string) => [
   {
     label: "Home",
@@ -24,7 +24,7 @@ const ProjectOptions = (projectId: string) => [
     label: "Pots",
     id: "pots",
     disabled: false,
-    source: Pots,
+    source: (componentProps: any) => <Pots {...componentProps} />,
     href: hrefWithParams(`?tab=project&projectId=${projectId}&nav=pots`),
   },
   {
@@ -38,15 +38,13 @@ const ProjectOptions = (projectId: string) => [
     label: "",
     id: "followers",
     disabled: false,
-    // source: `${ownerId}/widget/Profile.FollowTabs`,
-    source: About,
+    source: FollowTabs,
   },
   {
     label: "",
     id: "following",
     disabled: false,
-    // source: `${ownerId}/widget/Profile.FollowTabs`,
-    source: About,
+    source: FollowTabs,
   },
 ];
 
