@@ -9,6 +9,7 @@ import Header from "./components/Header/Header";
 import Projects from "./NavPages/Projects/Projects";
 import { PotDetail } from "@app/types";
 import Applications from "./NavPages/Applications/Applications";
+import Donations from "./NavPages/Donations/Donations";
 
 const Pot = () => {
   const { potId, nav: _nav } = useParams();
@@ -67,8 +68,10 @@ const Pot = () => {
   // Get total public donations
   const allDonationsPaginated = useCache(() => {
     const limit = 480; // number of donations to fetch per req
+
     const donationsCount = potDetail.public_donations_count;
-    const paginations = [...Array(donationsCount / limit + (donationsCount % limit > 0 ? 1 : 0)).keys()];
+    const paginations = [...Array(Math.ceil(donationsCount / limit)).keys()];
+
     try {
       const allDonations = paginations.map((index) =>
         PotSDK.asyncGetPublicRoundDonations(potId, {
@@ -76,9 +79,11 @@ const Pot = () => {
           limit: limit,
         }),
       );
+
       return Promise.all(allDonations);
     } catch (error) {
       console.error(`error getting public donations`, error);
+      return Promise.all([]);
     }
   }, "pot-public-donations");
 
@@ -106,6 +111,7 @@ const Pot = () => {
       <BodyContainer>
         {nav === "projects" && <Projects {...childProps} />}
         {nav === "applications" && <Applications {...childProps} />}
+        {nav === "donations" && <Donations {...childProps} />}
         {/* {SelectedNavComponent && (
           <SelectedNavComponent
             allDonations={allDonations}

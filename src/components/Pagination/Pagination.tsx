@@ -53,7 +53,7 @@ const Pagination = (props: Props) => {
       }
 
       if (shouldShowLeftDots && !shouldShowRightDots) {
-        let rightItemCount = 3 + 2 * siblingCount;
+        let rightItemCount = 3 + siblingCount;
         let rightRange = range(totalPageCount - rightItemCount + 1, totalPageCount);
         return [firstPageIndex, DOTS, ...rightRange];
       }
