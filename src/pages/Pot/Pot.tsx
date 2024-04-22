@@ -10,6 +10,7 @@ import Projects from "./NavPages/Projects/Projects";
 import { PotDetail } from "@app/types";
 import Applications from "./NavPages/Applications/Applications";
 import Donations from "./NavPages/Donations/Donations";
+import Sponsors from "./NavPages/Sponsors/Sponsors";
 
 const Pot = () => {
   const { potId, nav: _nav } = useParams();
@@ -112,6 +113,7 @@ const Pot = () => {
         {nav === "projects" && <Projects {...childProps} />}
         {nav === "applications" && <Applications {...childProps} />}
         {nav === "donations" && <Donations {...childProps} />}
+        {nav === "sponsors" && <Sponsors {...childProps} />}
         {/* {SelectedNavComponent && (
           <SelectedNavComponent
             allDonations={allDonations}
