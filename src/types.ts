@@ -20,7 +20,7 @@ export type Project = {
 };
 export type PotDetail = {
   owner: string;
-  admins: [];
+  admins: string[];
   chef: string;
   pot_name: string;
   pot_description: string;
