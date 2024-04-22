@@ -1,12 +1,13 @@
 import hrefWithParams from "@app/utils/hrefWithParams";
 import Test from "./Test";
+import Projects from "../NavPages/Projects/Projects";
 
 const navOptions = (potId: string) => [
   {
     label: "Projects",
     id: "projects",
     disabled: false,
-    source: Test,
+    source: Projects,
     href: hrefWithParams(`?tab=pot&potId=${potId}&nav=projects`),
   },
   // {

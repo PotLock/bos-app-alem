@@ -10,6 +10,9 @@ import Button from "@app/components/Button";
 import CopyIcon from "@app/pages/Project/components/CopyIcon";
 import PoolAllocationTable from "../PoolAllocationTable/PoolAllocationTable";
 import NewApplicationModal from "../NewApplicationModal/NewApplicationModal";
+import FundModal from "../FundModal/FundModal";
+import ChallengeModal from "../ChallengeModal/ChallengeModal";
+import ModalDonation from "@app/modals/ModalDonation";
 
 const Header = ({
   potDetail,
@@ -38,7 +41,7 @@ const Header = ({
 
   const { IPFS_BASE_URL, NADA_BOT_URL } = constants;
 
-  const { potId } = useParams();
+  const { potId, referrerId } = useParams();
 
   const NADABOT_ICON_URL = IPFS_BASE_URL + "bafkreiecgkoybmplo4o542fphclxrhh4nlof5uit3lkzyv4eo2qymrpsru";
   const accountId = context.accountId || "";
@@ -188,41 +191,40 @@ const Header = ({
           potDetail={potDetail}
         />
       )}
-      {/* <Widget
-        src={`${ownerId}/widget/Pots.FundModal`}
-        props={{
-          ...props,
-          isMatchingPoolModalOpen,
-          onClose: () => setIsMatchingPoolModalOpen(false),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Pots.ChallengeModal`}
-        props={{
-          ...props,
-          showChallengePayoutsModal,
-          onCancel: () => setShowChallengePayoutsModal(false),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/ModalDonation.Main`}
-        loading={""}
-        props={{
-          ...props,
-          isModalOpen: isModalDonationOpen,
-          onClose: () => setIsModalDonationOpen(false),
-          potId,
-          potDetail,
-          projects,
-          referrerId,
-          multiple: true,
-          openDonationModalSuccess: (donation) => {
-            setIsModalDonationOpen(false);
-            setSuccessfulDonation(donation);
-          },
-        }}
-      />
-      {successfulDonation && (
+      {isMatchingPoolModalOpen && (
+        <FundModal
+          potDetail={potDetail}
+          onClose={() => {
+            setIsMatchingPoolModalOpen(false);
+          }}
+        />
+      )}
+      {showChallengePayoutsModal && (
+        <ChallengeModal
+          existingChallengeForUser={existingChallengeForUser}
+          onClose={() => setShowChallengePayoutsModal(false)}
+        />
+      )}
+
+      {isModalDonationOpen && (
+        <ModalDonation
+          {...{
+            isModalOpen: isModalDonationOpen,
+            onClose: () => setIsModalDonationOpen(false),
+            potId,
+            potDetail,
+            projects,
+            referrerId,
+            multiple: true,
+            openDonationModalSuccess: (donation: any) => {
+              setIsModalDonationOpen(false);
+              setSuccessfulDonation(donation);
+            },
+          }}
+        />
+      )}
+
+      {/* {successfulDonation && (
         <Widget
           src={`${ownerId}/widget/Project.ModalSuccess`}
           props={{

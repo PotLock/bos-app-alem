@@ -1,3 +1,14 @@
+// check if obk is empty
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
+function getSocialProfile(keys) {
+  return Near.asyncView("social.near", "get", {
+    keys,
+  });
+}
+
 const PotSDK = {
   getConfig: (potId) => {
     return Near.view(potId, "get_config", {});

@@ -7,6 +7,7 @@ import NewApplicationModal from "./components/NewApplicationModal/NewApplication
 import Tabs from "../Profile/components/Tabs";
 import HeaderStatus from "./components/HeaderStatus/HeaderStatus";
 import Header from "./components/Header/Header";
+import Projects from "./NavPages/Projects/Projects";
 
 const Pot = () => {
   const { potId, nav } = useParams();
@@ -87,7 +88,8 @@ const Pot = () => {
 
   const options = navOptions(potId || "");
 
-  const SelectedNavComponent = options.find((option: any) => option.id === (nav || emptyNav)).source;
+  const SelectedNavComponent = options.find((option: any) => option.id === (nav || emptyNav));
+  console.log("SelectedNavComponent", SelectedNavComponent);
 
   return (
     <Wrapper>
@@ -97,11 +99,7 @@ const Pot = () => {
       <Tabs nav={nav ?? emptyNav} navOptions={options} />
 
       <BodyContainer>
-        {/* <SelectedNavComponent
-          allDonations={allDonations}
-          potDetail={potDetail}
-          sybilRequirementMet={sybilRequirementMet}
-        /> */}
+        <Projects allDonations={allDonations} potDetail={potDetail} sybilRequirementMet={sybilRequirementMet} />
       </BodyContainer>
     </Wrapper>
   );

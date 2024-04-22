@@ -39,8 +39,8 @@ const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
     // Get the count of unique donors
     const uniqueDonorIds = new Set();
     // Iterate through each object and collect unique donor_id values
-    donations.forEach((project: any) => {
-      project.donations.forEach((donation: any) => {
+    donations?.forEach((project: any) => {
+      project.donations?.forEach((donation: any) => {
         uniqueDonorIds.add(donation.donor_id);
       });
     });
@@ -50,7 +50,7 @@ const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
 
   const calcMatchedAmount = (donations: any) => {
     let total = Big(0);
-    donations.forEach((donation: any) => {
+    donations?.forEach((donation: any) => {
       total = total.plus(Big(donation.net_amount));
     });
     const amount = SUPPORTED_FTS[base_currency.toUpperCase() || "NEAR"].fromIndivisible(total.toString());
@@ -65,7 +65,7 @@ const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
     PotSDK.getFlaggedAccounts(potDetail, potId)
       .then((data) => {
         const listOfFlagged: any = [];
-        data.forEach((adminFlaggedAcc: any) => {
+        data?.forEach((adminFlaggedAcc: any) => {
           const addresses = Object.keys(adminFlaggedAcc.potFlaggedAcc);
           listOfFlagged.push(...addresses);
         });

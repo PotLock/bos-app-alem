@@ -69,5 +69,6 @@ export const Row = styled.div`
   .profile-image {
     width: 18px;
     height: 18px;
+    display: flex !important;
   }
 `;

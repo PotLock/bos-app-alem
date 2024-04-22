@@ -45,7 +45,7 @@ export type PotDetail = {
   payouts: [];
   cooldown_end_ms?: number;
   all_paid_out: boolean;
-  protocol_config_provider: number;
+  protocol_config_provider: string;
 };
 
 export type Pot = {
