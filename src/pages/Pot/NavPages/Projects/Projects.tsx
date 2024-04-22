@@ -21,6 +21,7 @@ const Projects = (props: Props) => {
 
   // get projects
   const { potId } = useParams();
+
   const { potDetail, sybilRequirementMet, allDonations } = props;
 
   if (!projects) {
