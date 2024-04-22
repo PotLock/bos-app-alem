@@ -40,6 +40,7 @@ const navOptions: any = (potId: string, potDetail: PotDetail) => [
     id: "payouts",
     disabled: dateNow < potDetail.public_round_start_ms, // TODO: ADD BACK IN
     source: Test,
+    href: hrefWithParams(`?tab=pot&potId=${potId}&nav=payouts`),
   },
   {
     label: "Settings",
