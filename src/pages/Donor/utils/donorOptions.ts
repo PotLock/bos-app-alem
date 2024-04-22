@@ -1,3 +1,4 @@
+import FollowTabs from "@app/pages/Profile/components/FollowTabs/FollowTabs";
 import hrefWithParams from "../../../utils/hrefWithParams";
 import Feed from "../../Project/NavPages/Feed/Feed";
 import Donations from "../NavPages/Donations/Donations";
@@ -18,18 +19,18 @@ const donorOptions = (accountId: string) => [
     source: Donations,
     href: hrefWithParams(`?tab=profile&accountId=${accountId}&nav=donations`),
   },
-  // {
-  //   label: "",
-  //   id: "followers",
-  //   disabled: false,
-  //   source: `${ownerId}/widget/Profile.FollowTabs`,
-  // },
-  // {
-  //   label: "",
-  //   id: "following",
-  //   disabled: false,
-  //   source: `${ownerId}/widget/Profile.FollowTabs`,
-  // },
+  {
+    label: "",
+    id: "followers",
+    disabled: false,
+    source: FollowTabs,
+  },
+  {
+    label: "",
+    id: "following",
+    disabled: false,
+    source: FollowTabs,
+  },
 ];
 
 export default donorOptions;

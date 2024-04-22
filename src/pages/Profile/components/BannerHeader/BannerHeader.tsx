@@ -1,5 +1,10 @@
-import { Files, Near, Social, Widget, context, props, useParams } from "alem";
-import { Project } from "../../../../types";
+import { Files, Near, Social, context, props } from "alem";
+import { Project } from "@app/types";
+import CameraSvg from "@app/assets/svgs/camera";
+import ProfileImage from "@app/components/mob.near/ProfileImage";
+import FollowStats from "../FollowStats";
+import statuses from "./statuses";
+import Image from "@app/components/mob.near/Image";
 import {
   BackgroundImageContainer,
   Container,
@@ -8,10 +13,6 @@ import {
   ProfileWraper,
   Verified,
 } from "./styles";
-import CameraSvg from "../../../../assets/svgs/camera";
-import ProfileImage from "@app/components/mob.near/ProfileImage";
-import FollowStats from "../FollowStats";
-import statuses from "./statuses";
 
 type Props = {
   showFollowers: boolean;
@@ -20,8 +21,6 @@ type Props = {
   accountId: string;
 };
 
-// TODO: Bug: As propriedades só são vistas se colocadas aqui entre chaves
-// se nao colocar, não pega as props.
 const BannerHeader = ({ showFollowers, project, projectId, accountId: _accountId }: Props) => {
   const accountId = _accountId || projectId || context.accountId;
 
@@ -50,9 +49,8 @@ const BannerHeader = ({ showFollowers, project, projectId, accountId: _accountId
         className={editable ? "editable" : ""}
         style={{ height: backgroundStyle.height ? backgroundStyle.height : "" }}
       >
-        <Widget
-          src="mob.near/widget/Image"
-          props={{
+        <Image
+          {...{
             image: backgroundImage,
             alt: "profile background",
             style: { ...backgroundStyle, pointerEvents: "none" },

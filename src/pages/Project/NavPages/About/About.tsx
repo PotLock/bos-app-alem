@@ -20,7 +20,7 @@ const About = ({ projectId, accountId }: Props) => {
   const { name, description, plPublicGoodReason } = profile;
 
   const smartContracts = profile.plSmartContracts
-    ? Object.entries(JSON.parse(profile.plSmartContracts)).reduce((accumulator, [chain, contracts]) => {
+    ? Object.entries(JSON.parse(profile.plSmartContracts)).reduce((accumulator, [chain, contracts]: any) => {
         // Iterate over each contract address in the current chain
         const contractsForChain: any = Object.keys(contracts).map((contractAddress) => {
           return [chain, contractAddress]; // Create an array with the chain and contract address
@@ -51,7 +51,7 @@ const About = ({ projectId, accountId }: Props) => {
   const SmartContracts = () =>
     smartContracts.length > 0 ? (
       <SmartContractWrapper>
-        {smartContracts.map(([chain, contract]) => {
+        {smartContracts.map(([chain, contract]: any) => {
           return (
             <div className="contract">
               <CopyIcon textToCopy={contract} />

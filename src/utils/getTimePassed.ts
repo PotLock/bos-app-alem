@@ -1,6 +1,6 @@
 // TODO: Use "javascript-time-ago" module here
 
-const getTimePassed = (timestamp: number, abbreviate: string) => {
+const getTimePassed = (timestamp: number, abbreviate: boolean) => {
   // Calculate the difference in milliseconds
   const currentTimestamp = new Date().getTime();
   const timePassed = currentTimestamp - timestamp;

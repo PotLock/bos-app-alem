@@ -15,9 +15,7 @@ const FollowStats = ({ projectId: _projectId, accountId: _accountId }: Props) =>
     return "";
   }
 
-  // TODO: Bug => Está mesclando a string e tranformando em apenas uma chamada de Social.keys.
-  // Ver arquivo erro10.txt
-  const following = Social.keys(`${accountId}/graph/follow/*`, "final", {
+  const following = Social.keys<any>(`${accountId}/graph/follow/*`, "final", {
     return_type: "BlockHeight",
     values_only: true,
   });
@@ -35,6 +33,7 @@ const FollowStats = ({ projectId: _projectId, accountId: _accountId }: Props) =>
   );
 
   const Container = styled.div`
+    margin-left: ${projectId ? "0" : "2rem"};
     display: flex;
     align-items: center;
     font-size: 14px;
