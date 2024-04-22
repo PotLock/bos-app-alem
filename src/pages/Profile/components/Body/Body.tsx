@@ -1,4 +1,4 @@
-import { Near, context, props, useState, useParams } from "alem";
+import { Near, context, props, useState, useParams, useMemo } from "alem";
 import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
 import constants from "@app/constants";
 import RegistrySDK from "../../../../SDK/registry";
@@ -7,119 +7,118 @@ import { Project } from "../../../../types";
 import BodyHeader from "../BodyHeader/BodyHeader";
 import Select from "../../../../components/Inputs/Select/Select";
 import Tabs from "../Tabs";
+import ListsSDK from "@app/SDK/lists";
+import ModalOverlay from "@app/modals/ModalOverlay";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import Button from "@app/components/Button";
 
-type Props = {
-  projectId?: string;
-  project?: Project;
-  profile: any;
-  nav: string;
-  navOptions: any;
-};
+// type Props = {
+//   projectId?: string;
+//   project?: Project;
+//   profile: any;
+//   nav: string;
+//   navOptions: any;
+// };
 
-const Body = ({ projectId, project, profile, nav, navOptions }: Props) => {
+const Body = (props: any) => {
+  const { projectId } = props;
   const { accountId: _accountId } = useParams();
   const accountId = _accountId ?? context.accountId;
-  const { PROJECT_STATUSES, SUPPORTED_FTS } = constants;
+  const {
+    PROJECT_STATUSES,
+    SUPPORTED_FTS: { NEAR },
+  } = constants;
 
   const [statusReview, setStatusReview] = useState({ modalOpen: false, notes: "", newStatus: "" });
 
-  const registryContractId = RegistrySDK.getContractId();
-  const userIsRegistryAdmin = RegistrySDK.isUserRegistryAdmin(context.accountId);
+  const listsContractId = ListsSDK.getContractId();
+  const userIsRegistryAdmin = ListsSDK.isRegistryAdmin(context.accountId);
+  const registration = ListsSDK.getRegistration(null, projectId);
 
   const handleUpdateStatus = () => {
     Near.call([
       {
-        contractName: registryContractId,
-        methodName: "admin_set_project_status",
+        contractName: listsContractId,
+        methodName: "update_registration",
         args: {
-          project_id: projectId,
+          registration_id: registration.id,
           status: statusReview.newStatus,
-          review_notes: statusReview.notes,
+          notes: statusReview.notes,
         },
-        deposit: SUPPORTED_FTS.NEAR.toIndivisible(0.01).toString(),
+        deposit: NEAR.toIndivisible(0.01).toString(),
       },
     ]);
   };
 
-  // Select props
-  const options = PROJECT_STATUSES.map((status) => ({
-    value: status,
-    text: status,
-  }));
-
-  const value = { text: props.project.status, value: props.project.status };
-
-  const onChangeHandler = (status: any) => {
-    if (project && status.value != project.status) {
-      setStatusReview({ ...statusReview, newStatus: status.value, modalOpen: true });
-    }
-  };
-
-  // TODO: Use SimpleRoute instead
-  const SelectedNavComponent = navOptions.find((option: any) => option.id == nav).source;
+  const SelectedNavComponent = useMemo(() => {
+    return props.navOptions.find((option: any) => option.id == props.nav).source;
+  }, []);
 
   return (
     <Wrapper>
-      <BannerHeader showFollowers accountId={projectId || accountId} projectId={projectId} project={project} />
-
+      <BannerHeader showFollowers accountId={projectId || accountId} projectId={projectId} project={props.project} />
       <Container>
-        <BodyHeader accountId={accountId} projectId={projectId} profile={profile} />
+        <BodyHeader accountId={accountId} projectId={projectId} profile={props.profile} />
         {userIsRegistryAdmin && projectId && (
           <Select
-            noLabel
-            options={options}
-            value={value}
-            onChange={onChangeHandler}
-            containerStyles={{ padding: "16px 24px" }}
+            {...{
+              noLabel: true,
+              options: PROJECT_STATUSES.map((status) => ({
+                value: status,
+                text: status,
+              })),
+              value: { text: props.registration.status, value: props.registration.status },
+              onChange: (status) => {
+                if (status.value != registration.status) {
+                  setStatusReview({ ...statusReview, newStatus: status.value, modalOpen: true });
+                }
+              },
+              containerStyles: {
+                padding: "16px 24px",
+              },
+            }}
           />
         )}
-        <Tabs navOptions={navOptions} nav={nav} />
+        <Tabs navOptions={props.navOptions} nav={props.nav} />
 
         <Details>
-          {/* Selected Nav Page / Component */}
-          <SelectedNavComponent accountId={accountId} projectId={projectId} accounts={[projectId || accountId]} />
+          {SelectedNavComponent && (
+            <SelectedNavComponent
+              accountId={accountId}
+              projectId={projectId}
+              accounts={[projectId || accountId]}
+              donations={props.donations}
+              {...props}
+            />
+          )}
         </Details>
       </Container>
 
-      {/* <Widget
-        src={`${ownerId}/widget/Components.Modal`}
-        props={{
-          ...props,
-          isModalOpen: statusReview.modalOpen,
-          onClose: () => setStatusReview({ ...statusReview, modalOpen: false }),
-          children: (
-            <>
-              <ModalTitle>Enter Notes for changing status to {statusReview.newStatus}</ModalTitle>
-              <Widget
-                src={`${ownerId}/widget/Inputs.TextArea`}
-                props={{
-                  noLabel: true,
-                  inputRows: 5,
-                  inputStyle: {
-                    background: "#FAFAFA",
-                  },
-                  placeholder: "Your notes here...",
-                  value: statusReview.notes,
-                  onChange: (notes) => setStatusReview({ ...statusReview, notes }),
-                  validate: () => {
-                    // none necessary
-                  },
-                }}
-              />
-              <Row style={{ justifyContent: "flex-end", marginTop: "12px" }}>
-                <Widget
-                  src={`${ownerId}/widget/Components.Button`}
-                  props={{
-                    type: "primary",
-                    text: "Submit",
-                    onClick: handleUpdateStatus,
-                  }}
-                />
-              </Row>
-            </>
-          ),
-        }}
-      /> */}
+      {statusReview.modalOpen && (
+        <ModalOverlay onOverlayClick={() => setStatusReview({ ...statusReview, modalOpen: false })}>
+          <>
+            <ModalTitle>Enter Notes for changing status to {statusReview.newStatus}</ModalTitle>
+            <TextArea
+              {...{
+                noLabel: true,
+                inputRows: 5,
+                inputStyle: {
+                  background: "#FAFAFA",
+                },
+                placeholder: "Your notes here...",
+                value: statusReview.notes,
+                onChange: (notes: any) => setStatusReview({ ...statusReview, notes }),
+                validate: () => {
+                  // none necessary
+                },
+              }}
+            />
+            <Row style={{ justifyContent: "flex-end", marginTop: "12px" }}>
+              <Button type="primary" text="Submit" onClick={handleUpdateStatus} />
+            </Row>
+          </>
+        </ModalOverlay>
+      )}
     </Wrapper>
   );
 };

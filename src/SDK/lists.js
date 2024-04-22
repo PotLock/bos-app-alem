@@ -1,10 +1,9 @@
-const { props } = require("alem");
+import { props } from "alem";
 
-const listsContractId = props.env === "staging" ? "lists.staging.potlock.near" : "lists.potlock.near";
 const potlockRegistryListId = 1;
 
 const ListsSDK = {
-  getContractId: () => listsContractId,
+  getContractId: () => (props.env === "staging" ? "lists.staging.potlock.near" : "lists.potlock.near"),
   getList: (listId) => {
     return Near.view(contractId, "get_list", { list_id: listId });
   },
