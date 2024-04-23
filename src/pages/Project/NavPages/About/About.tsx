@@ -1,4 +1,4 @@
-import { Markdown, Social } from "alem";
+import { Markdown, Social, useMemo } from "alem";
 import CopyIcon from "../../components/CopyIcon";
 import { Container, GithubWrapper, Header, HeaderContainer, SmartContractWrapper } from "./styles";
 import AboutItem from "../../components/AboutItem";
@@ -71,6 +71,10 @@ const About = ({ projectId, accountId }: Props) => {
   const github = <Github />;
   const smartContractsItems = <SmartContracts />;
 
+  const team = useMemo(() => {
+    return <Team team={getTeamMembersFromSocialProfileData(profile)} />;
+  }, []);
+
   return (
     <Container>
       <HeaderContainer>
@@ -78,7 +82,7 @@ const About = ({ projectId, accountId }: Props) => {
       </HeaderContainer>
       <AboutItem title="Overview" text={markdown} />
       <AboutItem title="Why we are a public good" text={plPublicGoodReason || "None provided"} />
-      <Team team={getTeamMembersFromSocialProfileData(profile)} />
+      {team}
       <AboutItem title="Github repo(s)" text={github} />
       <AboutItem title="Smart contracts" text={smartContractsItems} />
     </Container>
