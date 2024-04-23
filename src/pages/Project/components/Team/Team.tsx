@@ -15,7 +15,7 @@ const Team = ({ team: _team }: Props) => {
         accountId: teamMember,
         imageClassName: "",
         style: {},
-        thumbnail: "",
+        thumbnail: false,
         tooltip: true,
       }}
     />

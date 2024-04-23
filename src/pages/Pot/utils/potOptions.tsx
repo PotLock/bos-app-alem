@@ -18,7 +18,7 @@ const navOptions: any = (potId: string, potDetail: PotDetail) => [
     label: "Applications",
     id: "applications",
     disabled: false,
-    source: Applications,
+    source: (compProps: any) => <Applications {...compProps} />,
     href: hrefWithParams(`?tab=pot&potId=${potId}&nav=applications`),
   },
   {

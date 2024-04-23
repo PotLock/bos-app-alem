@@ -1148,10 +1148,10 @@ accepts@~1.3.4, accepts@~1.3.8:
     mime-types "~2.1.34"
     negotiator "0.6.3"
 
-alem@1.0.0-beta.23:
-  version "1.0.0-beta.23"
-  resolved "https://registry.yarnpkg.com/alem/-/alem-1.0.0-beta.23.tgz#898f6189ee94a91775d06d018a7d58b8c01f3110"
-  integrity sha512-hd4jNh3Tz5EZUnYItl521kpkwBEI0AoaMz+4Jhoar+ft7pkZhrrsLCyXqZiN34tDIJSwI9AZK/7S/V1jHDuHrg==
+alem@1.0.0-beta.26:
+  version "1.0.0-beta.26"
+  resolved "https://registry.yarnpkg.com/alem/-/alem-1.0.0-beta.26.tgz#8d13925c0d628dbf42eb0becc9248c6e3423c24a"
+  integrity sha512-ZGyUpfparL6iXQR/XzlnHhz0aO1YTbRU9dJmS2rxqu5dDYEri9eWbNPhBzSEu2s18fENHM4sharivnXUDKE1NA==
   dependencies:
     "@babel/core" "^7.24.3"
     "@babel/plugin-syntax-jsx" "^7.24.1"

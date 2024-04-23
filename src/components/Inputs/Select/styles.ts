@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Container = styled.div`
   display: flex;
@@ -29,7 +29,7 @@ export const Input = styled.div`
   background: #ffffff;
   border: 1px solid #d0d5dd;
   // box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
-  boxshadow: 0px -2px 0px rgba(93, 93, 93, 0.24) inset;
+  box-shadow: 0px -2px 0px rgba(93, 93, 93, 0.24) inset;
   border-radius: 4px;
   color: #101828;
   width: 100%;
@@ -39,7 +39,7 @@ export const Placeholder = styled.span`
   color: #a0a3a8;
 `;
 
-export const scaleOut = styled.keyframes`
+export const scaleOut = keyframes`
   from {
     transform: scaleY(0);
   }

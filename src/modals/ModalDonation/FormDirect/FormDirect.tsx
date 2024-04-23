@@ -22,11 +22,10 @@ const FormDirect = (props: any) => {
     donationType,
     ftBalance,
     activeRounds,
-    NADABOT_CONTRACT_ID,
     accountId,
   } = props;
 
-  const { NADABOT_HUMAN_METHOD } = constants;
+  const { NADABOT_HUMAN_METHOD, nadabotContractId: NADABOT_CONTRACT_ID } = constants;
 
   const isUserHumanVerified = Near.view(NADABOT_CONTRACT_ID, NADABOT_HUMAN_METHOD, {
     account_id: accountId,
