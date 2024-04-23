@@ -34,7 +34,7 @@ const Team = (props: Props) => {
                             accountId: teamMember,
                             imageClassName: "",
                             style: {},
-                            thumbnail: "",
+                            thumbnail: false,
                             tooltip: true,
                           }}
                         />

@@ -1,4 +1,3 @@
-import constants from "@app/constants";
 import PotSDK from "@app/SDK/pot";
 import { Big, useState, Near, useParams, context, useCache, useMemo } from "alem";
 import { BodyContainer, Wrapper } from "./styles";
@@ -6,12 +5,7 @@ import navOptions from "./utils/potOptions";
 import Tabs from "../Profile/components/Tabs";
 import HeaderStatus from "./components/HeaderStatus/HeaderStatus";
 import Header from "./components/Header/Header";
-import Projects from "./NavPages/Projects/Projects";
 import { PotDetail } from "@app/types";
-import Applications from "./NavPages/Applications/Applications";
-import Donations from "./NavPages/Donations/Donations";
-import Sponsors from "./NavPages/Sponsors/Sponsors";
-import Payouts from "./NavPages/Payouts/Payouts";
 
 const Pot = () => {
   const { potId, nav: _nav } = useParams();
@@ -97,12 +91,6 @@ const Pot = () => {
     return options.find((option: any) => option.id === nav).source;
   }, []);
 
-  const childProps = {
-    allDonations,
-    sybilRequirementMet,
-    potDetail,
-  };
-
   return (
     <Wrapper>
       <HeaderStatus potDetail={potDetail} />
@@ -111,18 +99,13 @@ const Pot = () => {
       <Tabs nav={nav} navOptions={options} />
 
       <BodyContainer>
-        {nav === "projects" && <Projects {...childProps} />}
-        {nav === "applications" && <Applications {...childProps} />}
-        {nav === "donations" && <Donations {...childProps} />}
-        {nav === "sponsors" && <Sponsors {...childProps} />}
-        {nav === "payouts" && <Payouts {...childProps} />}
-        {/* {SelectedNavComponent && (
+        {SelectedNavComponent && (
           <SelectedNavComponent
             allDonations={allDonations}
             potDetail={potDetail}
             sybilRequirementMet={sybilRequirementMet}
           />
-        )} */}
+        )}
       </BodyContainer>
     </Wrapper>
   );

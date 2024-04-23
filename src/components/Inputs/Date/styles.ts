@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
+  // flex: 1;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
@@ -67,13 +68,4 @@ export const Input = styled.input`
   color: #101828;
   width: 100%;
   border-radius: 4px;
-`;
-
-export const PercentageSign = styled.span`
-  display: flex;
-  align-items: center;
-  padding: 0 0.75em;
-  color: #7b7b7b;
-  font-size: 16px;
-  font-weight: 400;
 `;

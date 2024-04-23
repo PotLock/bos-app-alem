@@ -6,4 +6,5 @@ export const ProjectsContainer = styled.div`
   align-items: center;
   width: 100%;
   overflow-y: hidden;
+  margin-bottom: 420px;
 `;

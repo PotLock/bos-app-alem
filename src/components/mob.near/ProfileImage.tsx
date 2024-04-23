@@ -13,7 +13,7 @@ type Props = {
   className?: string;
   imageStyle?: React.CSSProperties;
   imageWrapperStyle?: React.CSSProperties;
-  thumbnail?: string;
+  thumbnail?: boolean;
   tooltip?: boolean;
   fast?: boolean;
 };

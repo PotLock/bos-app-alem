@@ -39,9 +39,9 @@ export const BackgroundImageContainer = styled.div`
     top: ${backgroundStyleHeightPx / 2}px;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0; // Start with the image invisible
+    opacity: 0;
     transition: opacity 0.3s;
-    z-index: 2; // Ensure the image is on top
+    z-index: 2;
     pointer-events: none;
   }
 `;
