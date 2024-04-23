@@ -1,0 +1,227 @@
+import { context, useEffect, useParams, useState } from "alem";
+import { Container, FlagTooltipWrapper, SearchBar, SearchBarContainer, SearchIcon, TrRow } from "./styles";
+import FlagBtn from "./FlagBtn";
+import getTimePassed from "@app/utils/getTimePassed";
+import _address from "@app/utils/_address";
+import calcNetDonationAmount from "@app/utils/calcNetDonationAmount";
+import PotSDK from "@app/SDK/pot";
+import Arrow from "@app/assets/svgs/Arrow";
+import ProfileImage from "@app/components/mob.near/ProfileImage";
+import Pagination from "@app/components/Pagination/Pagination";
+import FlagModal from "../FlagModal/FlagModal";
+import FlagSuccessModal from "../FlagSuccessModal/FlagSuccessModal";
+import hrefWithParams from "@app/utils/hrefWithParams";
+
+const DonationsTable = (props: any) => {
+  const accountId = context.accountId;
+
+  const { filteredDonations, filter, handleSearch, sortDonation, currentFilter, potDetail } = props;
+  const { potId } = useParams();
+
+  const { admins, owner, chef, all_paid_out } = potDetail;
+
+  const nearLogo = "https://ipfs.near.social/ipfs/bafkreicdcpxua47eddhzjplmrs23mdjt63czowfsa2jnw4krkt532pa2ha";
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [flagAddress, setFlagAddress] = useState(null);
+  const [successFlag, setSuccessFlag] = useState<any>(null);
+  const [updateFlaggedAddresses, setUpdateFlaggedAddresses] = useState(false);
+  const [flaggedAddresses, setFlaggedAddresses] = useState([]);
+  const perPage = 30;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
+
+  useEffect(() => {
+    PotSDK.getFlaggedAccounts(potDetail, potId)
+      .then((data) => setFlaggedAddresses(data))
+      .catch((err) => console.log("error getting the flagged accounts ", err));
+  }, [successFlag, updateFlaggedAddresses]);
+
+  const potAdmins = [owner, chef, ...admins];
+  const hasAuthority = potAdmins.includes(accountId) && !all_paid_out;
+
+  const checkIfIsFlagged = (address: string) => flaggedAddresses.find((obj: any) => obj.potFlaggedAcc[address]);
+
+  const FlagTooltip = ({ flag, href, address }: any) => (
+    <FlagTooltipWrapper className="flag" onClick={(e) => e.preventDefault()}>
+      <div className="tip-icon">
+        <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 5.24537e-07L-2.54292e-07 8L12 8L6 5.24537e-07Z" fill="white" />
+        </svg>
+      </div>
+      <div className="content">
+        <ProfileImage style={{}} accountId={flag.flaggedBy} />
+        <div className="content-info">
+          <div className="title">
+            <div className="role">{flag.role}</div>
+            <div className="dot" />
+            <div className="admin">
+              {_address(flag.flaggedBy)} has flagged
+              <a href={href} className="flaged" target="_blank" onClick={(e) => e.stopPropagation()}>
+                {_address(address)}
+              </a>
+            </div>
+          </div>
+          <div className="text">{flag.potFlaggedAcc[address]}</div>
+        </div>
+      </div>
+    </FlagTooltipWrapper>
+  );
+
+  const AddressItem = ({ href, address, isFlagged, isProject, className }: any) => (
+    <a
+      href={href}
+      className={className}
+      target="_blank"
+      onClick={(e) => {
+        isFlagged ? e.preventDefault() : null;
+      }}
+    >
+      <ProfileImage style={{}} accountId={address} />
+      <div
+        style={{
+          color: isFlagged ? "#ed464f" : "#292929",
+          fontWeight: "600",
+        }}
+      >
+        {_address(address)}
+      </div>
+      {isFlagged && <FlagTooltip flag={isFlagged} href={href} address={address} />}
+      {hasAuthority && (
+        <FlagBtn
+          isProject={isProject}
+          address={address}
+          isFlagged={isFlagged}
+          setUpdateFlaggedAddresses={setUpdateFlaggedAddresses}
+          updateFlaggedAddresse={updateFlaggedAddresses}
+          setFlagAddress={setFlagAddress}
+        />
+      )}
+    </a>
+  );
+
+  return (
+    <Container>
+      <div className="transcation">
+        <div className="header">
+          <div
+            className="address"
+            onClick={() => {
+              setSuccessFlag({
+                address: "re.near",
+                reason: "test tEST Tetset",
+              });
+            }}
+          >
+            Donor
+          </div>
+          <div className="address">Project</div>
+          <div className="sort price" onClick={() => sortDonation("price")}>
+            Amount
+            {currentFilter === "price" && <Arrow active={filter.price} />}
+          </div>
+          <div className="sort" onClick={() => sortDonation("date")}>
+            Date
+            {currentFilter === "date" && <Arrow active={!filter.date} />}
+          </div>
+        </div>
+        <SearchBarContainer>
+          <SearchIcon>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M15.7549 14.2549H14.9649L14.6849 13.9849C15.6649 12.8449 16.2549 11.3649 16.2549 9.75488C16.2549 6.16488 13.3449 3.25488 9.75488 3.25488C6.16488 3.25488 3.25488 6.16488 3.25488 9.75488C3.25488 13.3449 6.16488 16.2549 9.75488 16.2549C11.3649 16.2549 12.8449 15.6649 13.9849 14.6849L14.2549 14.9649V15.7549L19.2549 20.7449L20.7449 19.2549L15.7549 14.2549ZM9.75488 14.2549C7.26488 14.2549 5.25488 12.2449 5.25488 9.75488C5.25488 7.26488 7.26488 5.25488 9.75488 5.25488C12.2449 5.25488 14.2549 7.26488 14.2549 9.75488C14.2549 12.2449 12.2449 14.2549 9.75488 14.2549Z"
+                fill="#C7C7C7"
+              />
+            </svg>
+          </SearchIcon>
+          <SearchBar placeholder="Search donations" onChange={handleSearch} />
+        </SearchBarContainer>
+        {filteredDonations.length > 0 ? (
+          filteredDonations.slice((currentPage - 1) * perPage, currentPage * perPage).map((donation: any) => {
+            const { donor_id, recipient_id, donated_at_ms, donated_at, project_id } = donation;
+            const projectId = recipient_id || project_id;
+
+            const isDonorFlagged = checkIfIsFlagged(donor_id);
+            const isProjectFlagged = checkIfIsFlagged(projectId);
+
+            const projectHref = hrefWithParams(`?tab=project&projectId=${projectId}`);
+            const profileHref = hrefWithParams(`?tab=profile&accountId=${donor_id}`);
+            return (
+              <TrRow>
+                {/* Donor */}
+                <AddressItem
+                  address={donor_id}
+                  isFlagged={isDonorFlagged}
+                  href={profileHref}
+                  isProject={false}
+                  className="address"
+                />
+
+                {/* Project */}
+
+                <AddressItem
+                  address={projectId}
+                  isFlagged={isProjectFlagged}
+                  href={projectHref}
+                  isProject={true}
+                  className="address project"
+                />
+
+                <div className="price">
+                  <span>Donated</span>
+                  <img src={nearLogo} alt="NEAR" />
+                  {calcNetDonationAmount(donation).toFixed(2)}
+                </div>
+
+                <div className="date">
+                  {getTimePassed(donated_at_ms || donated_at)} ago <span> to </span>
+                  <AddressItem
+                    address={projectId}
+                    isFlagged={isProjectFlagged}
+                    href={projectHref}
+                    isProject={true}
+                    className="project-mobile-view"
+                  />
+                </div>
+              </TrRow>
+            );
+          })
+        ) : (
+          <TrRow>No donations</TrRow>
+        )}
+      </div>
+      <Pagination
+        {...{
+          onPageChange: (page) => {
+            setCurrentPage(page);
+          },
+          data: filteredDonations,
+          currentPage,
+          perPage: perPage,
+        }}
+      />
+      {flagAddress != null && (
+        <FlagModal
+          {...{
+            flagAddress: flagAddress,
+            setSuccessFlag,
+            onClose: () => setFlagAddress(null),
+          }}
+        />
+      )}
+      {successFlag != null && (
+        <FlagSuccessModal
+          {...{
+            successFlag: successFlag,
+
+            onClose: () => setSuccessFlag(null),
+          }}
+        />
+      )}
+    </Container>
+  );
+};
+
+export default DonationsTable;

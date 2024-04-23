@@ -31,12 +31,23 @@ const ModalOverlay = ({ children, onOverlayClick, contentStyle }: Props) => {
     flex-direction: column;
     border-radius: 12px;
     overflow: hidden;
+    position: relative;
+    z-index: 1;
     box-shadow: 0px 0px 0px 1px rgba(41, 41, 41, 0.1), 0px 8px 12px -4px rgba(41, 41, 41, 0.1),
       0px 20px 32px -10px rgba(41, 41, 41, 0.1), 0px 32px 44px -16px rgba(41, 41, 41, 0.1);
   `;
 
+  const Screen = styled.div`
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+  `;
+
   return (
-    <ModalOverlay style={contentStyle} onClick={onOverlayClick}>
+    <ModalOverlay style={contentStyle}>
+      <Screen onClick={onOverlayClick} />
       <ModalContent style={contentStyle}>{children}</ModalContent>
     </ModalOverlay>
   );

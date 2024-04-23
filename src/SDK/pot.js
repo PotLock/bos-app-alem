@@ -1,3 +1,14 @@
+// check if obk is empty
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
+function getSocialProfile(keys) {
+  return Near.asyncView("social.near", "get", {
+    keys,
+  });
+}
+
 const PotSDK = {
   getConfig: (potId) => {
     return Near.view(potId, "get_config", {});
@@ -111,6 +122,46 @@ const PotSDK = {
       gas: "300000000000000",
     };
     Near.call([transaction]);
+  },
+  getFlaggedAccounts: (potDetail, potId) => {
+    const roles = ["owner", "admins", "chef"];
+
+    const allUsers = {};
+    roles.forEach((role) => {
+      const users = potDetail[role];
+      if (typeof users === "object") {
+        users.forEach((user) => {
+          allUsers[user] = role === "admins" ? "admin" : role;
+        });
+      } else {
+        allUsers[users] = role;
+      }
+    });
+
+    const flaggedAccounts = [];
+    const socialKeys = Object.keys(allUsers).map((user) => `${user}/profile/**`);
+
+    return new Promise((resolve, reject) => {
+      getSocialProfile(socialKeys)
+        .then((profiles) => {
+          Object.entries(profiles).forEach(([user, { profile }]) => {
+            const pLBlacklistedAccounts = JSON.parse(profile.pLBlacklistedAccounts || "{}");
+            const potFlaggedAcc = pLBlacklistedAccounts[potId] || {};
+            if (!isEmpty(potFlaggedAcc)) {
+              flaggedAccounts.push({
+                flaggedBy: user,
+                role: allUsers[user],
+                potFlaggedAcc,
+              });
+            }
+          });
+          resolve(flaggedAccounts);
+        })
+        .catch((error) => {
+          console.error("Error fetching social profiles:", error);
+          reject(error);
+        });
+    });
   },
 };
 
