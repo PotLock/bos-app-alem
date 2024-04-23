@@ -10,6 +10,7 @@ import FeedPage from "@app/pages/Feed";
 import DeployPot from "@app/pages/DeployPot/DeployPot";
 import ConfigForm from "@app/pages/Pot/NavPages/ConfigForm/ConfigForm";
 import Leaderboard from "@app/pages/Leaderboard/Leaderboard";
+import Cart from "@app/pages/Cart/Cart";
 
 const Routes = () => {
   const ProjectsRoute = createRoute(routesPath.PROJECTS_LIST_TAB, () => <ProjectsPage />);
@@ -21,6 +22,7 @@ const Routes = () => {
   const FeedRoute = createRoute(routesPath.FEED_TAB, () => <FeedPage />);
   const DeployPotRoute = createRoute(routesPath.DEPLOY_POT_TAB, () => <DeployPot />);
   const LeaderboardRoute = createRoute(routesPath.DONORS_TAB, () => <Leaderboard />);
+  const CartRoute = createRoute(routesPath.CART_TAB, () => <Cart />);
   const routes = [
     ProjectsRoute,
     ProjectRoute,
@@ -31,6 +33,7 @@ const Routes = () => {
     FeedRoute,
     DeployPotRoute,
     LeaderboardRoute,
+    CartRoute,
   ];
 
   return <Router routes={routes} parameterName="tab" />;
