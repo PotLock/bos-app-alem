@@ -1,9 +1,9 @@
-import getTeamMembersFromSocialProfileData from "../../../../utils/getTeamMembersFromSocialProfileData";
 import { Markdown, Social } from "alem";
 import CopyIcon from "../../components/CopyIcon";
 import { Container, GithubWrapper, Header, HeaderContainer, SmartContractWrapper } from "./styles";
 import AboutItem from "../../components/AboutItem";
 import Team from "../../components/Team/Team";
+import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
 
 type Props = {
   projectId: string;

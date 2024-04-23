@@ -5,8 +5,8 @@ import Compose from "../../../Profile/components/Compose";
 import MergedIndexFeed from "../../../Profile/components/MergedIndexFeed/MergedIndexFeed";
 
 type Props = {
-  groupId: string;
-  permissions: string[];
+  groupId?: string;
+  permissions?: string[];
   post?: any;
   hashtags?: string[];
   indexKey?: string;
@@ -51,7 +51,7 @@ const Feed = (compProps: Props) => {
 
   const isPremiumFeed = compProps.isPremiumFeed;
   const commentAccounts = compProps.commentAccounts;
-  const renderedPosts = {};
+  const renderedPosts: any = {};
 
   const makePostItem = (a: any) => ({
     type: "social",

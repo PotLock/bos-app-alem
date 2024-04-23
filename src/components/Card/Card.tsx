@@ -26,6 +26,7 @@ import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileDat
 import routesPath from "@app/routes/routesPath";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import yoctosToNear from "@app/utils/yoctosToNear";
+import Image from "../mob.near/Image";
 
 const Card = (props: any) => {
   const { potId, payoutDetails } = props;
@@ -135,9 +136,8 @@ const Card = (props: any) => {
           <HeaderContainer className="pt-0 position-relative">
             <BackgroundImageContainer>
               {profile.backgroundImage?.nft ? (
-                <Widget
-                  src="mob.near/widget/Image"
-                  props={{
+                <Image
+                  {...{
                     image: profile.backgroundImage,
                     alt: "background",
                     className: "position-absolute w-100",
@@ -157,9 +157,8 @@ const Card = (props: any) => {
             </BackgroundImageContainer>
             <ProfileImageContainer className="profile-picture d-inline-block">
               {profile.image?.nft ? (
-                <Widget
-                  src="mob.near/widget/Image"
-                  props={{
+                <Image
+                  {...{
                     image: profile.image,
                     alt: "avatar",
                     className: "rounded-circle w-100 img-thumbnail d-block",
