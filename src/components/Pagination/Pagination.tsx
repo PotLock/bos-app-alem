@@ -83,8 +83,6 @@ const Pagination = (props: Props) => {
       perPage,
     }) || [];
 
-  console.log("paginationRange", paginationRange);
-
   if (currentPage === 0 || paginationRange.length < 2) {
     return "";
   }

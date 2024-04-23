@@ -11,7 +11,7 @@ type Props = {
   sortList: Option[];
   handleSortChange: (option: Option) => void;
   sortVal?: any;
-  title?: string;
+  title?: any;
   FilterMenuCustomClass?: string;
   showCount?: boolean;
   menuStyle?: CSSStyleDeclaration;
