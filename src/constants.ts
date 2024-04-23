@@ -1,8 +1,8 @@
-import { Big, props } from "alem";
+import { Big, getAlemEnvironment } from "alem";
 import styled from "styled-components";
 
 const constants = {
-  nadabotContractId: props.env === "staging" ? "v1.staging.nadabot.near" : "v1.nadabot.near",
+  nadabotContractId: getAlemEnvironment() === "staging" ? "v1.staging.nadabot.near" : "v1.nadabot.near",
   ownerId: "potlock.near",
   PROJECT_STATUSES: ["Pending", "Approved", "Rejected", "Graylisted", "Blacklisted"],
   DONATION_CONTRACT_ID: "donate.potlock.near",

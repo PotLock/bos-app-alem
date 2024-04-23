@@ -10,14 +10,14 @@ const ProjectOptions = (projectId: string) => [
     label: "Home",
     id: "home",
     disabled: false,
-    source: About,
+    source: (componentProps: any) => <About {...componentProps} />,
     href: hrefWithParams(`?tab=project&projectId=${projectId}&nav=home`),
   },
   {
     label: "Social Feed",
     id: "feed",
     disabled: false,
-    source: Feed,
+    source: (componentProps: any) => <Feed {...componentProps} />,
     href: hrefWithParams(`?tab=project&projectId=${projectId}&nav=feed`),
   },
   {

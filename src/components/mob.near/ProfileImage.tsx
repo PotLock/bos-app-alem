@@ -1,5 +1,6 @@
 import { Social, State, Widget, context, props, state } from "alem";
 import OverlayTrigger from "./OverlayTrigger";
+import Image from "./Image";
 
 type Props = {
   profile?: any;
@@ -33,6 +34,22 @@ const ProfileImage = ({
   fast: _fast,
 }: Props) => {
   // * taken from mob.near/widget/ProfileImage with minor tweaks for expanded composability *
+
+  // const {
+  //   profile: _profile,
+  //   accountId: _accountId,
+  //   style: _style,
+  //   imageClassName: _imageClassName,
+  //   image: _image,
+  //   title: _title,
+  //   name: _name,
+  //   className: _className,
+  //   imageStyle: _imageStyle,
+  //   imageWrapperStyle: _imageWrapperStyle,
+  //   thumbnail: _thumbnail,
+  //   tooltip: _tooltip,
+  //   fast: _fast,
+  // } = props;
 
   const accountId = _accountId ?? context.accountId;
   const className = _className ?? "profile-image d-inline-block";
@@ -86,11 +103,7 @@ const ProfileImage = ({
     </div>
   ) : (
     <div className={className} style={style} key={JSON.stringify(image)}>
-      <Widget
-        loading={<div className={`d-inline-block ${imageClassName}`} style={imageWrapperStyle} />}
-        src="mob.near/widget/Image"
-        props={imageProps}
-      />
+      <Image {...imageProps} />
     </div>
   );
 

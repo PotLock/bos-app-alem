@@ -1,11 +1,13 @@
-import { props } from "alem";
+import { getAlemEnvironment } from "alem";
 
 const potlockRegistryListId = 1;
 
+const _listContractId = getAlemEnvironment() === "staging" ? "lists.staging.potlock.near" : "lists.potlock.near";
+
 const ListsSDK = {
-  getContractId: () => (props.env === "staging" ? "lists.staging.potlock.near" : "lists.potlock.near"),
+  getContractId: () => _listContractId,
   getList: (listId) => {
-    return Near.view(contractId, "get_list", { list_id: listId });
+    return Near.view(_listContractId, "get_list", { list_id: listId });
   },
   getPotlockRegistry: () => {
     return ListsSDK.getList(potlockRegistryListId);
@@ -15,33 +17,33 @@ const ListsSDK = {
     return registry.admins && registry.admins.includes(accountId);
   },
   getRegistrations: (listId) => {
-    return Near.view(contractId, "get_registrations_for_list", {
+    return Near.view(_listContractId, "get_registrations_for_list", {
       list_id: listId || potlockRegistryListId,
     });
   },
   getRegistration: (listId, registrantId) => {
-    const registrations = Near.view(contractId, "get_registrations_for_registrant", {
+    const registrations = Near.view(_listContractId, "get_registrations_for_registrant", {
       registrant_id: registrantId,
     });
     if (registrations) {
       const registration = registrations.find(
         (registration) => registration.list_id === (listId || potlockRegistryListId),
       );
-      return Near.view(contractId, "get_registration", {
+      return Near.view(_listContractId, "get_registration", {
         registration_id: registration.id,
       });
     }
   },
   asyncGetRegistration: (listId, registrantId) => {
-    // return Near.asyncView(contractId, "get_project_by_id", { project_id: projectId });
-    return Near.asyncView(contractId, "get_registrations_for_registrant", {
+    // return Near.asyncView(_listContractId, "get_project_by_id", { project_id: projectId });
+    return Near.asyncView(_listContractId, "get_registrations_for_registrant", {
       registrant_id: registrantId,
     }).then((registrations) => {
       if (registrations) {
         const registration = registrations.find(
           (registration) => registration.list_id === (listId || potlockRegistryListId),
         );
-        return Near.asyncView(contractId, "get_registration", {
+        return Near.asyncView(_listContractId, "get_registration", {
           registration_id: registration.id,
         });
       }
