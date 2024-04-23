@@ -1,6 +1,7 @@
-import { props } from "alem";
+import { getAlemEnvironment } from "alem";
 
-const _registryContractId = props.env === "staging" ? "registry.staging.potlock.near" : "registry.potlock.near";
+const _registryContractId =
+  getAlemEnvironment() === "staging" ? "registry.staging.potlock.near" : "registry.potlock.near";
 
 const RegistrySDK = {
   getContractId: () => _registryContractId,

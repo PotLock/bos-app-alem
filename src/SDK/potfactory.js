@@ -1,4 +1,7 @@
-const potfactoryContractId = props.env === "staging" ? "potfactory.staging.potlock.near" : "v1.potfactory.potlock.near";
+import { getAlemEnvironment } from "alem";
+
+const potfactoryContractId =
+  getAlemEnvironment() === "staging" ? "potfactory.staging.potlock.near" : "v1.potfactory.potlock.near";
 
 const PotFactorySDK = {
   getContractId: () => potfactoryContractId,

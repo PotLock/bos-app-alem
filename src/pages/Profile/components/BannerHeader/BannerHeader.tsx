@@ -1,4 +1,4 @@
-import { Files, Near, Social, context, props } from "alem";
+import { Files, Near, Social, Widget, context, props } from "alem";
 import { Project } from "@app/types";
 import CameraSvg from "@app/assets/svgs/camera";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
