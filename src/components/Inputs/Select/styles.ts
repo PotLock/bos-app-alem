@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
@@ -39,7 +39,7 @@ export const Placeholder = styled.span`
   color: #a0a3a8;
 `;
 
-export const scaleOut = keyframes`
+export const scaleOut = styled.keyframes`
   from {
     transform: scaleY(0);
   }

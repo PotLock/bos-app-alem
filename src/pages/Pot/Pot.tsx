@@ -111,18 +111,13 @@ const Pot = () => {
       <Tabs nav={nav} navOptions={options} />
 
       <BodyContainer>
-        {nav === "projects" && <Projects {...childProps} />}
-        {nav === "applications" && <Applications {...childProps} />}
-        {nav === "donations" && <Donations {...childProps} />}
-        {nav === "sponsors" && <Sponsors {...childProps} />}
-        {nav === "payouts" && <Payouts {...childProps} />}
-        {/* {SelectedNavComponent && (
+        {SelectedNavComponent && (
           <SelectedNavComponent
             allDonations={allDonations}
             potDetail={potDetail}
             sybilRequirementMet={sybilRequirementMet}
           />
-        )} */}
+        )}
       </BodyContainer>
     </Wrapper>
   );

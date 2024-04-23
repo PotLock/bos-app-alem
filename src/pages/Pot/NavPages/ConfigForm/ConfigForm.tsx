@@ -5,7 +5,6 @@ import { Big, Near, State, context, state, useMemo, useParams } from "alem";
 import {
   Checkbox,
   FormBody,
-  FormDivider,
   FormSectionContainer,
   FormSectionDescription,
   FormSectionLeftDiv,
@@ -20,8 +19,10 @@ import Text from "@app/components/Inputs/Text/Text";
 import AccountsList from "@app/components/AccountsList/AccountsList";
 import Button from "@app/components/Button";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import DateInput from "@app/components/Inputs/Date/Date";
+import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
 
-const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
+const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }) => {
   const { potId } = useParams();
   const {
     NADABOT_HUMAN_METHOD,
@@ -38,14 +39,6 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
   const DEFAULT_SYBIL_WRAPPER_PROVIDER = `${NADABOT_CONTRACT_ID}:${NADABOT_HUMAN_METHOD}`;
   const CURRENT_SOURCE_CODE_VERSION = "0.1.0";
   const SOURCE_CODE_LINK = "https://github.com/PotLock/core"; // for use in contract source metadata
-  const POT_CODE_LINK = "https://github.com/PotLock/core/tree/main/contracts/pot"; // for directing user to view source code for Pot
-
-  const IPFS_BASE_URL = "https://nftstorage.link/ipfs/";
-  // const ADD_ADMINS_ICON_URL =
-  //   IPFS_BASE_URL + "bafkreig6c7m2z2lupreu2br4pm3xx575mv6uvmuy2qkij4kzzfpt7tipcq";
-  // const CLOSE_ICON_URL =
-  //   IPFS_BASE_URL + "bafkreifyg2vvmdjpbhkylnhye5es3vgpsivhigkjvtv2o4pzsae2z4vi5i";
-  const DEFAULT_PROFILE_IMAGE_URL = IPFS_BASE_URL + "bafkreifel4bfm6hxmklcsqjilk3bhvi3acf2rxqepcgglluhginbttkyqm";
 
   const MAX_POT_NAME_LENGTH = 64;
   const MAX_POT_DESCRIPTION_LENGTH = 256;
@@ -53,14 +46,6 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
   const MAX_REFERRAL_FEE_MATCHING_POOL_BASIS_POINTS = 1000; // 10%
   const MAX_REFERRAL_FEE_PUBLIC_ROUND_BASIS_POINTS = 1000; // 10%
   const MAX_CHEF_FEE_BASIS_POINTS = 1000; // 10%
-
-  const getImageUrlFromSocialImage = (image: any) => {
-    if (image.url) {
-      return image.url;
-    } else if (image.ipfs_cid) {
-      return IPFS_BASE_URL + image.ipfs_cid;
-    }
-  };
 
   Big.PE = 100;
 
@@ -344,7 +329,7 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
     });
   };
 
-  const userIsOwner = context.accountId === potDetail.owner;
+  const userIsOwner = context.accountId === potDetail?.owner;
   const userIsAdmin = isUpdate && potDetail.admins.includes(context.accountId || "");
   const isAdminOrGreater = userIsOwner || userIsAdmin;
 
@@ -515,10 +500,8 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
               }}
             />
           </Row>
-          <Date
-          <Widget
-            src={`${ownerId}/widget/Inputs.Date`}
-            props={{
+          <DateInput
+            {...{
               label: "Application start date",
               //   placeholder: "0", // TODO: possibly add this back in
               selectTime: true,
@@ -543,9 +526,8 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
               disabled: isUpdate ? !isAdminOrGreater : false,
             }}
           />
-          <Widget
-            src={`${ownerId}/widget/Inputs.Date`}
-            props={{
+          <DateInput
+            {...{
               label: "Application end date",
               //   placeholder: "0", // TODO: possibly add this back in
               selectTime: true,
@@ -565,9 +547,8 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
               disabled: isUpdate ? !isAdminOrGreater : false,
             }}
           />
-          <Widget
-            src={`${ownerId}/widget/Inputs.Date`}
-            props={{
+          <DateInput
+            {...{
               label: "Matching round start date",
               selectTime: true,
               value: state.matchingRoundStartDate,
@@ -586,9 +567,9 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
               disabled: isUpdate ? !isAdminOrGreater : false,
             }}
           />
-          <Widget
-            src={`${ownerId}/widget/Inputs.Date`}
-            props={{
+
+          <DateInput
+            {...{
               label: "Matching round end date",
               //   placeholder: "0", // TODO: possibly add this back in
               selectTime: true,
@@ -605,10 +586,10 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
               disabled: isUpdate ? !isAdminOrGreater : false,
             }}
           />
+
           <Row>
-            <Widget
-              src={`${ownerId}/widget/Inputs.Text`}
-              props={{
+            <Text
+              {...{
                 label: "Optional: Min matching pool donation amount (in NEAR)",
                 placeholder: "0",
                 value: state.minMatchingPoolDonationAmount,
@@ -630,9 +611,8 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
         {FormSectionLeft("Chef details", "")}
         <FormSectionRightDiv>
           <Row>
-            <Widget
-              src={`${ownerId}/widget/Inputs.Text`}
-              props={{
+            <Text
+              {...{
                 label: "Assign chef",
                 placeholder: "E.g. user.near",
                 value: state.chef,
@@ -646,9 +626,9 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
                 disabled: isUpdate ? !isAdminOrGreater : false,
               }}
             />
-            <Widget
-              src={`${ownerId}/widget/Inputs.Text`}
-              props={{
+
+            <Text
+              {...{
                 label: "Chef fee %",
                 placeholder: "0",
                 percent: true,
@@ -675,9 +655,8 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
       <FormSectionContainer>
         {FormSectionLeft("Application details", "")}
         <FormSectionRightDiv>
-          <Widget
-            src={`${ownerId}/widget/Inputs.Text`}
-            props={{
+          <Text
+            {...{
               label: "Max. approved projects",
               placeholder: "e.g. 20",
               value: state.maxProjects,
@@ -698,12 +677,11 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
         <FormSectionRightDiv>
           <Row>
             <Checkbox>
-              <Widget
-                src={`${ownerId}/widget/Inputs.Checkbox`}
-                props={{
+              <Checkbox
+                {...{
                   id: "registrationSelector",
                   checked: state.usePotlockRegistry,
-                  onClick: (e) => {
+                  onClick: (e: any) => {
                     State.update({
                       usePotlockRegistry: e.target.checked,
                     });
@@ -711,6 +689,7 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
                   disabled: isUpdate ? !isAdminOrGreater : false,
                 }}
               />
+
               <Label htmlFor="sybilSelector">Require approval on PotLock registry (recommended)</Label>
             </Checkbox>
           </Row>
@@ -721,12 +700,11 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
         <FormSectionRightDiv>
           <Row>
             <Checkbox>
-              <Widget
-                src={`${ownerId}/widget/Inputs.Checkbox`}
-                props={{
+              <Checkbox
+                {...{
                   id: "sybilSelector",
                   checked: state.useNadabotSybil,
-                  onClick: (e) => {
+                  onClick: (e: any) => {
                     State.update({
                       useNadabotSybil: e.target.checked,
                     });
@@ -734,17 +712,17 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
                   disabled: isUpdate ? !isAdminOrGreater : false,
                 }}
               />
+
               <Label htmlFor="sybilSelector">🤖 nada.bot human verification (recommended)</Label>
             </Checkbox>
           </Row>
           <Row style={{ justifyContent: "flex-end", marginTop: "36px" }}>
             {!isUpdate && isAdminOrGreater && (
-              <Widget
-                src={`${ownerId}/widget/Components.Button`}
-                props={{
+              <Button
+                {...{
                   type: "tertiary",
                   text: "Cancel",
-                  style: props.style || {},
+                  style: style || {},
                   onClick: () => {
                     // TODO: handle click
                   },
@@ -752,12 +730,11 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
               />
             )}
             {((isUpdate && isAdminOrGreater) || !isUpdate) && (
-              <Widget
-                src={`${ownerId}/widget/Components.Button`}
-                props={{
+              <Button
+                {...{
                   type: "primary",
                   text: isUpdate ? "Save changes" : "Deploy",
-                  style: props.style || {},
+                  style: style || {},
                   onClick: isUpdate ? handleUpdate : handleDeploy,
                   // disabled: !canDeploy,
                 }}
@@ -766,25 +743,25 @@ const ConfigForm = ({ potDetail }: { potDetail: PotDetail }) => {
           </Row>
         </FormSectionRightDiv>
       </FormSectionContainer>
-      <Widget
-        src={`${ownerId}/widget/Components.ModalMultiAccount`}
-        props={{
-          ...props,
-          isModalOpen: state.isAdminsModalOpen,
-          onClose: () => State.update({ isAdminsModalOpen: false }),
-          titleText: "Add admins",
-          descriptionText: "Add NEAR account IDs for your admins.",
-          inputValue: state.admin,
-          onInputChange: (admin) => {
-            State.update({ admin, adminsError: "" });
-          },
-          handleAddAccount: handleAddAdmin,
-          handleRemoveAccount: handleRemoveAdmin,
-          accountError: state.adminsError,
-          accountIds: state.admins.map((admin) => admin.accountId),
-          unitText: "admin",
-        }}
-      />
+
+      {state.isAdminsModalOpen && (
+        <ModalMultiAccount
+          {...{
+            onClose: () => State.update({ isAdminsModalOpen: false }),
+            titleText: "Add admins",
+            descriptionText: "Add NEAR account IDs for your admins.",
+            inputValue: state.admin,
+            onInputChange: (admin: any) => {
+              State.update({ admin, adminsError: "" });
+            },
+            handleAddAccount: handleAddAdmin,
+            handleRemoveAccount: handleRemoveAdmin,
+            accountError: state.adminsError,
+            accountIds: state.admins.map((admin: any) => admin.accountId),
+            unitText: "admin",
+          }}
+        />
+      )}
     </FormBody>
   );
 };

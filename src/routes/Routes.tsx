@@ -7,6 +7,8 @@ import EditProfile from "@app/pages/Profile/Edit";
 import PotsHome from "@app/pages/PotsHome/PotsHome";
 import Pot from "@app/pages/Pot/Pot";
 import FeedPage from "@app/pages/Feed";
+import DeployPot from "@app/pages/DeployPot/DeployPot";
+import ConfigForm from "@app/pages/Pot/NavPages/ConfigForm/ConfigForm";
 
 const Routes = () => {
   const ProjectsRoute = createRoute(routesPath.PROJECTS_LIST_TAB, () => <ProjectsPage />);
@@ -16,7 +18,17 @@ const Routes = () => {
   const PotsHomeRoute = createRoute(routesPath.POTS_TAB, () => <PotsHome />);
   const PotRoute = createRoute(routesPath.POT_DETAIL_TAB, () => <Pot />);
   const FeedRoute = createRoute(routesPath.FEED_TAB, () => <FeedPage />);
-  const routes = [ProjectsRoute, ProjectRoute, DonorRoute, EditRoute, PotsHomeRoute, PotRoute, FeedRoute];
+  const DeployPotRoute = createRoute(routesPath.DEPLOY_POT_TAB, () => <DeployPot />);
+  const routes = [
+    ProjectsRoute,
+    ProjectRoute,
+    DonorRoute,
+    EditRoute,
+    PotsHomeRoute,
+    PotRoute,
+    FeedRoute,
+    DeployPotRoute,
+  ];
 
   return <Router routes={routes} parameterName="tab" />;
 };

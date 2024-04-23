@@ -31,11 +31,9 @@ export const FormSectionContainer = styled.div`
 `;
 
 export const FormSectionLeftDiv = styled.div`
-  //   flex: 1;
   width: 30%;
   display: flex;
   flex-direction: column;
-  // background-color: yellow;
   gap: 16px;
   @media screen and (max-width: 768px) {
     width: 100%;
