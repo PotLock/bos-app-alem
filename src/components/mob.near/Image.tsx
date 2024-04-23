@@ -13,8 +13,6 @@ const Image = (props: any) => {
   const fallbackUrl = props.fallbackUrl;
   const thumbnail = props.thumbnail;
 
-  console.log("test");
-
   State.init({
     image,
   });

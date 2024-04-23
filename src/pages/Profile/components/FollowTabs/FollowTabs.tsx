@@ -32,7 +32,7 @@ const FollowTabs = (props: any) => {
       </Nav>
       <div className="tab-content">
         <div className="tab-pane fade in show active" role="tabpanel">
-          <FollowersList accountId={projectId || accountId} {...props} />
+          <FollowersList accountId={projectId || accountId} nav={nav} />
         </div>
       </div>
     </Container>

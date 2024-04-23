@@ -1,14 +1,14 @@
-import { Container, Filter, LoadingWrapper, Tabs } from "./styles";
+import { useCache, useMemo, useState } from "alem";
 import calcNetDonationAmount from "@app/utils/calcNetDonationAmount";
 import filterByDate from "@app/utils/filterByDate";
 import PotFactorySDK from "@app/SDK/potfactory";
 import PotSDK from "@app/SDK/pot";
 import DonateSDK from "@app/SDK/donate";
-import { Storage, useCache, useMemo, useState } from "alem";
 import DonorsCards from "./components/DonorsCards/DonorsCards";
 import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
 import DonorsTrx from "./components/DonorsTrx/DonorsTrx";
 import DonorsLeaderboard from "./components/DonorsLeaderboard/DonorsLeaderboard";
+import { Container, Filter, LoadingWrapper, Tabs } from "./styles";
 
 const Leaderboard = () => {
   const Loading = () => <LoadingWrapper>Loading...</LoadingWrapper>;
