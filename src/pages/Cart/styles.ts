@@ -16,7 +16,6 @@ export const SuccessContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  //   justify-content: center;
   width: 100%;
   padding: 24px;
   gap: 24px;
@@ -34,9 +33,7 @@ export const SuccessContainer = styled.div`
 export const ColumnLeft = styled.div`
   display: flex;
   flex-direction: column;
-  //   background: #fafafa;
   width: 55%;
-  //   background: pink;
   padding: 48px 40px 48px 64px;
   gap: 48px;
 
@@ -47,7 +44,6 @@ export const ColumnLeft = styled.div`
 `;
 
 export const ColumnRight = styled.div`
-  //   background: yellow;
   flex: 1;
   padding: 152px 148px 152px 84px;
   border-left: 1px #c7c7c7 solid;
