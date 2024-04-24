@@ -1,6 +1,6 @@
 {
   "isIndex": true,
-  "mainnetAccount": "potlock.near",
+  "mainnetAccount": "staging.potlock.near",
   "testnetAccount": "alem-lib.testnet",
   "name": "PotLock",
   "description": "App description",
@@ -23,6 +23,9 @@
     }
   },
   "options": {
-    "keepRoute": false
+    "keepRoute": false,
+    "createLoaderWidget": true,
+    "loadingComponentFile": "src/components/SuspenseLoading.tsx",
+    "loadingComponentName": "SuspenseLoading"
   }
 }
