@@ -1,0 +1,12 @@
+name: Deploy app to Mainnet (Staging)
+on:
+  push:
+    branches: [staging]
+jobs:
+  deploy-mainnet:
+    uses: wpdas/alem/.github/workflows/deploy.yml@main
+    with:
+      signer-account-address: staging.potlock.near
+      signer-public-key: ed25519:8xGzgb54TKjmbLQs3h1NRPiVFgF64fKvVW2RkjfnXvZg
+    secrets:
+      SIGNER_PRIVATE_KEY: ${{ secrets.SIGNER_PRIVATE_KEY_STAGING }}
