@@ -23,6 +23,9 @@
     }
   },
   "options": {
-    "keepRoute": false
+    "keepRoute": false,
+    "createLoaderWidget": true,
+    "loadingComponentFile": "src/components/SuspenseLoading.tsx",
+    "loadingComponentName": "SuspenseLoading"
   }
 }
