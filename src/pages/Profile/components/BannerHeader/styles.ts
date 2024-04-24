@@ -106,9 +106,9 @@ export const ProfileImageContainer = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0; // Start with the image invisible
+    opacity: 0; /* Start with the image invisible */
     transition: opacity 0.3s;
-    z-index: 2; // Ensure the image is on top
+    z-index: 2; /* Ensure the image is on top */
     pointer-events: none;
   }
   @media screen and (max-width: 768px) {

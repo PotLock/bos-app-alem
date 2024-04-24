@@ -61,11 +61,12 @@ export const ProfileImageContainer = styled.div`
     cursor: pointer;
 
     &:after {
-      background-color: rgba(45.9, 45.9, 45.9, 0.4); // Dark overlay with 40% opacity on hover
+      /*  Dark overlay with 40% opacity on hover */
+      background-color: rgba(45.9, 45.9, 45.9, 0.4);
     }
 
     svg {
-      opacity: 1; // Make the image visible on hover
+      opacity: 1; /* Make the image visible on hover */
     }
   }
 `;
