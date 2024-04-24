@@ -11,6 +11,7 @@ import DeployPot from "@app/pages/DeployPot/DeployPot";
 import ConfigForm from "@app/pages/Pot/NavPages/ConfigForm/ConfigForm";
 import Leaderboard from "@app/pages/Leaderboard/Leaderboard";
 import Cart from "@app/pages/Cart/Cart";
+import CreateProject from "@app/pages/CreateProject/CreateProject";
 
 const Routes = () => {
   const ProjectsRoute = createRoute(routesPath.PROJECTS_LIST_TAB, () => <ProjectsPage />);
@@ -23,6 +24,9 @@ const Routes = () => {
   const DeployPotRoute = createRoute(routesPath.DEPLOY_POT_TAB, () => <DeployPot />);
   const LeaderboardRoute = createRoute(routesPath.DONORS_TAB, () => <Leaderboard />);
   const CartRoute = createRoute(routesPath.CART_TAB, () => <Cart />);
+  const CreateProjectRoute = createRoute(routesPath.CREATE_PROJECT_TAB, () => <CreateProject />);
+  const EditProjectRoute = createRoute(routesPath.EDIT_PROJECT_TAB, () => <CreateProject />);
+
   const routes = [
     ProjectsRoute,
     ProjectRoute,
@@ -34,6 +38,8 @@ const Routes = () => {
     DeployPotRoute,
     LeaderboardRoute,
     CartRoute,
+    CreateProjectRoute,
+    EditProjectRoute,
   ];
 
   return <Router routes={routes} parameterName="tab" />;

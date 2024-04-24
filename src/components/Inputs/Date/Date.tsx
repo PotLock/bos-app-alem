@@ -1,7 +1,7 @@
 import { Container, Error, Input, InputContainer, Label } from "./styles";
 
 type Props = {
-  label?: string;
+  label?: any;
   placeholder?: string;
   value?: string;
   onChange: (value: string) => void;
