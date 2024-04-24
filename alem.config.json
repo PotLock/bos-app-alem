@@ -1,6 +1,6 @@
 {
   "isIndex": true,
-  "mainnetAccount": "potlock.near",
+  "mainnetAccount": "staging.potlock.near",
   "testnetAccount": "alem-lib.testnet",
   "name": "PotLock",
   "description": "App description",
