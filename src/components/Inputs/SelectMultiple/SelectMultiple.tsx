@@ -15,7 +15,7 @@ const SelectMultiple = (props: Props) => {
   return (
     <Container>
       {label && <Label>{label}</Label>}
-      <TypeAhead
+      <Typeahead
         options={options}
         multiple
         onChange={onChange}
