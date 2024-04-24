@@ -1,4 +1,4 @@
-import { State, useState } from "alem";
+import { State, context, useState } from "alem";
 import {
   Button,
   ButtonRegisterProject,
@@ -13,6 +13,7 @@ import {
 import DonationStats from "../../pages/Projects/components/DonationStats/DonationStats";
 import getProjects from "@app/services/getProjects";
 import ModalDonation from "@app/modals/ModalDonation";
+import ListsSDK from "@app/SDK/lists";
 
 const Hero = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,6 +33,11 @@ const Hero = () => {
       return projects.allProjects[randomIndex]?.id;
     }
   };
+
+  const accountId = context.accountId;
+
+  const allRegistrations = ListsSDK.getRegistrations() || [];
+  const isRegisteredProject = allRegistrations.find((registration: any) => registration.registrant_id === accountId);
 
   return (
     <HeroContainer>
@@ -66,7 +72,11 @@ const Hero = () => {
           <Button onClick={openDonateRandomlyModal}>Donate Randomly</Button>
           {/* <ButtonRegisterProject href={"?tab=createproject"}>Register Your Project</ButtonRegisterProject> */}
           {isModalOpen && <ModalDonation projectId={getRandomProject()} onClose={closeDonateRandomlyModal} />}
-          <ButtonRegisterProject>Register Your Project</ButtonRegisterProject>
+          <ButtonRegisterProject
+            href={isRegisteredProject ? `?tab=project&projectId=${accountId}` : "?tab=createproject"}
+          >
+            {isRegisteredProject ? "View Your Project" : "Register Your Project"}
+          </ButtonRegisterProject>
         </ButtonsContainer>
         <DonationStats />
       </HeaderContainer>

@@ -1,4 +1,4 @@
-import { Files, Near, Social, Widget, context, props } from "alem";
+import { Files, Near, Social, context } from "alem";
 import { Project } from "@app/types";
 import CameraSvg from "@app/assets/svgs/camera";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
@@ -15,20 +15,31 @@ import {
 } from "./styles";
 
 type Props = {
-  showFollowers: boolean;
+  showFollowers?: boolean;
   project?: Project;
   projectId?: string;
-  accountId: string;
+  accountId?: string;
+  bgImageOnChange?: (files: any) => void;
+  profileImageOnChange?: (files: any) => void;
+  profile?: any;
+  profileImage?: any;
+  backgroundImage?: any;
+  imageStyle?: any;
+  backgroundStyle?: any;
+  containerStyle?: any;
+  children?: any;
 };
 
-const BannerHeader = ({ showFollowers, project, projectId, accountId: _accountId }: Props) => {
-  const accountId = _accountId || projectId || context.accountId;
+const BannerHeader = (props: Props) => {
+  const { showFollowers, project, projectId, profileImageOnChange, bgImageOnChange } = props;
+
+  const accountId = props.accountId || projectId || context.accountId;
 
   if (!accountId) {
     return "No account ID";
   }
 
-  const editable = props.bgImageOnChange && props.profileImageOnChange;
+  const editable = bgImageOnChange && profileImageOnChange;
 
   const profile = props.profile ?? Social.getr(`${accountId}/profile`);
 
@@ -71,7 +82,7 @@ const BannerHeader = ({ showFollowers, project, projectId, accountId: _accountId
               position: "absolute",
             }}
             clickable
-            onChange={props.bgImageOnChange}
+            onChange={bgImageOnChange}
           />
         )}
       </BackgroundImageContainer>
@@ -105,7 +116,7 @@ const BannerHeader = ({ showFollowers, project, projectId, accountId: _accountId
                 top: 0,
               }}
               clickable
-              onChange={props.profileImageOnChange}
+              onChange={profileImageOnChange}
             ></Files>
           )}
         </ProfileImageContainer>

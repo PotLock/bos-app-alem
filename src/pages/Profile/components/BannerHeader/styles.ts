@@ -64,6 +64,34 @@ export const ProfileImageContainer = styled.div`
   border-radius: 50%;
   padding: 6px;
   position: relative;
+  &.editable {
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+      background-color: rgba(45.9, 45.9, 45.9, 0);
+      transition: background-color 0.3s;
+      pointer-events: none;
+      @media screen and (max-width: 768px) {
+        height: 64px;
+      }
+    }
+    &:hover {
+      cursor: pointer;
+      &:after {
+        background-color: rgba(45.9, 45.9, 45.9, 0.4);
+      }
+      svg {
+        opacity: 1;
+      }
+    }
+  }
   .profile-image {
     height: 100%;
     width: 100%;
@@ -83,39 +111,6 @@ export const ProfileImageContainer = styled.div`
     z-index: 2; // Ensure the image is on top
     pointer-events: none;
   }
-  &.editable {
-    &:after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 100%;
-      width: 100%;
-      border-radius: 50%;
-      background-color: rgba(45.9, 45.9, 45.9, 0); // Start with transparent overlay
-      transition: background-color 0.3s; // Smooth transition for the overlay
-      pointer-events: none;
-
-      @media screen and (max-width: 768px) {
-        height: 64px;
-      }
-    }
-
-    &:hover {
-      cursor: pointer;
-
-      &:after {
-        background-color: rgba(45.9, 45.9, 45.9, 0.4); // Dark overlay with 40% opacity on hover
-      }
-
-      svg {
-        opacity: 1; // Make the image visible on hover
-      }
-    }
-  }
-
   @media screen and (max-width: 768px) {
     width: 72px;
     height: 72px;
@@ -126,24 +121,6 @@ export const BackgroundImageContainer = styled.div`
   position: relative;
   width: 100%;
   height: 318px;
-  img {
-    object-fit: cover;
-    height: 100%;
-    width: 100%;
-  }
-  @media screen and (max-width: 768px) {
-    height: 264px;
-  }
-  svg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0; // Start with the image invisible
-    transition: opacity 0.3s;
-    z-index: 2; // Ensure the image is on top
-    pointer-events: none;
-  }
   &.editable {
     &:after {
       content: "";
@@ -152,21 +129,39 @@ export const BackgroundImageContainer = styled.div`
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: rgba(45.9, 45.9, 45.9, 0); // Start with transparent overlay
-      transition: background-color 0.3s; // Smooth transition for the overlay
+      background-color: rgba(45.9, 45.9, 45.9, 0);
+      transition: background-color 0.3s;
       pointer-events: none;
     }
-
     &:hover {
       cursor: pointer;
 
       &:after {
-        background-color: rgba(45.9, 45.9, 45.9, 0.4); // Dark overlay with 40% opacity on hover
+        background-color: rgba(45.9, 45.9, 45.9, 0.4);
       }
 
       svg {
-        opacity: 1; // Make the image visible on hover
+        opacity: 1;
       }
+    }
+    img {
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+    }
+    svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    @media screen and (max-width: 768px) {
+      height: 264px;
     }
   }
 `;
