@@ -110,7 +110,7 @@ const ProjectPage = () => {
 
   return (
     <Wrapper>
-      {project.status !== "Approved" && <ProjectBanner project={project} />}
+      {registration.status !== "Approved" && <ProjectBanner registration={registration} />}
 
       <Body
         {...{

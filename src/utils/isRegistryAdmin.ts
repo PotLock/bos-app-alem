@@ -1,5 +1,5 @@
 import { context } from "alem";
-import RegistrySDK from "../SDK/registry";
+import ListsSDK from "@app/SDK/lists";
 
-const isRegistryAdmin = RegistrySDK.isRegistryAdmin(context.accountId);
+const isRegistryAdmin = ListsSDK.isRegistryAdmin(context.accountId);
 export default isRegistryAdmin;

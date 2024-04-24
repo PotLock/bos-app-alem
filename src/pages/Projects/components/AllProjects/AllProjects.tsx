@@ -3,7 +3,6 @@ import ListSection from "../ListSection";
 import { ProjectsContainer, FilterWrapper, Title, Container, Header } from "./styles";
 import Card from "@app/components/Card/Card";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import RegistrySDK from "@app/SDK/registry";
 import DonateSDK from "@app/SDK/donate";
 import yoctosToUsd from "@app/utils/yoctosToUsd";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
@@ -11,9 +10,10 @@ import { Social, context, createDebounce, useEffect, useState } from "alem";
 import SearchBar from "../SearchBar/SearchBar";
 import FilterDropdown from "@app/components/Inputs/FilterDropdown/FilterDropdown";
 import tagsList from "./tagsList";
+import ListsSDK from "@app/SDK/lists";
 
 const AllProjects = ({ projectsData }: { projectsData: any }) => {
-  const isRegistryAdmin = RegistrySDK.isRegistryAdmin(context.accountId);
+  const isRegistryAdmin = ListsSDK.isRegistryAdmin(context.accountId);
 
   const [totalDonation, setTotalDonation] = useState(0);
   const [totalDonated, setTotalDonated] = useState("0");

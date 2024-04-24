@@ -1,7 +1,7 @@
-import RegistrySDK from "../SDK/registry";
+import ListsSDK from "@app/SDK/lists";
 
 const getProjectByProjectId = (projectId: string) => {
-  return RegistrySDK.getProjectById(projectId);
+  return ListsSDK.getRegistration(null, projectId);
 };
 
 export default getProjectByProjectId;
