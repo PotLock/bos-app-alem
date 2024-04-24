@@ -54,7 +54,12 @@ const Body = (props: any) => {
 
   return (
     <Wrapper>
-      <BannerHeader showFollowers accountId={projectId || accountId} projectId={projectId} project={props.project} />
+      <BannerHeader
+        showFollowers
+        accountId={projectId || accountId}
+        projectId={projectId}
+        registration={registration}
+      />
       <Container>
         <BodyHeader accountId={accountId} projectId={projectId} profile={props.profile} />
         {userIsRegistryAdmin && projectId && (

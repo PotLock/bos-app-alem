@@ -1,4 +1,4 @@
-import { Files, Near, Social, context } from "alem";
+import { Files, Near, Social, context, useParams } from "alem";
 import { Project } from "@app/types";
 import CameraSvg from "@app/assets/svgs/camera";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
@@ -16,7 +16,7 @@ import {
 
 type Props = {
   showFollowers?: boolean;
-  project?: Project;
+  registration?: Project;
   projectId?: string;
   accountId?: string;
   bgImageOnChange?: (files: any) => void;
@@ -31,8 +31,7 @@ type Props = {
 };
 
 const BannerHeader = (props: Props) => {
-  const { showFollowers, project, projectId, profileImageOnChange, bgImageOnChange } = props;
-
+  const { showFollowers, registration, projectId, profileImageOnChange, bgImageOnChange } = props;
   const accountId = props.accountId || projectId || context.accountId;
 
   if (!accountId) {
@@ -122,10 +121,10 @@ const BannerHeader = (props: Props) => {
         </ProfileImageContainer>
         {showFollowers && (
           <ProfileStats>
-            {project ? (
-              <Verified className="not-verified">
-                {statuses[project.status].icon}
-                <div style={{ color: statuses[project.status].color }}> {project.status}</div>
+            {registration ? (
+              <Verified>
+                {statuses[registration.status].icon}
+                <div style={{ color: statuses[registration.status].color }}> {registration.status}</div>
               </Verified>
             ) : nadaBotVerified ? (
               <Verified>
@@ -133,7 +132,11 @@ const BannerHeader = (props: Props) => {
                 <div style={{ color: statuses.Approved.color }}> Verified</div>
               </Verified>
             ) : (
-              ""
+              <div
+                style={{
+                  width: "10px",
+                }}
+              />
             )}
             <FollowStats accountId={projectId || accountId} projectId={projectId} />
           </ProfileStats>
