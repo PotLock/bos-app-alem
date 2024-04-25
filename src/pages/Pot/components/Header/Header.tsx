@@ -13,6 +13,8 @@ import NewApplicationModal from "../NewApplicationModal/NewApplicationModal";
 import FundModal from "../FundModal/FundModal";
 import ChallengeModal from "../ChallengeModal/ChallengeModal";
 import ModalDonation from "@app/modals/ModalDonation";
+import calculatePayouts from "@app/utils/calculatePayouts";
+import ModalSuccess from "@app/modals/ModalSuccess/ModalSuccess";
 
 const Header = ({
   potDetail,
@@ -29,7 +31,6 @@ const Header = ({
     owner,
     pot_name,
     pot_description,
-    registry_provider,
     matching_pool_balance,
     public_round_end_ms,
     public_round_start_ms,
@@ -41,7 +42,7 @@ const Header = ({
 
   const { IPFS_BASE_URL, NADA_BOT_URL } = constants;
 
-  const { potId, referrerId } = useParams();
+  const { potId } = useParams();
 
   const NADABOT_ICON_URL = IPFS_BASE_URL + "bafkreiecgkoybmplo4o542fphclxrhh4nlof5uit3lkzyv4eo2qymrpsru";
   const accountId = context.accountId || "";
@@ -55,6 +56,7 @@ const Header = ({
   const [registryStatus, setRegistryStatus] = useState<any>(null);
   const [isDao, setIsDao] = useState(null);
   const [applicationSuccess, setApplicationSuccess] = useState(null);
+  const [flaggedAddresses, setFlaggedAddresses] = useState(null);
 
   const verifyIsOnRegistry = (address: any) => {
     Near.asyncView("lists.potlock.near", "get_registrations_for_registrant", {
@@ -88,10 +90,12 @@ const Header = ({
       });
     }
   }, []);
+
   const applicationExists = existingApplication || applicationSuccess;
 
   const now = Date.now();
   const publicRoundOpen = now >= public_round_start_ms && now < public_round_end_ms;
+  const publicRoundEnded = now > public_round_end_ms;
 
   const applicationOpen = now >= application_start_ms && now < application_end_ms;
 
@@ -101,10 +105,35 @@ const Header = ({
     context.accountId && `&referrerId=${context.accountId}`
   }`;
 
-  const canPayoutsBeProcessed =
-    now >= public_round_end_ms && userIsAdminOrGreater && now >= cooldown_end_ms && !all_paid_out;
+  const canPayoutsBeProcessed = userIsAdminOrGreater && now >= cooldown_end_ms && !all_paid_out;
+
+  const canPayoutsBeSet = userIsChefOrGreater && !all_paid_out && publicRoundEnded;
 
   const payoutsChallenges = PotSDK.getPayoutsChallenges(potId);
+
+  if (!flaggedAddresses) {
+    PotSDK.getFlaggedAccounts(potDetail, potId)
+      .then((data) => {
+        const listOfFlagged: any = [];
+        data.forEach((adminFlaggedAcc: any) => {
+          const addresses = Object.keys(adminFlaggedAcc.potFlaggedAcc);
+          listOfFlagged.push(...addresses);
+        });
+        setFlaggedAddresses(listOfFlagged);
+      })
+      .catch((err) => console.log("error getting the flagged accounts ", err));
+  }
+
+  const handleSetPayouts = () => {
+    if (allDonations && flaggedAddresses !== null) {
+      const payouts = Object.entries(calculatePayouts(allDonations, matching_pool_balance, flaggedAddresses))
+        .map(([projectId, { matchingAmount }]: any) => ({ project_id: projectId, amount: matchingAmount }))
+        .filter((payout) => payout.amount !== "0");
+      PotSDK.chefSetPayouts(potId, payouts);
+    } else {
+      console.log("error fetching donations or flagged addresses");
+    }
+  };
 
   const handleProcessPayouts = () => {
     PotSDK.adminProcessPayouts(potId);
@@ -154,7 +183,7 @@ const Header = ({
           {now < public_round_end_ms && (
             <Button type="secondary" text="Fund matching pool" onClick={() => setIsMatchingPoolModalOpen(true)} />
           )}
-          {applicationOpen && (
+          {canApply && (
             <Button
               type={registrationApproved || projectNotRegistered ? "primary" : "tertiary"}
               text={registryStatus && !registrationApproved ? `Project Registration ${registryStatus}` : "Apply to pot"}
@@ -168,6 +197,14 @@ const Header = ({
               type="secondary"
               text={existingChallengeForUser ? "Update challenge" : "Challenge payouts"}
               onClick={() => setShowChallengePayoutsModal(true)}
+            />
+          )}
+          {canPayoutsBeSet && (
+            <Button
+              {...{
+                text: "Set Payouts",
+                onClick: handleSetPayouts,
+              }}
             />
           )}
           {canPayoutsBeProcessed && <Button type="primary" text="Process Payouts" onClick={handleProcessPayouts} />}
@@ -214,7 +251,6 @@ const Header = ({
             potId,
             potDetail,
             projects,
-            referrerId,
             multiple: true,
             openDonationModalSuccess: (donation: any) => {
               setIsModalDonationOpen(false);
@@ -223,18 +259,15 @@ const Header = ({
           }}
         />
       )}
-
-      {/* {successfulDonation && (
-        <Widget
-          src={`${ownerId}/widget/Project.ModalSuccess`}
-          props={{
-            ...props,
+      {successfulDonation && (
+        <ModalSuccess
+          {...{
             successfulDonation: successfulDonation,
             isModalOpen: successfulDonation != null,
             onClose: () => setSuccessfulDonation(null),
           }}
         />
-      )} */}
+      )}
     </Container>
   );
 };

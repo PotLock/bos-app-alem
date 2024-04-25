@@ -5,7 +5,6 @@ import {
   asyncFetch,
   context,
   fetch,
-  props,
   state,
   useCache,
   useEffect,
@@ -22,20 +21,23 @@ import { Banner, Container, HeaderIcons } from "./styles";
 import FormPot from "./FormPot/FormPot";
 import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
 import ConfirmPot from "./ConfirmPot/ConfirmPot";
+import { PotDetail } from "@app/types";
 
 type DonationModalProps = {
-  projectId: string;
+  projectId?: string;
   onClose: () => void;
   multiple?: boolean;
-  potId?: string;
+  potDetail?: PotDetail;
 };
 
-const ModalDonation = ({ projectId, onClose, multiple }: DonationModalProps) => {
+const ModalDonation = (donationProps: DonationModalProps) => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
 
   const { potId, referrerId } = useParams();
 
-  const potDetail = PotSDK.getConfig(potId);
+  const { projectId, onClose, multiple } = donationProps;
+
+  const potDetail = donationProps.potDetail ?? PotSDK.getConfig(potId);
 
   const accountId = context.accountId;
 
@@ -258,7 +260,7 @@ const ModalDonation = ({ projectId, onClose, multiple }: DonationModalProps) => 
           </Banner>
         </div>
         <ActivePageComponent
-          {...props}
+          {...donationProps}
           {...state}
           accountId={accountId}
           potId={potId}
