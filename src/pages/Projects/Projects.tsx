@@ -14,7 +14,7 @@ const ProjectsPage = () => {
 
   return (
     <>
-      <Hero />
+      <Hero projectsData={projectsData} />
       <FeaturedProjects projectsData={projectsData} />
       <AllProjects projectsData={projectsData} />
     </>

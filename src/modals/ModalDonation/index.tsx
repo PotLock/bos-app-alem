@@ -155,6 +155,7 @@ const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
         .then((ftBalancesRes) => {
           if (ftBalancesRes) {
             const ftBalances = ftBalancesRes.body.balances;
+
             State.update({
               ftBalances: ftBalances,
               denominationOptions: DENOMINATION_OPTIONS.concat(
