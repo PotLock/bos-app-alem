@@ -24,6 +24,7 @@ const NewApplicationModal = ({
     applicationMessage: "",
     applicationMessageError: "",
     daoAddress: "",
+    daoPolicy: "",
     daoAddressError: "",
   });
   const updateState = State.update;
@@ -98,6 +99,7 @@ const NewApplicationModal = ({
       Near.asyncView(daoAddress, "get_policy", {})
         .then((policy) => {
           const hasPermissions = !policy ? false : doesUserHaveDaoFunctionCallProposalPermissions(accountId, policy);
+
           updateState({
             daoAddressError: hasPermissions
               ? ""
@@ -144,9 +146,9 @@ const NewApplicationModal = ({
               : "Register to apply"
           }
           onClick={
-            isDao || registrationApprovedOrNoRegistryProvider
+            (isDao || registrationApprovedOrNoRegistryProvider) && !isError
               ? () => {
-                  handleSendApplication(potId, potDetail, setApplicationSuccess);
+                  handleSendApplication(potId, potDetail, setApplicationSuccess, isDao);
                 }
               : () => {}
           }

@@ -57,10 +57,9 @@ const Button = ({ type, disabled, href, onClick, stopPropagation, style, target,
     font-size: 14px;
     line-height: 16px;
     font-weight: 600;
-
+    cursor: ${disabled ? "not-allowed" : "pointer"} !important;
     &:hover {
       text-decoration: none;
-      cursor: ${props.disabled ? "not-allowed" : "pointer"};
     }
   `;
 
