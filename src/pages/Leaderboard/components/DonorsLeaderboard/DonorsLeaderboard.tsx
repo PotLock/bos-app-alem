@@ -9,8 +9,8 @@ import ProfileImage from "@app/components/mob.near/ProfileImage";
 import _address from "@app/utils/_address";
 import Pagination from "@app/components/Pagination/Pagination";
 
-const DonorsLeaderboard = (props: Props) => {
-  const { sponsors, sortedDonations, filter, currentTab } = props;
+const DonorsLeaderboard = (propsLeaderboard: Props) => {
+  const { sponsors, sortedDonations, filter, currentTab } = propsLeaderboard;
 
   const { tab } = useParams();
 
