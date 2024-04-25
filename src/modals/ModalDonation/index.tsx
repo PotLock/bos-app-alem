@@ -10,6 +10,7 @@ import {
   useCache,
   useEffect,
   useMemo,
+  useParams,
   useState,
 } from "alem";
 import PotSDK from "@app/SDK/pot";
@@ -22,8 +23,17 @@ import FormPot from "./FormPot/FormPot";
 import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
 import ConfirmPot from "./ConfirmPot/ConfirmPot";
 
-const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
+type DonationModalProps = {
+  projectId: string;
+  onClose: () => void;
+  multiple?: boolean;
+  potId?: string;
+};
+
+const ModalDonation = ({ projectId, onClose, multiple }: DonationModalProps) => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
+
+  const { potId, referrerId } = useParams();
 
   const potDetail = PotSDK.getConfig(potId);
 
@@ -251,6 +261,8 @@ const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
           {...props}
           {...state}
           accountId={accountId}
+          potId={potId}
+          referrerId={referrerId}
           updateState={State.update}
           ftBalance={ftBalance}
           activeRounds={activeRounds}

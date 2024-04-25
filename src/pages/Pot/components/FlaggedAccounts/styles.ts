@@ -37,6 +37,7 @@ export const Table = styled.div`
   transition: max-height 400ms ease-in-out;
   overflow: hidden;
   max-height: 1000px;
+  overflow-y: scroll;
   opacity: 1;
   &.hidden {
     opacity: 0;

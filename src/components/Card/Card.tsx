@@ -1,4 +1,4 @@
-import { Big, RouteLink, Social, State, Widget, context, useEffect, useMemo, useParams, useState } from "alem";
+import { Big, RouteLink, Social, State, context, useEffect, useMemo, useParams, useState } from "alem";
 import CardSkeleton from "../../pages/Projects/components/CardSkeleton";
 import {
   Amount,
@@ -28,6 +28,7 @@ import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import Image from "../mob.near/Image";
 import _address from "@app/utils/_address";
+import ModalDonation from "@app/modals/ModalDonation";
 
 const Card = (props: any) => {
   const { payoutDetails } = props;
@@ -38,30 +39,7 @@ const Card = (props: any) => {
   // console.log(utils);
 
   const [ready, isReady] = useState(false);
-
-  State.init({
-    donateModal: {
-      isOpen: false,
-      recipientId: null,
-      referrerId: null,
-      potId: null,
-      potDetail: null,
-      successfulDonation: null,
-    },
-  });
-
-  const openDonateModal = () => {
-    State.update({
-      donateModal: {
-        isOpen: true,
-        recipientId: projectId,
-        referrerId: null,
-        potId: null,
-        potDetail: null,
-        successfulDonation: null,
-      },
-    });
-  };
+  const [isOpen, setIsOpen] = useState(false);
 
   const projectId = props.project.registrant_id || props.projectId;
   const profile = Social.getr(`${projectId}/profile`) as any;
@@ -92,7 +70,6 @@ const Card = (props: any) => {
   }, [donationsForProject]);
 
   const getImageSrc = (image: any) => {
-    // console.log(image);
     const defaultImageUrl = "https://ipfs.near.social/ipfs/bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";
     if (!image) return defaultImageUrl;
     const { url, ipfs_cid } = image;
@@ -206,7 +183,7 @@ const Card = (props: any) => {
               <DonationButton
                 onClick={(e) => {
                   e.preventDefault();
-                  openDonateModal();
+                  setIsOpen(true);
                 }}
                 disabled={!context.accountId}
               >
@@ -222,6 +199,7 @@ const Card = (props: any) => {
           )}
         </CardContainer>
       </RouteLink>
+      {isOpen && <ModalDonation projectId={projectId} onClose={() => setIsOpen(false)} />}
     </>
   );
 };
