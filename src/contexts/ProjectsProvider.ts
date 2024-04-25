@@ -51,7 +51,9 @@ const ProjectsProvider = () => {
 
           const featuredProjectIds = ["magicbuild.near", "potlock.near", "yearofchef.near"];
 
-          const featuredProjects = allProjects.filter((project: any) => featuredProjectIds.includes(project.id));
+          const featuredProjects = allProjects.filter((project: any) =>
+            featuredProjectIds.includes(project.registrant_id),
+          );
 
           // Set projects
           self.setProjects(allProjects, featuredProjects);

@@ -8,27 +8,6 @@ import ProfileImage from "@app/components/mob.near/ProfileImage";
 import _address from "@app/utils/_address";
 import Button from "@app/components/Button";
 
-const ProfileImg = ({ profile }: any) => <ProfileImage profile={profile} style={{}} />;
-
-const donationTypes = [
-  {
-    label: "Auto",
-    info: "(allocate funds evenly across multiple projects)",
-    val: "auto",
-    disabled: false,
-  },
-  {
-    label: "Manual",
-    info: "(manually specify amount for each project)",
-    val: "manual",
-    disabled: false,
-  },
-];
-
-const isEmpty = (obj: any) => {
-  return Object.keys(obj).length === 0;
-};
-
 const FormPot = ({
   amount,
   amountError,
@@ -40,6 +19,27 @@ const FormPot = ({
   hrefWithParams,
   selectedProjects,
 }: any) => {
+  const ProfileImg = ({ profile }: any) => <ProfileImage profile={profile} style={{}} />;
+
+  const donationTypes = [
+    {
+      label: "Auto",
+      info: "(allocate funds evenly across multiple projects)",
+      val: "auto",
+      disabled: false,
+    },
+    {
+      label: "Manual",
+      info: "(manually specify amount for each project)",
+      val: "manual",
+      disabled: false,
+    },
+  ];
+
+  const isEmpty = (obj: any) => {
+    return Object.keys(obj).length === 0;
+  };
+
   const projects = props.projects ?? [];
   const projectHegiht = 58;
   const projectsContaienrHegiht = projects.length > 4 ? 234 : projectHegiht * projects.length;

@@ -76,7 +76,7 @@ export const Row = styled.div`
   }
 `;
 
-export const Checkbox = styled.div`
+export const CheckboxWrapper = styled.div`
   display: flex;
   @media screen and (max-width: 768px) {
     flex-direction: row;

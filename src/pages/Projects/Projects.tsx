@@ -1,9 +1,7 @@
 import Hero from "@app/components/Hero/Hero";
 import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
-import SearchBar from "./components/SearchBar/SearchBar";
-// import { useState } from "alem";
-// import getProjects from "@app/services/getProjects";
-// import ProjectsProvider from "../../contexts/ProjectsProvider";
+import AllProjects from "./components/AllProjects/AllProjects";
+import getProjects from "@app/services/getProjects";
 
 const ProjectsPage = () => {
   // NOTE: Usar o getProjects() service é mais performatico do ponto de vista de renderização pois
@@ -12,12 +10,13 @@ const ProjectsPage = () => {
   //
   // O Uso de um Provider deve ser usado só quando realmente necessário. Prefira criar services!
   // ProjectsProvider();
+  const projectsData = getProjects();
 
   return (
     <>
-      <Hero />
-      <FeaturedProjects />
-      <SearchBar />
+      <Hero projectsData={projectsData} />
+      <FeaturedProjects projectsData={projectsData} />
+      <AllProjects projectsData={projectsData} />
     </>
   );
 };

@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 400px;
+  max-width: 420px;
   min-height: 405px;
   width: 100%;
   height: 100%;
@@ -61,11 +61,12 @@ export const ProfileImageContainer = styled.div`
     cursor: pointer;
 
     &:after {
-      background-color: rgba(45.9, 45.9, 45.9, 0.4); // Dark overlay with 40% opacity on hover
+      /*  Dark overlay with 40% opacity on hover */
+      background-color: rgba(45.9, 45.9, 45.9, 0.4);
     }
 
     svg {
-      opacity: 1; // Make the image visible on hover
+      opacity: 1; /* Make the image visible on hover */
     }
   }
 `;
@@ -83,9 +84,6 @@ export const Title = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: #2e2e2e;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   width: 100%;
 `;
 

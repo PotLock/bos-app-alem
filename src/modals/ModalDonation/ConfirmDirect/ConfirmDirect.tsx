@@ -265,7 +265,9 @@ const ConfirmDirect = ({
           <div>
             {amount} <span>{selectedDenomination.text}</span>
           </div>
-          {nearToUsd && <div className="usd-amount">~${(nearToUsd * amount).toFixed(2)}</div>}
+          {nearToUsd && selectedDenomination.text === "NEAR" && (
+            <div className="usd-amount">~${(nearToUsd * amount).toFixed(2)}</div>
+          )}
         </Amout>
       </div>
       <div>

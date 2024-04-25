@@ -1,15 +1,13 @@
 import styled from "styled-components";
 
-export const Banner = styled.div<{ status: string }>`
+export const Banner = styled.div`
   width: 100%;
-  background: ${(props) => (props.status === "Pending" ? "#E6B800" : "#dd3345")};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 8px 0;
-  margin-bottom: 8px;
-  border-radius: 4px;
+  padding: 12px;
+  backdrop-filter: blur(150px);
 `;
 export const Row = styled.div`
   display: flex;
@@ -19,14 +17,47 @@ export const Row = styled.div`
 `;
 export const BannerText = styled.div`
   text-align: center;
-  color: white;
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 600;
-  margin: 0 8px;
-  word-break: break-all;
-
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
   @media screen and (max-width: 768px) {
     font-size: 12px;
-    margin-left: 4px;
+  }
+`;
+export const Toggle = styled.span`
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 22px;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+
+  svg {
+    width: 12px;
+    transition: all 300ms ease-in-out;
+  }
+  &.active svg {
+    rotate: 180deg;
+  }
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+    svg {
+      width: 8px;
+    }
+  }
+`;
+
+export const Notes = styled.div`
+  overflow: hidden;
+  transition: all 300ms ease-in-out;
+  font-size: 12px;
+  font-style: italic;
+  max-height: 0;
+  text-transform: uppercase;
+  max-width: 1270px;
+  &.active {
+    max-height: 80px;
+    margin-top: 12px;
   }
 `;

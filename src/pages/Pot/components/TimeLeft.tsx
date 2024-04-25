@@ -3,9 +3,9 @@ import { useState, useEffect } from "alem";
 const TimeLeft = ({ daysLeft }: { daysLeft: number }) => {
   const [timeLeft, setTimeLeft] = useState("-");
 
-  const now = new Date().getTime();
-
   function formatTimeLeft(targetTimestamp: number) {
+    const now = new Date().getTime();
+
     // Calculate time remaining
     const timeRemaining = targetTimestamp - now;
 
@@ -32,6 +32,8 @@ const TimeLeft = ({ daysLeft }: { daysLeft: number }) => {
     const intervelId = setInterval(() => {
       const time = formatTimeLeft(daysLeft);
       setTimeLeft(time);
+      const now = new Date().getTime();
+
       if (now > daysLeft) {
         clearInterval(intervelId);
       }

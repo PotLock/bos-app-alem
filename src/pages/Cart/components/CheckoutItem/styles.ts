@@ -5,7 +5,7 @@ export const ItemContainer = styled.div`
   flex-direction: row;
   max-width: 800px;
   background: white;
-  // background: pink;
+  /* background: pink; */
   border: 1px solid #dbdbdb;
   box-shadow: 0px -2px 0px #dbdbdb inset;
   border-radius: 6px;
@@ -16,7 +16,7 @@ export const ItemContainer = styled.div`
 export const ItemLeft = styled.div`
   height: 100%;
   padding: 24px 16px;
-  // background: green;
+  /* background: green; */
 `;
 
 export const ItemRight = styled.div`
@@ -24,7 +24,7 @@ export const ItemRight = styled.div`
   flex-direction: row;
   padding: 24px 24px 24px 16px;
   width: 100%;
-  // background: yellow;
+  /* background: yellow; */
   border-left: 1px solid #dbdbdb;
 `;
 

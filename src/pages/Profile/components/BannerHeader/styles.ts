@@ -106,9 +106,9 @@ export const ProfileImageContainer = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0; // Start with the image invisible
+    opacity: 0; /* Start with the image invisible */
     transition: opacity 0.3s;
-    z-index: 2; // Ensure the image is on top
+    z-index: 2; /* Ensure the image is on top */
     pointer-events: none;
   }
   @media screen and (max-width: 768px) {
@@ -121,6 +121,7 @@ export const BackgroundImageContainer = styled.div`
   position: relative;
   width: 100%;
   height: 318px;
+  display: flex;
   &.editable {
     &:after {
       content: "";
@@ -144,24 +145,23 @@ export const BackgroundImageContainer = styled.div`
         opacity: 1;
       }
     }
-    img {
-      object-fit: cover;
-      height: 100%;
-      width: 100%;
-    }
-    svg {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 0.3s;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    @media screen and (max-width: 768px) {
-      height: 264px;
-    }
+  }
+  img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+    pointer-events: none;
+  }
+  @media screen and (max-width: 768px) {
+    height: 264px;
   }
 `;

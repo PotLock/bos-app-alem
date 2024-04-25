@@ -74,27 +74,27 @@ const Settings = ({ potDetail }: { potDetail: PotDetail }) => {
             </div>
           </div>
         )}
-        {/* {userIsAdminOrGreater && ( */}
-        <div className="edit" onClick={() => setEditSettings(true)}>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M0.25 13.7501H3.0625L11.3575 5.45508L8.545 2.64258L0.25 10.9376V13.7501ZM1.75 11.5601L8.545 4.76508L9.235 5.45508L2.44 12.2501H1.75V11.5601Z"
-              fill="#DD3345"
-            />
-            <path
-              d="M11.7777 0.469375C11.4852 0.176875 11.0127 0.176875 10.7202 0.469375L9.34766 1.84187L12.1602 4.65438L13.5327 3.28187C13.8252 2.98937 13.8252 2.51688 13.5327 2.22438L11.7777 0.469375Z"
-              fill="#DD3345"
-            />
-          </svg>
-          Edit Pot
-        </div>
-        {/* )} */}
+        {userIsAdminOrGreater && (
+          <div className="edit" onClick={() => setEditSettings(true)}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M0.25 13.7501H3.0625L11.3575 5.45508L8.545 2.64258L0.25 10.9376V13.7501ZM1.75 11.5601L8.545 4.76508L9.235 5.45508L2.44 12.2501H1.75V11.5601Z"
+                fill="#DD3345"
+              />
+              <path
+                d="M11.7777 0.469375C11.4852 0.176875 11.0127 0.176875 10.7202 0.469375L9.34766 1.84187L12.1602 4.65438L13.5327 3.28187C13.8252 2.98937 13.8252 2.51688 13.5327 2.22438L11.7777 0.469375Z"
+                fill="#DD3345"
+              />
+            </svg>
+            Edit Pot
+          </div>
+        )}
       </Admins>
       <Detail>
         {fields.map((field) => (
           <div className="row-field" key={field.label}>
             <div className="label">{field.label}</div>
-            <div className="input">{field.val}</div>
+            <div className="input">{field.val ?? "-"}</div>
           </div>
         ))}
       </Detail>

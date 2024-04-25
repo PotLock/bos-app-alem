@@ -3,7 +3,7 @@ import PotFactorySDK from "@app/SDK/potfactory";
 import constants from "@app/constants";
 import { Big, Near, State, context, state, useMemo, useParams } from "alem";
 import {
-  Checkbox,
+  CheckboxWrapper,
   FormBody,
   FormSectionContainer,
   FormSectionDescription,
@@ -13,6 +13,7 @@ import {
   Label,
   Row,
 } from "./styles";
+import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import { PotDetail } from "@app/types";
 import validateNearAddress from "@app/utils/validateNearAddress";
 import Text from "@app/components/Inputs/Text/Text";
@@ -676,8 +677,8 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
         {FormSectionLeft("Project Registration", "")}
         <FormSectionRightDiv>
           <Row>
-            <Checkbox>
-              <Checkbox
+            <CheckboxWrapper>
+              <CheckBox
                 {...{
                   id: "registrationSelector",
                   checked: state.usePotlockRegistry,
@@ -691,7 +692,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               />
 
               <Label htmlFor="sybilSelector">Require approval on PotLock registry (recommended)</Label>
-            </Checkbox>
+            </CheckboxWrapper>
           </Row>
         </FormSectionRightDiv>
       </FormSectionContainer>
@@ -699,8 +700,8 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
         {FormSectionLeft("Donor Sybil Resistance", "")}
         <FormSectionRightDiv>
           <Row>
-            <Checkbox>
-              <Checkbox
+            <CheckboxWrapper>
+              <CheckBox
                 {...{
                   id: "sybilSelector",
                   checked: state.useNadabotSybil,
@@ -714,7 +715,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               />
 
               <Label htmlFor="sybilSelector">🤖 nada.bot human verification (recommended)</Label>
-            </Checkbox>
+            </CheckboxWrapper>
           </Row>
           <Row style={{ justifyContent: "flex-end", marginTop: "36px" }}>
             {!isUpdate && isAdminOrGreater && (

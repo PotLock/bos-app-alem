@@ -135,7 +135,6 @@ const Leaderboard = () => {
 
   const options: any = [
     { tab: "feed", src: (compProps: any) => <DonorsTrx {...compProps} /> },
-    { tab: "leaderboard", src: (compProps: any) => <DonorsLeaderboard {...compProps} /> },
     { tab: "sponsors", src: (compProps: any) => <DonorsLeaderboard {...compProps} /> },
   ];
 
@@ -199,15 +198,20 @@ const Leaderboard = () => {
               ))}
             </Filter>
           </Tabs>
-          <SelectedNavComponent
-            {...{
-              allDonations: allDonations,
-              filter,
-              sponsors,
-              sortedDonations,
-              currentTab,
-            }}
-          />
+
+          {currentTab === "leaderboard" ? (
+            <DonorsLeaderboard {...{ allDonations: allDonations, filter, sponsors, sortedDonations, currentTab }} />
+          ) : (
+            <SelectedNavComponent
+              {...{
+                allDonations: allDonations,
+                filter,
+                sponsors,
+                sortedDonations,
+                currentTab,
+              }}
+            />
+          )}
         </>
       )}
     </Container>

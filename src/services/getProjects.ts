@@ -1,29 +1,21 @@
-import { context } from "alem";
-import RegistrySDK from "../SDK/registry";
-import { Project } from "../types";
+import ListsSDK from "@app/SDK/lists";
 
 /**
  * Get current projects.
  * @returns
  */
 const getProjects = () => {
-  const isRegistryAdmin = RegistrySDK.isRegistryAdmin(context.accountId);
-
-  let allProjects = RegistrySDK.getProjects() as Project[];
+  const allProjects = ListsSDK.getRegistrations();
 
   if (!allProjects) {
     return { allProjects: [], featuredProjects: [] };
   }
 
-  if (!isRegistryAdmin) {
-    allProjects = allProjects.filter((project) => project.status === "Approved");
-  } else {
-    allProjects.sort((a, b) => b.submitted_ms - a.submitted_ms);
-  }
+  allProjects.sort((a: any, b: any) => b.submitted_ms - a.submitted_ms);
 
-  const featuredProjectIds = ["magicbuild.near", "potlock.near", "yearofchef.near"];
+  const featuredProjectIds = ["v1.foodbank.near", "potlock.near", "yearofchef.near"];
 
-  const featuredProjects = allProjects.filter((project) => featuredProjectIds.includes(project.id));
+  const featuredProjects = allProjects.filter((project: any) => featuredProjectIds.includes(project.registrant_id));
 
   return { allProjects, featuredProjects };
 };

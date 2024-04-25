@@ -94,7 +94,7 @@ export const FormSectionLeftDiv = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  // background-color: yellow;
+  /* background-color: yellow; */
   gap: 16px;
 `;
 
@@ -102,7 +102,7 @@ export const FormSectionRightDiv = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  // background-color: lightblue;
+  /* background-color: lightblue; */
 `;
 
 export const FormSectionTitle = styled.div`

@@ -1,9 +1,9 @@
-import { Big, state, Near, context, State } from "alem";
+import { Big, state, Near, context } from "alem";
 import constants from "@app/constants";
 import { PotDetail } from "@app/types";
 import PotSDK from "@app/SDK/pot";
 
-const handleSendApplication = (potId: string, potDetail: PotDetail, setApplicationSuccess: any) => {
+const handleSendApplication = (potId: string, potDetail: PotDetail, setApplicationSuccess: any, isDao: boolean) => {
   // Constents
   const FIFTY_TGAS = "50000000000000";
   const MIN_PROPOSAL_DEPOSIT_FALLBACK = "100000000000000000000000"; // 0.1N
@@ -31,7 +31,7 @@ const handleSendApplication = (potId: string, potDetail: PotDetail, setApplicati
   ];
 
   // if it is a DAO, we need to convert transactions to DAO function call proposals
-  if (state.isDao) {
+  if (isDao) {
     const clonedTransactions = JSON.parse(JSON.stringify(transactions));
     transactions = clonedTransactions.map((tx: any) => {
       const action = {
@@ -70,7 +70,7 @@ const handleSendApplication = (potId: string, potDetail: PotDetail, setApplicati
   const pollId = setInterval(() => {
     PotSDK.asyncGetApplications(potId).then((applications: any) => {
       const application = applications.find(
-        (application: any) => application.project_id === (state.isDao ? state.daoAddress : context.accountId),
+        (application: any) => application.project_id === (isDao ? state.daoAddress : context.accountId),
       );
       if (application) {
         clearInterval(pollId);

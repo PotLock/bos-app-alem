@@ -1278,6 +1278,7 @@ const CreateForm = (props: { edit: boolean }) => {
                     style: {
                       width: "fit-content",
                       marginTop: "1rem",
+                      marginBottom: "3rem",
                     },
                     disabled: state.fundingSources.some(
                       (fs: any) => !fs.investorName || !fs.amountReceived || !fs.denomination || !fs.description,
@@ -1441,7 +1442,7 @@ const CreateForm = (props: { edit: boolean }) => {
             />
           )}
 
-          {state.fundingSourceIndex && (
+          {state.fundingSourceIndex !== null && (
             <ModalAddFundingSource
               {...{
                 onClose: () => {

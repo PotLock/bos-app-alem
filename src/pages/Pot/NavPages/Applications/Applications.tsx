@@ -19,6 +19,7 @@ import ProfileImage from "@app/components/mob.near/ProfileImage";
 import daysUntil from "@app/utils/daysUntil";
 import Button from "@app/components/Button";
 import ApplicationReviewModal from "../../components/ApplicationReviewModal/ApplicationReviewModal";
+import daysAgo from "@app/utils/daysAgo";
 
 const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
   const { potId } = useParams();
@@ -211,7 +212,7 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
                     </OverlayTrigger>
 
                     <Dot />
-                    <div className="date">{daysUntil(submitted_at)}</div>
+                    <div className="date">{daysAgo(submitted_at)}</div>
                   </div>
                   <Status
                     style={{
