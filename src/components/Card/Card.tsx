@@ -58,15 +58,15 @@ const Card = (props: any) => {
     }
   }, [profile, donationsForProject]);
 
-  const [totalAmountNear] = useMemo(() => {
-    if (!donationsForProject) return ["0", 0];
+  const totalAmountNear = useMemo(() => {
+    if (!donationsForProject) return "0";
     let totalDonationAmountNear = new Big(0);
     for (const donation of donationsForProject) {
-      if (donation.ft_id === "near" || donation.base_currency === "near") {
+      if (donation.ft_id === "near" || donation.base_currency === "near" || potId) {
         totalDonationAmountNear = totalDonationAmountNear.plus(new Big(donation.total_amount));
       }
     }
-    return [totalDonationAmountNear.toString()];
+    return totalDonationAmountNear.toString();
   }, [donationsForProject]);
 
   const getImageSrc = (image: any) => {
