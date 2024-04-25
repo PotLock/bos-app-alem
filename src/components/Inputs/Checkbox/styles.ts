@@ -13,7 +13,7 @@ export const CheckBoxContent = styled.input`
   padding: 0px;
   appearance: checkbox;
   cursor: pointer;
-  // TODO: update background color when selected
+  /* TODO: update background color when selected */
 `;
 
 export const Label = styled.label``;

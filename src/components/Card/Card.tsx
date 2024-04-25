@@ -1,4 +1,4 @@
-import { Big, RouteLink, Social, State, Widget, context, useEffect, useMemo, useState } from "alem";
+import { Big, RouteLink, Social, State, context, useEffect, useMemo, useParams, useState } from "alem";
 import CardSkeleton from "../../pages/Projects/components/CardSkeleton";
 import {
   Amount,
@@ -27,42 +27,21 @@ import routesPath from "@app/routes/routesPath";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import Image from "../mob.near/Image";
+import _address from "@app/utils/_address";
+import ModalDonation from "@app/modals/ModalDonation";
 
 const Card = (props: any) => {
-  const { potId, payoutDetails } = props;
-
+  const { payoutDetails } = props;
+  const { potId } = useParams();
   // TODO: Bug -> não esta importando o utils
   // Só importa funcóes que retornam algo, um objeto direto está falhando.
   // const { ipfsUrlFromCid, yoctosToNear, yoctosToUsdWithFallback } = utils;
   // console.log(utils);
 
   const [ready, isReady] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  State.init({
-    donateModal: {
-      isOpen: false,
-      recipientId: null,
-      referrerId: null,
-      potId: null,
-      potDetail: null,
-      successfulDonation: null,
-    },
-  });
-
-  const openDonateModal = () => {
-    State.update({
-      donateModal: {
-        isOpen: true,
-        recipientId: projectId,
-        referrerId: null,
-        potId: null,
-        potDetail: null,
-        successfulDonation: null,
-      },
-    });
-  };
-
-  const projectId = props.project.id || props.projectId;
+  const projectId = props.project.registrant_id || props.projectId;
   const profile = Social.getr(`${projectId}/profile`) as any;
 
   const MAX_DESCRIPTION_LENGTH = 80;
@@ -74,28 +53,23 @@ const Card = (props: any) => {
     : DonateSDK.getDonationsForRecipient(projectId);
 
   useEffect(() => {
-    if (profile && donationsForProject && !ready) {
+    if (profile !== null && !ready) {
       isReady(true);
     }
   }, [profile, donationsForProject]);
 
-  const [totalAmountNear, totalDonors] = useMemo(() => {
-    if (!donationsForProject) return ["0", 0];
-    const donors: any = [];
+  const totalAmountNear = useMemo(() => {
+    if (!donationsForProject) return "0";
     let totalDonationAmountNear = new Big(0);
     for (const donation of donationsForProject) {
-      if (!donors.includes(donation.donor_id)) {
-        donors.push(donation.donor_id);
+      if (donation.ft_id === "near" || donation.base_currency === "near" || potId) {
+        totalDonationAmountNear = totalDonationAmountNear.plus(new Big(donation.total_amount));
       }
-      // if (donation.ft_id === "near" || donation.base_currency === "near") {
-      totalDonationAmountNear = totalDonationAmountNear.plus(new Big(donation.total_amount));
-      // }
     }
-    return [totalDonationAmountNear.toString(), donors.length];
+    return totalDonationAmountNear.toString();
   }, [donationsForProject]);
 
   const getImageSrc = (image: any) => {
-    // console.log(image);
     const defaultImageUrl = "https://ipfs.near.social/ipfs/bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";
     if (!image) return defaultImageUrl;
     const { url, ipfs_cid } = image;
@@ -178,7 +152,7 @@ const Card = (props: any) => {
             </ProfileImageContainer>
           </HeaderContainer>
           <Info>
-            <Title>{name}</Title>
+            <Title>{_address(name, 30) || _address(projectId, 30)}</Title>
             <SubTitle>
               {description.length > MAX_DESCRIPTION_LENGTH
                 ? description.slice(0, MAX_DESCRIPTION_LENGTH) + "..."
@@ -209,7 +183,7 @@ const Card = (props: any) => {
               <DonationButton
                 onClick={(e) => {
                   e.preventDefault();
-                  openDonateModal();
+                  setIsOpen(true);
                 }}
                 disabled={!context.accountId}
               >
@@ -225,6 +199,7 @@ const Card = (props: any) => {
           )}
         </CardContainer>
       </RouteLink>
+      {isOpen && <ModalDonation projectId={projectId} onClose={() => setIsOpen(false)} />}
     </>
   );
 };

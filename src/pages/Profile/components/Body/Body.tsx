@@ -1,9 +1,7 @@
 import { Near, context, props, useState, useParams, useMemo } from "alem";
 import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
 import constants from "@app/constants";
-import RegistrySDK from "../../../../SDK/registry";
 import BannerHeader from "../BannerHeader/BannerHeader";
-import { Project } from "../../../../types";
 import BodyHeader from "../BodyHeader/BodyHeader";
 import Select from "../../../../components/Inputs/Select/Select";
 import Tabs from "../Tabs";
@@ -56,7 +54,12 @@ const Body = (props: any) => {
 
   return (
     <Wrapper>
-      <BannerHeader showFollowers accountId={projectId || accountId} projectId={projectId} project={props.project} />
+      <BannerHeader
+        showFollowers
+        accountId={projectId || accountId}
+        projectId={projectId}
+        registration={registration}
+      />
       <Container>
         <BodyHeader accountId={accountId} projectId={projectId} profile={props.profile} />
         {userIsRegistryAdmin && projectId && (

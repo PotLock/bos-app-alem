@@ -1,4 +1,4 @@
-import { State, context, useState } from "alem";
+import { State, context, useMemo, useState } from "alem";
 import {
   Button,
   ButtonRegisterProject,
@@ -11,33 +11,34 @@ import {
   Underline,
 } from "./styles";
 import DonationStats from "../../pages/Projects/components/DonationStats/DonationStats";
-import getProjects from "@app/services/getProjects";
 import ModalDonation from "@app/modals/ModalDonation";
-import ListsSDK from "@app/SDK/lists";
 
-const Hero = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const projects = getProjects();
+const Hero = ({ projectsData }: { projectsData: any }) => {
+  const [donateTo, setDonateTo] = useState("");
+
+  const getRandomProject = () => {
+    const allProjects = projectsData.allProjects;
+    if (allProjects) {
+      const randomIndex = Math.floor(Math.random() * allProjects.length);
+      return allProjects[randomIndex]?.registrant_id;
+    }
+  };
 
   const openDonateRandomlyModal = () => {
-    setIsModalOpen(true);
+    setDonateTo(getRandomProject());
   };
 
   const closeDonateRandomlyModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const getRandomProject = () => {
-    if (projects.allProjects) {
-      const randomIndex = Math.floor(Math.random() * projects.allProjects.length);
-      return projects.allProjects[randomIndex]?.id;
-    }
+    setDonateTo("");
   };
 
   const accountId = context.accountId;
 
-  const allRegistrations = ListsSDK.getRegistrations() || [];
-  const isRegisteredProject = allRegistrations.find((registration: any) => registration.registrant_id === accountId);
+  const isRegisteredProject = useMemo(() => {
+    if (projectsData.allProjects) {
+      return projectsData.allProjects.find((registration: any) => registration.registrant_id === accountId);
+    }
+  }, [projectsData]);
 
   return (
     <HeroContainer>
@@ -71,7 +72,7 @@ const Hero = () => {
         <ButtonsContainer>
           <Button onClick={openDonateRandomlyModal}>Donate Randomly</Button>
           {/* <ButtonRegisterProject href={"?tab=createproject"}>Register Your Project</ButtonRegisterProject> */}
-          {isModalOpen && <ModalDonation projectId={getRandomProject()} onClose={closeDonateRandomlyModal} />}
+          {donateTo && <ModalDonation projectId={donateTo} onClose={closeDonateRandomlyModal} />}
           <ButtonRegisterProject
             href={isRegisteredProject ? `?tab=project&projectId=${accountId}` : "?tab=createproject"}
           >

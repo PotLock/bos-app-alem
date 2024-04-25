@@ -303,7 +303,10 @@ const FundModal = ({ potDetail, onClose }: Props) => {
       <Row style={{ marginTop: "6px" }}>
         <FeeText>
           Net donation amount:{" "}
-          {matchingPoolDonationAmountNear - protocolFeeAmountNear - chefFeeAmountNear - referrerFeeAmountNear} NEAR
+          {(matchingPoolDonationAmountNear - protocolFeeAmountNear - chefFeeAmountNear - referrerFeeAmountNear).toFixed(
+            2,
+          )}{" "}
+          NEAR
         </FeeText>
       </Row>
       <Row style={{ justifyContent: "flex-end", marginTop: "12px" }}>

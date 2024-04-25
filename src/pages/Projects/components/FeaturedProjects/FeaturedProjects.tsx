@@ -1,16 +1,14 @@
 import { useEffect, useMemo, useState } from "alem";
 import Card from "@app/components/Card/Card";
 import { ContainerHeader, Header, OnBottom, ProjectList, Title } from "./styles";
-import getProjects from "@app/services/getProjects";
 import { Project } from "@app/types";
 import CardSkeleton from "../CardSkeleton";
 
-const FeaturedProjects = () => {
+const FeaturedProjects = ({ projectsData }: { projectsData: any }) => {
   const [projects, setProjects] = useState<Project[]>([]);
 
   // TODO: Criar um formato para o compilador saber quando é um arquivo
   // de custom hook e injetar no arquivo
-  const projectsData = getProjects();
   useEffect(() => {
     if (projectsData) {
       const { featuredProjects } = projectsData;
@@ -30,7 +28,7 @@ const FeaturedProjects = () => {
     () => (
       <>
         {projects.map((project: any) => {
-          return <Card projectId={project.id} allowDonate={true} />;
+          return <Card projectId={project.registrant_id} allowDonate={true} />;
         })}
       </>
     ),

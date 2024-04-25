@@ -1,10 +1,9 @@
-import { props } from "alem";
 import NearIcon from "@app/assets/svgs/near-icon";
 import nearToUsd from "@app/utils/nearToUsd";
 import Select from "@app/components/Inputs/Select/Select";
 import { Container, DropdownWrapper, PotDenomination } from "./styles";
 
-const AmountInput = ({ value, HandleAmoutChange, donationType, denominationOptions, selectedDenomination }: any) => {
+const AmountInput = (props: any) => {
   const Dropdown = ({ selectedDenomination, denominationOptions, updateState }: any) => (
     <DropdownWrapper>
       <Select
@@ -41,6 +40,7 @@ const AmountInput = ({ value, HandleAmoutChange, donationType, denominationOptio
       />
     </DropdownWrapper>
   );
+  const { value, HandleAmoutChange, donationType, denominationOptions, selectedDenomination } = props;
 
   return (
     <Container>

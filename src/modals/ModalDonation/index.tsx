@@ -5,11 +5,11 @@ import {
   asyncFetch,
   context,
   fetch,
-  props,
   state,
   useCache,
   useEffect,
   useMemo,
+  useParams,
   useState,
 } from "alem";
 import PotSDK from "@app/SDK/pot";
@@ -21,11 +21,23 @@ import { Banner, Container, HeaderIcons } from "./styles";
 import FormPot from "./FormPot/FormPot";
 import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
 import ConfirmPot from "./ConfirmPot/ConfirmPot";
+import { PotDetail } from "@app/types";
 
-const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
+type DonationModalProps = {
+  projectId?: string;
+  onClose: () => void;
+  multiple?: boolean;
+  potDetail?: PotDetail;
+};
+
+const ModalDonation = (donationProps: DonationModalProps) => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
 
-  const potDetail = PotSDK.getConfig(potId);
+  const { potId, referrerId } = useParams();
+
+  const { projectId, onClose, multiple } = donationProps;
+
+  const potDetail = donationProps.potDetail ?? PotSDK.getConfig(potId);
 
   const accountId = context.accountId;
 
@@ -155,6 +167,7 @@ const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
         .then((ftBalancesRes) => {
           if (ftBalancesRes) {
             const ftBalances = ftBalancesRes.body.balances;
+
             State.update({
               ftBalances: ftBalances,
               denominationOptions: DENOMINATION_OPTIONS.concat(
@@ -247,9 +260,11 @@ const ModalDonation = ({ projectId, onClose, multiple, potId }: any) => {
           </Banner>
         </div>
         <ActivePageComponent
-          {...props}
+          {...donationProps}
           {...state}
           accountId={accountId}
+          potId={potId}
+          referrerId={referrerId}
           updateState={State.update}
           ftBalance={ftBalance}
           activeRounds={activeRounds}
