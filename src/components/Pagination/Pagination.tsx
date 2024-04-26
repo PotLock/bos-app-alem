@@ -1,5 +1,5 @@
+import { useMemo } from "alem";
 import { Container } from "./styles";
-import { useMemo } from "react";
 
 type Props = {
   onPageChange: (page: number) => void;
@@ -112,6 +112,7 @@ const Pagination = (props: Props) => {
 
           return (
             <li
+              key={pageNumber}
               className={`pagination-item ${pageNumber === currentPage ? "selected" : ""}`}
               onClick={() => onPageChange(pageNumber)}
             >
