@@ -10,6 +10,7 @@ export const Container = styled.div`
   border-bottom-width: 3px;
   background: #fef6ee;
   margin-left: auto;
+  height: fit-content;
   .donations-info {
     display: flex;
     gap: 4px;

@@ -3,9 +3,10 @@ import { FollowContainer } from "./styles";
 
 type Props = {
   accountId: string;
+  classname?: string;
 };
 
-const FollowButton = ({ accountId }: Props) => {
+const FollowButton = ({ accountId, classname }: Props) => {
   if (!accountId || !context.accountId || context.accountId === accountId) {
     return "";
   }
@@ -51,6 +52,7 @@ const FollowButton = ({ accountId }: Props) => {
 
   return (
     <FollowContainer
+      className={classname || ""}
       onClick={() => {
         const transactions = [
           {

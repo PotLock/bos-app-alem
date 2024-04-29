@@ -17,10 +17,10 @@ const Hero = ({ projectsData }: { projectsData: any }) => {
   const [donateTo, setDonateTo] = useState("");
 
   const getRandomProject = () => {
-    const allProjects = projectsData.allProjects;
-    if (allProjects) {
-      const randomIndex = Math.floor(Math.random() * allProjects.length);
-      return allProjects[randomIndex]?.registrant_id;
+    const approvedProjects = projectsData.approvedProjects;
+    if (approvedProjects) {
+      const randomIndex = Math.floor(Math.random() * approvedProjects.length);
+      return approvedProjects[randomIndex]?.registrant_id;
     }
   };
 

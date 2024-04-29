@@ -17,8 +17,20 @@ export const Container = styled.div`
   width: 100%;
   flex-wrap: wrap;
   gap: 2rem;
+  .follow-btn {
+    padding: 10px 0px;
+    width: 160px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+  }
   @media only screen and (max-width: 480px) {
     flex-direction: column;
+    .follow-btn {
+      margin-left: auto;
+    }
   }
 `;
 

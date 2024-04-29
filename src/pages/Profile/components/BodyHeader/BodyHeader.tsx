@@ -6,6 +6,7 @@ import hrefWithParams from "@app/utils/hrefWithParams";
 import ProfileTags from "../ProfileTags";
 import Linktree from "../Linktree/Linktree";
 import DonationsInfo from "@app/pages/Project/components/DonationsInfo/DonationsInfo";
+import FollowButton from "@app/pages/Project/components/FollowButton/FollowButton";
 
 type Props = {
   profile: any;
@@ -75,7 +76,13 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
           <ProfileTags projectId={projectId} accountId={accountId} />
           <Linktree projectId={projectId} accountId={accountId} />
         </Info>
-        {projectId && <DonationsInfo accountId={id} projectId={projectId} />}
+        {projectId ? (
+          <DonationsInfo projectId={projectId} />
+        ) : accountId !== context.accountId ? (
+          <FollowButton accountId={accountId || ""} classname="follow-btn" />
+        ) : (
+          ""
+        )}
       </Container>
     </Header>
   );

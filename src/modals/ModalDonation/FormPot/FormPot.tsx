@@ -7,6 +7,7 @@ import { CustomButton, Content, CurrentBalance, Form, Label, ProjectAmount, Proj
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import _address from "@app/utils/_address";
 import Button from "@app/components/Button";
+import hrefWithParams from "@app/utils/hrefWithParams";
 
 const FormPot = ({
   amount,
@@ -16,7 +17,6 @@ const FormPot = ({
   selectedDenomination,
   donationType,
   ftBalance,
-  hrefWithParams,
   selectedProjects,
 }: any) => {
   const ProfileImg = ({ profile }: any) => <ProfileImage profile={profile} style={{}} />;

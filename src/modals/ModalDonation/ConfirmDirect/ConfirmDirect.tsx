@@ -10,6 +10,7 @@ import Button from "@app/components/Button";
 import NearIcon from "@app/assets/svgs/near-icon";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import hrefWithParams from "@app/utils/hrefWithParams";
 
 const ConfirmDirect = ({
   selectedDenomination,
@@ -298,7 +299,7 @@ const ConfirmDirect = ({
 
           <div className="label">Remove {protocolFeeBasisPoints / 100 || "-"}% protocol fee</div>
           <a
-            href={`https://near.social/mob.near/widget/ProfilePage?accountId=${protocolFeeRecipientAccount}`}
+            href={hrefWithParams(`?tab=profile&accountId=${protocolFeeRecipientAccount}`)}
             className="address"
             target="_blank"
           >
@@ -318,11 +319,7 @@ const ConfirmDirect = ({
             />
 
             <div className="label"> Remove {chefFeeBasisPoints / 100 || "-"}% chef fee</div>
-            <a
-              href={`https://near.social/mob.near/widget/ProfilePage?accountId=${potDetail?.chef}`}
-              className="address"
-              target="_blank"
-            >
+            <a href={hrefWithParams(`?tab=profile&accountId=${potDetail?.chef}`)} className="address" target="_blank">
               <ProfileImg accountId={potDetail?.chef} />
 
               {potDetail?.chef}

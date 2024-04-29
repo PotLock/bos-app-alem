@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { RouteLink } from "alem";
 
 type Props = {
   navOptions: any;
@@ -53,9 +54,9 @@ const Tabs = ({ navOptions, nav }: Props) => {
       {navOptions.map((option: any) => {
         const selected = option.id == getSelectedNavOption().id;
         return option.label ? (
-          <a className={`nav-option ${selected && "selected"} ${option.disabled && "disabled"}`} href={option.href}>
+          <RouteLink className={`nav-option ${selected && "selected"} ${option.disabled && "disabled"}`} to={option.to}>
             {option.label}
-          </a>
+          </RouteLink>
         ) : (
           ""
         );

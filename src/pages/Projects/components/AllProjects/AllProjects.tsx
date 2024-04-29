@@ -22,10 +22,8 @@ const AllProjects = ({ projectsData }: { projectsData: any }) => {
   const [sort, setSort] = useState("Sort");
 
   useEffect(() => {
-    if (projects.length === 0) {
-      const { allProjects } = projectsData;
-      const approvedProjects = allProjects.filter((project: any) => project.status === "Approved");
-
+    if (projects.length === 0 && projectsData) {
+      const { allProjects, approvedProjects } = projectsData;
       setProjects(allProjects);
       setFilteredProjects(approvedProjects);
     }

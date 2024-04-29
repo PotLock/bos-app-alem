@@ -13,7 +13,7 @@ export const ProfileWraper = styled.div`
   position: relative;
   z-index: 6;
   @media screen and (max-width: 768px) {
-    padding-left: 1rem;
+    padding-left: 8px;
   }
 `;
 
@@ -64,6 +64,8 @@ export const ProfileImageContainer = styled.div`
   border-radius: 50%;
   padding: 6px;
   position: relative;
+  width: 120px;
+  height: 120px;
   &.editable {
     &:after {
       content: "";
@@ -112,8 +114,8 @@ export const ProfileImageContainer = styled.div`
     pointer-events: none;
   }
   @media screen and (max-width: 768px) {
-    width: 72px;
-    height: 72px;
+    width: 100px;
+    height: 100px;
   }
 `;
 

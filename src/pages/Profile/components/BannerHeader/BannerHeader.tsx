@@ -86,13 +86,7 @@ const BannerHeader = (props: Props) => {
         )}
       </BackgroundImageContainer>
       <ProfileWraper>
-        <ProfileImageContainer
-          className={editable ? "editable" : ""}
-          style={{
-            width: imageStyle?.width ?? "128px",
-            height: imageStyle?.height ?? "128px",
-          }}
-        >
+        <ProfileImageContainer className={editable ? "editable" : ""}>
           <CameraSvg height={24} />
           <ProfileImage
             profile={profile}

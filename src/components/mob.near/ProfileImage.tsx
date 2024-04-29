@@ -16,40 +16,26 @@ type Props = {
   thumbnail?: boolean;
   tooltip?: boolean;
   fast?: boolean;
+  fallbackUrl?: string;
 };
 
-const ProfileImage = ({
-  profile: _profile,
-  accountId: _accountId,
-  style: _style,
-  imageClassName: _imageClassName,
-  image: _image,
-  title: _title,
-  name: _name,
-  className: _className,
-  imageStyle: _imageStyle,
-  imageWrapperStyle: _imageWrapperStyle,
-  thumbnail: _thumbnail,
-  tooltip: _tooltip,
-  fast: _fast,
-}: Props) => {
+const ProfileImage = (profileImgProps: Props) => {
   // * taken from mob.near/widget/ProfileImage with minor tweaks for expanded composability *
-
-  // const {
-  //   profile: _profile,
-  //   accountId: _accountId,
-  //   style: _style,
-  //   imageClassName: _imageClassName,
-  //   image: _image,
-  //   title: _title,
-  //   name: _name,
-  //   className: _className,
-  //   imageStyle: _imageStyle,
-  //   imageWrapperStyle: _imageWrapperStyle,
-  //   thumbnail: _thumbnail,
-  //   tooltip: _tooltip,
-  //   fast: _fast,
-  // } = props;
+  const {
+    profile: _profile,
+    accountId: _accountId,
+    style: _style,
+    imageClassName: _imageClassName,
+    image: _image,
+    title: _title,
+    name: _name,
+    className: _className,
+    imageStyle: _imageStyle,
+    imageWrapperStyle: _imageWrapperStyle,
+    thumbnail: _thumbnail,
+    tooltip: _tooltip,
+    fast: _fast,
+  } = profileImgProps;
 
   const accountId = _accountId ?? context.accountId;
   const className = _className ?? "profile-image d-inline-block";
@@ -74,7 +60,7 @@ const ProfileImage = ({
       accountId,
     });
   }
-  const fallbackUrl = "https://ipfs.near.social/ipfs/bafkreibmiy4ozblcgv3fm3gc6q62s55em33vconbavfd2ekkuliznaq3zm";
+  const fallbackUrl = props.fallbackUrl;
 
   const imageProps = {
     image,

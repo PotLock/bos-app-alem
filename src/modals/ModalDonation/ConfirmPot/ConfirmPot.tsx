@@ -235,7 +235,7 @@ const ConfirmPot = ({
 
             <div className="label">Remove {protocolFeeBasisPoints / 100 || "-"}% protocol fee</div>
             <a
-              href={`https://near.social/mob.near/widget/ProfilePage?accountId=${protocolFeeRecipientAccount}`}
+              href={hrefWithParams(`?tab=profile&accountId=${protocolFeeRecipientAccount}`)}
               className="address"
               target="_blank"
             >
@@ -255,11 +255,7 @@ const ConfirmPot = ({
               />
 
               <div className="label"> Remove {chefFeeBasisPoints / 100 || "-"}% chef fee</div>
-              <a
-                href={`https://near.social/mob.near/widget/ProfilePage?accountId=${potDetail?.chef}`}
-                className="address"
-                target="_blank"
-              >
+              <a href={hrefWithParams(`?tab=profile&accountId=${potDetail?.chef}`)} className="address" target="_blank">
                 <ProfileImg accountId={potDetail?.chef} />
 
                 {potDetail?.chef}
