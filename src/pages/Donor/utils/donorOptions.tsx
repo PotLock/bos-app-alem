@@ -22,13 +22,13 @@ const donorOptions = (accountId: string) => [
     label: "",
     id: "followers",
     disabled: false,
-    source: (componentProps: any) => <FollowTabs {...componentProps} />,
+    source: FollowTabs,
   },
   {
     label: "",
     id: "following",
     disabled: false,
-    source: (componentProps: any) => <FollowTabs {...componentProps} />,
+    source: FollowTabs,
   },
 ];
 
