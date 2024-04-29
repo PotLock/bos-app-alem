@@ -49,7 +49,31 @@ export const NameContainer = styled.div`
   align-items: end;
   gap: 1rem;
 `;
+export const LinksWrapper = styled.div`
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+`;
 
+export const ReferralButton = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  cursor: pointer;
+  div {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  svg {
+    width: 18px;
+  }
+  svg path {
+    transition: fill 300ms ease-in-out;
+  }
+  :hover svg path {
+    fill: #292929;
+  }
+`;
 export const Name = styled.div`
   font-size: 40px;
   font-weight: 500;

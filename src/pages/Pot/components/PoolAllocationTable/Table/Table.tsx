@@ -7,6 +7,7 @@ import _address from "@app/utils/_address";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import constants from "@app/constants";
 import { Social, useState } from "alem";
+import Image from "@app/components/mob.near/Image";
 
 const Table = ({ donations, totalAmount, totalUniqueDonors, title, allPayouts, potDetail }: any) => {
   const [usdToggle, setUsdToggle] = useState<any>(false);
@@ -52,7 +53,12 @@ const Table = ({ donations, totalAmount, totalUniqueDonors, title, allPayouts, p
           <Row>
             <div>#{idx + 1}</div>
             <a className="address" href={hrefWithParams(`?tab=project&projectId=${id}`)}>
-              <ProfileImage profile={profile} style={{}} />
+              <Image
+                image={profile?.image}
+                className="profile-image"
+                fallbackUrl="https://ipfs.near.social/ipfs/bafkreiccpup6f2kihv7bhlkfi4omttbjpawnsns667gti7jbhqvdnj4vsm"
+                style={{}}
+              />
               {_address(profile?.name || id, 15)}
             </a>
             <div>
