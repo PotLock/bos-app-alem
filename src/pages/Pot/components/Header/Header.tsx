@@ -142,7 +142,7 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
     (challenge: any) => challenge.challenger_id === context.accountId,
   );
 
-  const canDonate = projects.length > 0;
+  const canDonate = projects.length > 0 && publicRoundOpen && context.accountId;
 
   const registrationApproved = registryStatus === "Approved";
 
@@ -161,10 +161,10 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
           </div>
         </Fund>
         <ButtonsWrapper>
-          {publicRoundOpen && context.accountId && (
+          {canDonate && (
             <Button
               type="primary"
-              text={canDonate ? "Donate" : "Verify to Donate"}
+              text={"Donate"}
               href={canDonate ? "" : NADA_BOT_URL}
               onClick={
                 canDonate

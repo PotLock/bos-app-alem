@@ -7,6 +7,7 @@ import nearToUsd from "@app/utils/nearToUsd";
 import _address from "@app/utils/_address";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import Button from "@app/components/Button";
+import hrefWithParams from "@app/utils/hrefWithParams";
 import {
   Amout,
   ButtonWrapper,
@@ -31,7 +32,6 @@ const ConfirmPot = ({
   openDonationSuccessModal,
   selectedProjects,
   donationType,
-  hrefWithParams,
   toggleAmount,
 }: any) => {
   const ProfileImg = ({ accountId, profile }: any) => (
