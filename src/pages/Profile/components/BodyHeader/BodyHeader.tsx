@@ -17,7 +17,7 @@ import ProfileTags from "../ProfileTags";
 import Linktree from "../Linktree/Linktree";
 import DonationsInfo from "@app/pages/Project/components/DonationsInfo/DonationsInfo";
 import FollowButton from "@app/pages/Project/components/FollowButton/FollowButton";
-import ReferrerIcon from "@app/assets/svgs/referrerIcon";
+import ReferrerIcon from "@app/assets/svgs/ReferrerIcon";
 import CheckIcon from "@app/assets/svgs/CheckIcon";
 
 type Props = {
