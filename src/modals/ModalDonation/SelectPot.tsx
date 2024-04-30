@@ -12,7 +12,7 @@ const SelectPot = ({ selectedRound, activeRoundsOptions, updateState }: any) => 
   return (
     <PotSelector>
       <Dropdown
-        props={{
+        {...({
           sortVal: activeRoundsOptions ? activeRoundsOptions[selectedRound].label : "",
           showCount: false,
           sortList: Object.values(activeRoundsOptions),
@@ -32,7 +32,7 @@ const SelectPot = ({ selectedRound, activeRoundsOptions, updateState }: any) => 
               selectedRound: val,
             });
           },
-        }}
+        } as any)}
       />
     </PotSelector>
   );
