@@ -36,7 +36,7 @@ const FeaturedProjects = ({ projectsData }: { projectsData: any }) => {
   );
 
   return (
-    <ContainerHeader tab="">
+    <ContainerHeader>
       <Header>
         <Title>Featured projects</Title>
       </Header>

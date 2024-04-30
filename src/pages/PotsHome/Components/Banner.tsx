@@ -1,5 +1,5 @@
 import { context } from "alem";
-import HomeBannerBackground from "@app/assets/svgs/HomeBannerBackground";
+import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
 import { Container } from "./styles";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import PotFactorySDK from "@app/SDK/potfactory";
@@ -8,9 +8,11 @@ const Banner = () => {
   const canDeploy = PotFactorySDK.canUserDeployPot(context.accountId);
 
   return (
-    <Container>
-      <HomeBannerBackground className="background" />
-
+    <Container
+      style={{
+        ...HomeBannerStyle,
+      }}
+    >
       <div className="content">
         <h3 className="sub-title">Explore Pots</h3>
         <h1 className="title">
