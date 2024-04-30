@@ -7,6 +7,7 @@ import nearToUsd from "@app/utils/nearToUsd";
 import _address from "@app/utils/_address";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import Button from "@app/components/Button";
+import hrefWithParams from "@app/utils/hrefWithParams";
 import {
   Amout,
   ButtonWrapper,
@@ -31,7 +32,6 @@ const ConfirmPot = ({
   openDonationSuccessModal,
   selectedProjects,
   donationType,
-  hrefWithParams,
   toggleAmount,
 }: any) => {
   const ProfileImg = ({ accountId, profile }: any) => (
@@ -67,7 +67,7 @@ const ConfirmPot = ({
           for (const donation of alldonations) {
             const { project_id, donated_at_ms, donated_at } = donation;
             if (projectIds.includes(project_id) && (donated_at_ms || donated_at) > afterTs) {
-              donations[project_id] = donation;
+              donations[project_id] = { ...donation, potId };
             }
           }
           if (Object.keys(donations).length === projectIds.length) {
@@ -235,7 +235,7 @@ const ConfirmPot = ({
 
             <div className="label">Remove {protocolFeeBasisPoints / 100 || "-"}% protocol fee</div>
             <a
-              href={`https://near.social/mob.near/widget/ProfilePage?accountId=${protocolFeeRecipientAccount}`}
+              href={hrefWithParams(`?tab=profile&accountId=${protocolFeeRecipientAccount}`)}
               className="address"
               target="_blank"
             >
@@ -255,11 +255,7 @@ const ConfirmPot = ({
               />
 
               <div className="label"> Remove {chefFeeBasisPoints / 100 || "-"}% chef fee</div>
-              <a
-                href={`https://near.social/mob.near/widget/ProfilePage?accountId=${potDetail?.chef}`}
-                className="address"
-                target="_blank"
-              >
+              <a href={hrefWithParams(`?tab=profile&accountId=${potDetail?.chef}`)} className="address" target="_blank">
                 <ProfileImg accountId={potDetail?.chef} />
 
                 {potDetail?.chef}

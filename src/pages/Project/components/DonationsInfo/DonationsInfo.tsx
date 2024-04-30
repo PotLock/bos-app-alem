@@ -7,7 +7,7 @@ import FollowButton from "../FollowButton/FollowButton";
 import ModalDonation from "@app/modals/ModalDonation";
 import ModalSuccess from "@app/modals/ModalSuccess/ModalSuccess";
 
-const DonationsInfo = ({ accountId, projectId, donations, referrerId }: any) => {
+const DonationsInfo = ({ projectId, donations, referrerId }: any) => {
   const [isModalDonationOpen, setIsModalDonationOpen] = useState(false);
   const [successfulDonation, setSuccessfulDonation] = useState(null);
 

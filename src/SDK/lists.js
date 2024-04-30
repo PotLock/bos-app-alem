@@ -21,6 +21,11 @@ const ListsSDK = {
       list_id: listId || potlockRegistryListId,
     });
   },
+  asyncGetRegistrations: (listId) => {
+    return Near.asyncView(_listContractId, "get_registrations_for_list", {
+      list_id: listId || potlockRegistryListId,
+    });
+  },
   getRegistration: (listId, registrantId) => {
     const registrations = Near.view(_listContractId, "get_registrations_for_registrant", {
       registrant_id: registrantId,

@@ -11,6 +11,7 @@ import Text from "@app/components/Inputs/Text/Text";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import Button from "@app/components/Button";
+import hrefWithParams from "@app/utils/hrefWithParams";
 
 type Props = {
   potDetail: PotDetail;
@@ -142,6 +143,13 @@ const FundModal = ({ potDetail, onClose }: Props) => {
     // <---- EXTENSION WALLET HANDLING ----> // TODO: implement
   };
 
+  const disabled =
+    (fundAsDao && !daoAddress) ||
+    daoAddressError ||
+    !matchingPoolDonationAmountNear ||
+    !!matchingPoolDonationAmountNearError ||
+    !parseFloat(matchingPoolDonationAmountNear);
+
   return (
     <ModalOverlay onOverlayClick={onClose}>
       <CheckBox
@@ -243,10 +251,7 @@ const FundModal = ({ potDetail, onClose }: Props) => {
 
         <Label htmlFor="bypassProtocolFeeSelector">
           Bypass {protocolConfig?.basis_points / 100 || "-"}% protocol fee to{" "}
-          <UserChipLink
-            href={`https://near.social/mob.near/widget/ProfilePage?accountId=${protocolConfig?.account_id}`}
-            target="_blank"
-          >
+          <UserChipLink href={hrefWithParams(`?tab=profile&accountId=${protocolConfig?.account_id}`)} target="_blank">
             <ProfileImage
               accountId={protocolConfig?.account_id}
               style={{
@@ -271,7 +276,7 @@ const FundModal = ({ potDetail, onClose }: Props) => {
 
           <Label htmlFor="bypassChefFeeSelector">
             Bypass {chef_fee_basis_points / 100 || "-"}% chef fee to
-            <UserChipLink href={`https://near.social/mob.near/widget/ProfilePage?accountId=${chef}`} target="_blank">
+            <UserChipLink href={hrefWithParams(`?tab=profile&accountId=${chef}`)} target="_blank">
               <ProfileImage
                 accountId={chef}
                 style={{
@@ -312,16 +317,11 @@ const FundModal = ({ potDetail, onClose }: Props) => {
       <Row style={{ justifyContent: "flex-end", marginTop: "12px" }}>
         <Button
           type="primary"
-          disabled={
-            daoAddressError ||
-            !matchingPoolDonationAmountNear ||
-            !!matchingPoolDonationAmountNearError ||
-            !parseFloat(matchingPoolDonationAmountNear)
-          }
+          disabled={disabled}
           text={`${fundAsDao ? "Create proposal to contribute " : "Contribute"}${
             matchingPoolDonationAmountNear ? ` ${matchingPoolDonationAmountNear} ${base_currency.toUpperCase()}` : ""
           } to matching pool`}
-          onClick={handleMatchingPoolDonation}
+          onClick={disabled ? () => {} : handleMatchingPoolDonation}
         />
       </Row>
     </ModalOverlay>

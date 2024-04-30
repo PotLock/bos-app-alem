@@ -213,6 +213,7 @@ const ModalDonation = (donationProps: DonationModalProps) => {
     <ModalOverlay
       onOverlayClick={(e: any) => {
         e.stopPropagation();
+        onClose();
       }}
       contentStyle={{ padding: "0px" }}
     >

@@ -28,7 +28,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
   const {
     NADABOT_HUMAN_METHOD,
     ONE_TGAS,
-    nadabotContractId: NADABOT_CONTRACT_ID,
+    NADABOT_CONTRACT_ID,
     SUPPORTED_FTS: { NEAR },
   } = constants;
 

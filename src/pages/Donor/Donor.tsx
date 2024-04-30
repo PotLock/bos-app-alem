@@ -12,19 +12,10 @@ const DonorPage = () => {
   return (
     <Wrapper>
       <Body
-        nav={nav ?? "feed"}
+        nav={nav ?? "donations"}
         navOptions={donorOptions(accountId)}
         profile={profile}
-        //    profile,
-        //    accounts: [accountId],
-        //    donations: allDonations,
-        //    totalDonationAmountNear,
-        //    matchingRoundDonations,
-        //    sponsorships,
-        //    directDonations,
-        //    nav: props.nav ?? "donations",
-        //    navOptions: ProfileOptions(props),
-        //    post: accountId === context.accountId,
+        post={accountId === context.accountId}
       />
     </Wrapper>
   );

@@ -9,7 +9,6 @@ import Card from "@app/components/Card/Card";
 
 type Props = {
   potDetail: any;
-  sybilRequirementMet: boolean;
   allDonations: any;
 };
 
@@ -18,11 +17,12 @@ const Projects = (props: Props) => {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [projects, setProjects] = useState<any>(null);
   const [flaggedAddresses, setFlaggedAddresses] = useState(null);
+  const [payouts, setPayouts] = useState<any>(null);
 
   // get projects
   const { potId } = useParams();
 
-  const { potDetail, sybilRequirementMet, allDonations } = props;
+  const { potDetail, allDonations } = props;
 
   if (!projects) {
     PotSDK.asyncGetApprovedApplications(potId).then((projects: any) => {
@@ -51,10 +51,17 @@ const Projects = (props: Props) => {
       .catch((err) => console.log("error getting the flagged accounts ", err));
   }
 
-  const payouts: any = useMemo(() => {
+  if (!payouts) {
     if (allDonations.length && flaggedAddresses)
-      return calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses);
-  }, [allDonations, flaggedAddresses]);
+      calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses)
+        .then((payouts: any) => {
+          setPayouts(payouts ?? []);
+        })
+        .catch((err) => {
+          console.log("error while calculating payouts ", err);
+          setPayouts([]);
+        });
+  }
 
   const searchByWords = (searchTerm: string) => {
     if (projects.length) {
@@ -118,8 +125,7 @@ const Projects = (props: Props) => {
                 potDetail,
                 projects,
                 projectId: project.project_id,
-                allowDonate: sybilRequirementMet && publicRoundOpen && project.project_id !== context.accountId,
-                requireVerification: !sybilRequirementMet,
+                allowDonate: publicRoundOpen && project.project_id !== context.accountId,
                 potRferralFeeBasisPoints: referral_fee_public_round_basis_points,
                 payoutDetails: payouts[project.project_id] || {
                   donorCount: 0,

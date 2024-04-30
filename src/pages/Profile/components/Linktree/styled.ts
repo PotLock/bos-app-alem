@@ -6,7 +6,6 @@ export const LinktreeContainer = styled.div`
   -webkit-box-pack: start;
   justify-content: flex-start;
   gap: 1rem;
-  width: 100%;
 `;
 
 export const LinktreeItemContainer = styled.a`

@@ -57,26 +57,30 @@ const filters: any = {
 };
 
 const potsSort: any = {
-  cooldown: {
-    check: filters.cooldown,
-    time: "cooldown_end_ms",
-  },
   active: {
     check: filters.round_open,
     time: "public_round_end_ms",
+    items: [],
+  },
+  cooldown: {
+    check: filters.cooldown,
+    time: "cooldown_end_ms",
+    items: [],
   },
   application: {
     check: filters.application_open,
     time: "application_end_ms",
+    items: [],
   },
   not_started: {
     check: filters.application_not_started,
     time: "application_start_ms",
+    items: [],
   },
   rest: {
     check: (round: any) => true,
     time: "application_start_ms",
+    items: [],
   },
 };
-
 export { filterBy, sortOptions, filters, potsSort };

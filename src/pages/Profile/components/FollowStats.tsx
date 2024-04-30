@@ -33,7 +33,6 @@ const FollowStats = ({ projectId: _projectId, accountId: _accountId }: Props) =>
   );
 
   const Container = styled.div`
-    margin-left: ${projectId ? "0" : "2rem"};
     display: flex;
     align-items: center;
     font-size: 14px;
@@ -56,7 +55,7 @@ const FollowStats = ({ projectId: _projectId, accountId: _accountId }: Props) =>
           <span>Follower{numFollowers !== 1 && "s"}</span>
         </a>
       </div>
-      <div className="me-4">
+      <div>
         <a href={`${profileLink}&nav=following`} className="text-dark">
           {numFollowing !== null ? <span style={{ fontWeight: 600 }}>{numFollowing}</span> : "-"}
 

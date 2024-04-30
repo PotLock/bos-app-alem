@@ -17,7 +17,9 @@ const getProjects = () => {
 
   const featuredProjects = allProjects.filter((project: any) => featuredProjectIds.includes(project.registrant_id));
 
-  return { allProjects, featuredProjects };
+  const approvedProjects = allProjects.filter((project: any) => project.status === "Approved");
+
+  return { allProjects, approvedProjects, featuredProjects };
 };
 
 export default getProjects;

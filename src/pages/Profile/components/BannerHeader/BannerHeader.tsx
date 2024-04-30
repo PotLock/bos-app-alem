@@ -86,20 +86,13 @@ const BannerHeader = (props: Props) => {
         )}
       </BackgroundImageContainer>
       <ProfileWraper>
-        <ProfileImageContainer
-          className={editable ? "editable" : ""}
-          style={{
-            width: imageStyle?.width ?? "128px",
-            height: imageStyle?.height ?? "128px",
-          }}
-        >
+        <ProfileImageContainer className={editable ? "editable" : ""}>
           <CameraSvg height={24} />
-          <ProfileImage
-            profile={profile}
-            accountId={accountId}
+          <Image
             style={{ ...imageStyle }}
-            imageClassName="rounded-circle"
+            className="profile-image"
             image={profileImage}
+            fallbackUrl="https://ipfs.near.social/ipfs/bafkreiccpup6f2kihv7bhlkfi4omttbjpawnsns667gti7jbhqvdnj4vsm"
           />
 
           {editable && (

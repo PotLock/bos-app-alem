@@ -22,10 +22,8 @@ const AllProjects = ({ projectsData }: { projectsData: any }) => {
   const [sort, setSort] = useState("Sort");
 
   useEffect(() => {
-    if (projects.length === 0) {
-      const { allProjects } = projectsData;
-      const approvedProjects = allProjects.filter((project: any) => project.status === "Approved");
-
+    if (projects.length === 0 && projectsData) {
+      const { allProjects, approvedProjects } = projectsData;
       setProjects(allProjects);
       setFilteredProjects(approvedProjects);
     }
@@ -42,91 +40,21 @@ const AllProjects = ({ projectsData }: { projectsData: any }) => {
     setTotalDonation(donateConfig.total_donations_count);
   }
 
-  const sortHighestToLowest = (projects: Project[]) => {
-    const sort = (a: any, b: any) => {
-      return parseFloat(b.total) - parseFloat(a.total);
-    };
-    const projectLength = projects.length;
-
-    for (let i = 0; i < projectLength - 1; i++) {
-      for (let j = 0; j < projectLength - 1 - i; j++) {
-        if (sort(projects[j], projects[j + 1]) > 0) {
-          const temp = projects[j];
-          projects[j] = projects[j + 1];
-          projects[j + 1] = temp;
-        }
-      }
-    }
-
-    setFilteredProjects(projects);
-  };
-
-  const sortLowestToHighest = (projects: Project[]) => {
-    const sort = (a: any, b: any) => {
-      return parseFloat(b.total) - parseFloat(a.total);
-    };
-    const projectLength = projects.length;
-
-    for (let i = 0; i < projectLength - 1; i++) {
-      for (let j = 0; j < projectLength - 1 - i; j++) {
-        if (sort(projects[j], projects[j + 1]) < 0) {
-          const temp = projects[j];
-          projects[j] = projects[j + 1];
-          projects[j + 1] = temp;
-        }
-      }
-    }
-
-    setFilteredProjects(projects);
-  };
-
-  const sortNewToOld = (projects: Project[]) => {
-    const projectLength = projects.length;
-
-    for (let i = 0; i < projectLength - 1; i++) {
-      for (let j = 0; j < projectLength - i - 1; j++) {
-        if (projects[j].submitted_ms < projects[j + 1].submitted_ms) {
-          const temp = projects[j];
-          projects[j] = projects[j + 1];
-          projects[j + 1] = temp;
-        }
-      }
-    }
-    setFilteredProjects(projects);
-  };
-
-  const sortOldToNew = (projects: Project[]) => {
-    const projectLength = projects.length;
-
-    for (let i = 0; i < projectLength - 1; i++) {
-      for (let j = 0; j < projectLength - i - 1; j++) {
-        if (projects[j].submitted_ms > projects[j + 1].submitted_ms) {
-          const temp = projects[j];
-          projects[j] = projects[j + 1];
-          projects[j + 1] = temp;
-        }
-      }
-    }
-    setFilteredProjects(projects);
-  };
-
   const handleSortChange = (sortType: string) => {
     setSort(sortType);
+    const projects = [...filteredProjects];
     switch (sortType) {
       case "All":
-        setFilteredProjects(filteredProjects);
         break;
       case "Newest to Oldest":
-        sortNewToOld(filteredProjects);
+        projects.sort((a, b) => b.submitted_ms - a.submitted_ms);
+        setFilteredProjects(projects);
         break;
       case "Oldest to Newest":
-        sortOldToNew(filteredProjects);
+        projects.sort((a, b) => a.submitted_ms - b.submitted_ms);
+        setFilteredProjects(projects);
         break;
-      case "Most to Least Donations":
-        sortHighestToLowest(filteredProjects);
-        break;
-      case "Least to Most Donations":
-        sortLowestToHighest(filteredProjects);
+      default:
         break;
     }
   };
@@ -228,7 +156,6 @@ const AllProjects = ({ projectsData }: { projectsData: any }) => {
       <ProjectsContainer>
         {filteredProjects.length ? (
           <ListSection
-            shouldShuffle={!isRegistryAdmin}
             items={filteredProjects}
             renderItem={(project: Project) => <Card projectId={project.registrant_id} allowDonate={true} />}
           />
