@@ -15,6 +15,7 @@ import {
 } from "./styles";
 import yoctosToUsd from "@app/utils/yoctosToUsd";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
+import VerifyInfo from "../ModalDonation/Banners/VerifyInfo";
 
 type Props = {
   onClose?: () => void;
@@ -24,6 +25,8 @@ const ModalSuccess = ({ onClose }: Props) => {
   const DEFAULT_GATEWAY = "https://bos.potlock.org/";
   const POTLOCK_TWITTER_ACCOUNT_ID = "PotLock_";
   const DEFAULT_SHARE_HASHTAGS = ["BOS", "PublicGoods", "Donations"];
+
+  const { NADABOT_CONTRACT_ID, NADABOT_HUMAN_METHOD, ownerId } = constants;
 
   State.init({
     showBreakdown: false,
@@ -81,7 +84,7 @@ const ModalSuccess = ({ onClose }: Props) => {
         method: "tx",
         params: [txHash, context.accountId],
       });
-      const res = asyncFetch("https://rpc.mainnet.near.org", {
+      asyncFetch("https://rpc.mainnet.near.org", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,7 +114,7 @@ const ModalSuccess = ({ onClose }: Props) => {
             if (methodName === "donate") {
               setSuccessfulDonation((prev: any) => ({
                 ...prev,
-                [recipientId]: result,
+                [recipientId]: { ...result, potId: receiver_id },
               }));
             } else if (methodName === "apply") {
               // application
@@ -170,15 +173,23 @@ const ModalSuccess = ({ onClose }: Props) => {
 
     let url =
       DEFAULT_GATEWAY +
-      `${constants.ownerId}/widget/Index?tab=project&projectId=${recipient_id}&referrerId=${context.accountId}`;
+      (successfulDonationVals[0].potId
+        ? `${ownerId}/widget/Index?tab=pot&potId=${successfulDonationVals[0].potId}&referrerId=${context.accountId}`
+        : `${ownerId}/widget/Index?tab=project&projectId=${recipient_id}&referrerId=${context.accountId}`);
     let text = `I just donated to ${tag} on @${POTLOCK_TWITTER_ACCOUNT_ID}! Support public goods at `;
     text = encodeURIComponent(text);
     url = encodeURIComponent(url);
     return twitterIntentBase + text + `&url=${url}` + `&hashtags=${DEFAULT_SHARE_HASHTAGS.join(",")}`;
   }, [successfulDonation, recipientProfile]);
 
+  const isUserHumanVerified = Near.view(NADABOT_CONTRACT_ID, NADABOT_HUMAN_METHOD, {
+    account_id: context.accountId,
+  });
+
+  const needsToVerify = isUserHumanVerified === false;
+
   return (
-    <ModalOverlay contentStyle={{ padding: "0px" }}>
+    <ModalOverlay onOverlayClick={onClose} contentStyle={{ padding: "0px" }}>
       <>
         {successfulApplication ? (
           <>
@@ -279,6 +290,7 @@ const ModalSuccess = ({ onClose }: Props) => {
                 ftIcon: ftMetadata?.icon,
               }}
             />
+            {needsToVerify && !successfulDonationVals[0]?.recipient_id && <VerifyInfo />}
           </ModalMain>
         ) : null}
       </>

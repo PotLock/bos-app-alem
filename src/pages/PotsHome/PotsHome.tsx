@@ -36,22 +36,21 @@ const PotsHome = () => {
     const states = Object.keys(potsSort);
 
     pots.forEach((pot) => {
-      Object.values(potsSort).some((sort: any, idx) => {
-        if (sort.check(pot)) {
-          listOfPots[states[idx]] = [...(listOfPots[states[idx]] || []), pot];
+      Object.keys(potsSort).some((type) => {
+        const { check, items } = potsSort[type];
+        if (check(pot)) {
+          potsSort[type].items = [...items, pot];
           return true;
         }
       });
     });
-
     // sort pots(time left)
-    const inProgressPots: PotDetail[] = [];
+    const inProgressPots: any = [];
 
-    Object.entries(listOfPots).forEach(([status, potsList]: any) => {
-      potsList.sort((a: any, b: any) => a[potsSort[status].time] - b[potsSort[status].time]);
-      inProgressPots.push(...potsList);
+    Object.values(potsSort).forEach(({ items, time }: any) => {
+      items.sort((a: any, b: any) => a[time] - b[time]);
+      inProgressPots.push(...items);
     });
-
     return inProgressPots;
   };
 

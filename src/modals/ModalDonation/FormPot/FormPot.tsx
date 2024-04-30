@@ -1,4 +1,4 @@
-import { Social, props } from "alem";
+import { Near, Social, context, props } from "alem";
 import Alert from "../Banners/Alert";
 import Checks from "../Checks/Checks";
 import AmountInput from "../AmountInput/AmountInput";
@@ -8,6 +8,8 @@ import ProfileImage from "@app/components/mob.near/ProfileImage";
 import _address from "@app/utils/_address";
 import Button from "@app/components/Button";
 import hrefWithParams from "@app/utils/hrefWithParams";
+import constants from "@app/constants";
+import VerifyInfo from "../Banners/VerifyInfo";
 
 const FormPot = ({
   amount,
@@ -96,8 +98,10 @@ const FormPot = ({
     });
   };
 
-  // INFO: old prop
-  const isUserHumanVerified = false;
+  const { NADABOT_HUMAN_METHOD, NADABOT_CONTRACT_ID } = constants;
+  const isUserHumanVerified = Near.view(NADABOT_CONTRACT_ID, NADABOT_HUMAN_METHOD, {
+    account_id: context.accountId,
+  });
 
   return (
     <Form>
@@ -162,6 +166,7 @@ const FormPot = ({
           )}
         </CurrentBalance>
         {amountError && <Alert error={amountError} />}
+        {!isUserHumanVerified && <VerifyInfo />}
       </Content>
       <Projects style={{ height: projectsContaienrHegiht + "px" }}>
         {projects.map(({ project_id }: any) => {
@@ -233,7 +238,7 @@ const FormPot = ({
               (donationType === "auto"
                 ? amountError || parseFloat(amount) === 0 || !amount
                 : totalAmountAllocated > ftBalance || amountError || parseFloat(totalAmountAllocated.toString()) === 0),
-            text: isUserHumanVerified ? "Verify to nadabot" : "Proceed to donate",
+            text: "Proceed to donate",
             onClick: () => {
               if (donationType === "auto") updateState({ currentPage: "confirmPot" });
               else {

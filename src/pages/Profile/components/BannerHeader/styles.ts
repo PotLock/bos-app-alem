@@ -97,6 +97,8 @@ export const ProfileImageContainer = styled.div`
   .profile-image {
     height: 100%;
     width: 100%;
+    display: flex;
+    border-radius: 50%;
     img {
       object-fit: cover;
       width: 100%;

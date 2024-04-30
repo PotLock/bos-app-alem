@@ -14,7 +14,7 @@ type Props = {
 };
 
 const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
-  const { SUPPORTED_FTS, NADA_BOT_URL } = constants;
+  const { SUPPORTED_FTS } = constants;
 
   const { base_currency, total_public_donations, matching_pool_balance, public_donations_count } = potDetail;
 
@@ -63,6 +63,14 @@ const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
       .catch((err) => console.log("error getting the flagged accounts ", err));
   }
 
+  const sortAndSetPayouts = (payouts: any) => {
+    payouts.sort((a: any, b: any) => {
+      // sort by matching pool allocation, highest to lowest
+      return b.matchingAmount - a.matchingAmount;
+    });
+    setAllPayouts(payouts.slice(0, 5));
+  };
+
   if (!allPayouts && allDonations?.length > 0 && flaggedAddresses) {
     let allPayouts = [];
 
@@ -74,22 +82,18 @@ const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
           matchingAmount: amount,
         };
       });
+      sortAndSetPayouts(allPayouts);
     } else {
-      const calculatedPayouts = calculatePayouts(allDonations, matching_pool_balance, flaggedAddresses);
-
-      // calculate estimated payouts
-      allPayouts = Object.entries(calculatedPayouts).map(([projectId, { matchingAmount }]: any) => {
-        return {
-          projectId,
-          matchingAmount,
-        };
+      calculatePayouts(allDonations, matching_pool_balance, flaggedAddresses).then((calculatedPayouts: any) => {
+        allPayouts = Object.entries(calculatedPayouts).map(([projectId, { matchingAmount }]: any) => {
+          return {
+            projectId,
+            matchingAmount,
+          };
+        });
+        sortAndSetPayouts(allPayouts);
       });
     }
-    allPayouts.sort((a, b) => {
-      // sort by matching pool allocation, highest to lowest
-      return b.matchingAmount - a.matchingAmount;
-    });
-    setAllPayouts(allPayouts.slice(0, 5));
   }
 
   return allPayouts?.length > 0 ? (
