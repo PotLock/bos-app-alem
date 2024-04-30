@@ -165,8 +165,6 @@ const PotlockFunding = ({
     </svg>
   );
 
-  const ProfileImg = ({ address }: any) => <ProfileImage {...{ accountId: address, style: {} }} />;
-
   const PotIcon = (potIconProps: any) => (
     <svg {...potIconProps} width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -328,7 +326,10 @@ const PotlockFunding = ({
                 {isPot ? (
                   <PotIcon className="profile-image" />
                 ) : (
-                  <ProfileImg address={projectId ? donor_id : recipient_id || project_id} />
+                  <ProfileImage
+                    accountId={projectId ? donor_id : recipient_id || project_id}
+                    fallbackUrl="https://ipfs.near.social/ipfs/bafkreiccpup6f2kihv7bhlkfi4omttbjpawnsns667gti7jbhqvdnj4vsm"
+                  />
                 )}
                 <div className="funding-src">
                   <a href={hrefWithParams(url)} target="_blank">

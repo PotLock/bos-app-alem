@@ -1,7 +1,7 @@
 import { useEffect, useState } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import { Stats, StatsSubTitle, StatsTitle } from "./styles";
-import yoctosToUsd from "@app/utils/yoctosToUsd";
+import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 // import { useDonationsInfo } from "@app/hooks/useDonationsInfo";
 
 const DonationStats = () => {
@@ -11,7 +11,9 @@ const DonationStats = () => {
   const data = DonateSDK.getConfig();
   useEffect(() => {
     if (!donated) {
-      const lastDonationAmount = data.net_donations_amount ? yoctosToUsd(data.net_donations_amount) : null;
+      const lastDonationAmount = data.net_donations_amount
+        ? yoctosToUsdWithFallback(data.net_donations_amount, true)
+        : null;
       const totalDonations = data.total_donations_count;
 
       setDonated(lastDonationAmount);

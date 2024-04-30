@@ -149,7 +149,7 @@ const DonationsTable = (props: any) => {
             const projectHref = hrefWithParams(`?tab=project&projectId=${projectId}`);
             const profileHref = hrefWithParams(`?tab=profile&accountId=${donor_id}`);
             return (
-              <TrRow>
+              <TrRow key={donated_at_ms || donated_at_ms}>
                 {/* Donor */}
                 <AddressItem
                   address={donor_id}

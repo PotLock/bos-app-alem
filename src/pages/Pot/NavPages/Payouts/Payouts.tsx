@@ -27,16 +27,14 @@ import PayoutsChallenges from "../../components/PayoutsChallenges/PayoutsChallen
 
 const Payouts = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonations: any }) => {
   const { potId } = useParams();
-  const userIsAdminOrGreater = PotSDK.isUserPotAdminOrGreater(potId, context.accountId); // TODO: ADD THIS BACK IN
 
   State.init({
     allPayouts: null,
     filteredPayouts: null,
-    showChallengePayoutsModal: false,
     flaggedAddresses: null,
   });
 
-  const { allPayouts, filteredPayouts, showChallengePayoutsModal, flaggedAddresses } = state;
+  const { allPayouts, filteredPayouts, flaggedAddresses } = state;
 
   if (!flaggedAddresses) {
     PotSDK.getFlaggedAccounts(potDetail, potId)
@@ -52,46 +50,42 @@ const Payouts = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonatio
   }
 
   if (!allPayouts && allDonations && potDetail && flaggedAddresses) {
-    const calculatedPayouts = calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses);
-    console.log("calculated payouts: ", calculatedPayouts);
-    if (potDetail.payouts.length) {
-      // handle these payouts, which don't contain all the info needed
-      // pot payouts contain id, project_id, amount & paid_at
-      // loop through potDetail payouts and synthesize the two sets of payouts, so projectId and matchingAmount are taken from potDetail payouts, and donorCount and totalAmount are taken from calculatedPayouts
-      const synthesizedPayouts = potDetail.payouts.map((payout) => {
-        const { project_id, amount } = payout;
-        const { totalAmount, donorCount } = calculatedPayouts[project_id];
-        return {
-          projectId: project_id,
-          totalAmount,
-          matchingAmount: amount,
-          donorCount,
-        };
-      });
-      State.update({ allPayouts: synthesizedPayouts, filteredPayouts: synthesizedPayouts });
-    } else {
-      // calculate estimated payouts
-      const allPayouts = Object.entries(calculatedPayouts).map(
-        ([projectId, { totalAmount, matchingAmount, donorCount }]: any) => {
+    calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses).then((calculatedPayouts: any) => {
+      if (potDetail.payouts.length) {
+        // handle these payouts, which don't contain all the info needed
+        // pot payouts contain id, project_id, amount & paid_at
+        // loop through potDetail payouts and synthesize the two sets of payouts, so projectId and matchingAmount are taken from potDetail payouts, and donorCount and totalAmount are taken from calculatedPayouts
+        const synthesizedPayouts = potDetail.payouts.map((payout) => {
+          const { project_id, amount } = payout;
+          const { totalAmount, donorCount } = calculatedPayouts[project_id];
           return {
-            projectId,
+            projectId: project_id,
             totalAmount,
-            matchingAmount,
+            matchingAmount: amount,
             donorCount,
           };
-        },
-      ); // TODO: refactor to use PotsSDK (note that this is duplicated in Pots/Projects.jsx)
-      allPayouts.sort((a, b) => {
-        // sort by matching pool allocation, highest to lowest
-        return b.matchingAmount - a.matchingAmount;
-      });
-      State.update({ allPayouts, filteredPayouts: allPayouts });
-    }
+        });
+        State.update({ allPayouts: synthesizedPayouts, filteredPayouts: synthesizedPayouts });
+      } else {
+        // calculate estimated payouts
+        const allPayouts = Object.entries(calculatedPayouts).map(
+          ([projectId, { totalAmount, matchingAmount, donorCount }]: any) => {
+            return {
+              projectId,
+              totalAmount,
+              matchingAmount,
+              donorCount,
+            };
+          },
+        ); // TODO: refactor to use PotsSDK (note that this is duplicated in Pots/Projects.jsx)
+        allPayouts.sort((a, b) => {
+          // sort by matching pool allocation, highest to lowest
+          return b.matchingAmount - a.matchingAmount;
+        });
+        State.update({ allPayouts, filteredPayouts: allPayouts });
+      }
+    });
   }
-
-  const columns = ["Project", "Total Raised", "Total Unique Donors", "Matching Pool Allocation"];
-
-  const { base_currency } = potDetail;
 
   const searchPayouts = (searchTerm: string) => {
     // filter payouts that match the search term (donor_id, project_id)

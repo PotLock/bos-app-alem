@@ -37,6 +37,7 @@ const Linktree = ({ projectId, accountId }: Props) => {
       {Object.entries(linktree).map(([k, v]) => {
         return k in itemIconUrls && v ? (
           <LinktreeItemContainer
+            key={k}
             href={fullUrls[k](v)}
             // disabled={!v}
             onClick={(e) => {

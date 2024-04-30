@@ -172,7 +172,9 @@ const CreateForm = (props: { edit: boolean }) => {
   const userHasPermissions =
     policy == null
       ? false
-      : policy == undefined || doesUserHaveDaoFunctionCallProposalPermissions(context.accountId, policy);
+      : policy
+      ? doesUserHaveDaoFunctionCallProposalPermissions(context.accountId, policy)
+      : projectId === context.accountId;
 
   // const userHasPermissions = useMemo(() => {
   //   if (policy == undefined) return true;
@@ -201,7 +203,6 @@ const CreateForm = (props: { edit: boolean }) => {
   const setSocialData = (accountId: string, shouldSetTeamMembers?: any) => {
     Near.asyncView("social.near", "get", { keys: [`${accountId}/**`] })
       .then((socialData) => {
-        console.log("socialData: ", socialData);
         if (!socialData || !socialData[accountId].profile) {
           State.update({
             socialDataFetched: true,
@@ -311,9 +312,9 @@ const CreateForm = (props: { edit: boolean }) => {
     }
   }, [state.socialDataFetched, state.isDao, state.daoAddress, context.accountId]);
 
-  console.log("state", state);
-
   const isCreateProjectDisabled =
+    !state.profileImage ||
+    !state.backgroundImage ||
     state.daoAddressError ||
     !state.name ||
     state.nameError ||

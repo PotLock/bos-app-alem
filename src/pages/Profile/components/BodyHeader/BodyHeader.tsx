@@ -1,11 +1,24 @@
-import { Near, context, useMemo } from "alem";
-import { AccountId, AccountInfoContainer, Container, Header, Info, Name, NameContainer } from "./styles";
+import { Near, clipboard, context, useMemo, useState } from "alem";
+import {
+  AccountId,
+  AccountInfoContainer,
+  Container,
+  Header,
+  Info,
+  Name,
+  NameContainer,
+  LinksWrapper,
+  ReferralButton,
+} from "./styles";
 import CopyIcon from "@app/pages/Project/components/CopyIcon";
 import Button from "@app/components/Button";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import ProfileTags from "../ProfileTags";
 import Linktree from "../Linktree/Linktree";
 import DonationsInfo from "@app/pages/Project/components/DonationsInfo/DonationsInfo";
+import FollowButton from "@app/pages/Project/components/FollowButton/FollowButton";
+import ReferrerIcon from "@app/assets/svgs/referrerIcon";
+import CheckIcon from "@app/assets/svgs/CheckIcon";
 
 type Props = {
   profile: any;
@@ -17,6 +30,8 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
   const name = profile.name;
   const policy = projectId ? Near.view(projectId, "get_policy", {}) : (false as any);
   const isDao = !!policy;
+
+  const [copid, setCopid] = useState(false);
 
   const userHasPermissions = useMemo(() => {
     if (!policy) return false;
@@ -73,9 +88,33 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
             )}
           </NameContainer>
           <ProfileTags projectId={projectId} accountId={accountId} />
-          <Linktree projectId={projectId} accountId={accountId} />
+          <LinksWrapper>
+            <Linktree projectId={projectId} accountId={accountId} />
+            {projectId && context.accountId && (
+              <ReferralButton
+                onClick={() => {
+                  clipboard.writeText(
+                    `https://bos.potlock.org/staging.potlock.near/widget/IndexLoader?tab=project&projectId=${projectId}&referrerId=${context.accountId}`,
+                  );
+                  setCopid(true);
+                  setTimeout(() => {
+                    setCopid(false);
+                  }, 2000);
+                }}
+              >
+                {copid ? <CheckIcon /> : <ReferrerIcon />}
+                <div>Earn referral fees</div>
+              </ReferralButton>
+            )}
+          </LinksWrapper>
         </Info>
-        {projectId && <DonationsInfo accountId={id} projectId={projectId} />}
+        {projectId ? (
+          <DonationsInfo projectId={projectId} />
+        ) : accountId !== context.accountId ? (
+          <FollowButton accountId={accountId || ""} classname="follow-btn" />
+        ) : (
+          ""
+        )}
       </Container>
     </Header>
   );

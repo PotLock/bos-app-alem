@@ -100,6 +100,7 @@ export const FundingSrc = styled.div`
   .profile-image {
     width: 24px;
     height: 24px;
+    display: flex !important;
   }
   .funding-src {
     display: flex;

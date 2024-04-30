@@ -12,24 +12,7 @@ const Pot = () => {
 
   Big.PE = 100;
 
-  const [sybilRequirementMet, setSybilRequirementMet] = useState<any>(null);
-
   const potDetail: PotDetail = PotSDK.getConfig(potId);
-
-  if (sybilRequirementMet === null) {
-    if (potDetail.sybil_wrapper_provider) {
-      const [contractId, methodName] = potDetail.sybil_wrapper_provider.split(":");
-      Near.asyncView(contractId, methodName, { account_id: context.accountId })
-        .then((result) => {
-          setSybilRequirementMet(result);
-        })
-        .catch((e) => {
-          setSybilRequirementMet(false);
-        });
-    } else {
-      setSybilRequirementMet(true);
-    }
-  }
 
   const noPot = potDetail === undefined;
   const loading = potDetail === null;
@@ -94,18 +77,12 @@ const Pot = () => {
   return (
     <Wrapper>
       <HeaderStatus potDetail={potDetail} />
-      <Header potDetail={potDetail} allDonations={allDonations} sybilRequirementMet={sybilRequirementMet} />
+      <Header potDetail={potDetail} allDonations={allDonations} />
 
       <Tabs nav={nav} navOptions={options} />
 
       <BodyContainer>
-        {SelectedNavComponent && (
-          <SelectedNavComponent
-            allDonations={allDonations}
-            potDetail={potDetail}
-            sybilRequirementMet={sybilRequirementMet}
-          />
-        )}
+        {SelectedNavComponent && <SelectedNavComponent allDonations={allDonations} potDetail={potDetail} />}
       </BodyContainer>
     </Wrapper>
   );

@@ -9,6 +9,7 @@ import AmountInput from "../AmountInput/AmountInput";
 import Alert from "../Banners/Alert";
 import Nadabot from "../Banners/Nadabot";
 import Button from "@app/components/Button";
+import VerifyInfo from "../Banners/VerifyInfo";
 
 const FormDirect = (props: any) => {
   const {
@@ -25,7 +26,7 @@ const FormDirect = (props: any) => {
     accountId,
   } = props;
 
-  const { NADABOT_HUMAN_METHOD, nadabotContractId: NADABOT_CONTRACT_ID } = constants;
+  const { NADABOT_HUMAN_METHOD, NADABOT_CONTRACT_ID } = constants;
 
   const isUserHumanVerified = Near.view(NADABOT_CONTRACT_ID, NADABOT_HUMAN_METHOD, {
     account_id: accountId,
@@ -100,16 +101,14 @@ const FormDirect = (props: any) => {
         >
           Amount
         </Label>
-        {!needsToVerify && (
-          <AmountInput
-            value={amount}
-            donationType={donationType}
-            HandleAmoutChange={HandleAmoutChange}
-            updateState={updateState}
-            denominationOptions={denominationOptions}
-            selectedDenomination={selectedDenomination}
-          />
-        )}
+        <AmountInput
+          value={amount}
+          donationType={donationType}
+          HandleAmoutChange={HandleAmoutChange}
+          updateState={updateState}
+          denominationOptions={denominationOptions}
+          selectedDenomination={selectedDenomination}
+        />
 
         {ftBalance && (
           <CurrentBalance>
@@ -122,12 +121,12 @@ const FormDirect = (props: any) => {
           </CurrentBalance>
         )}
         {amountError && <Alert error={amountError} />}
-        {needsToVerify && <Nadabot />}
+        {needsToVerify && <VerifyInfo />}
         <CustomButton>
           <Button
             {...{
               type: "primary",
-              disabled: amountError || needsToVerify || !amount || !accountId,
+              disabled: amountError || !amount || !accountId,
               text: !accountId ? "Sign In to Proceed" : isLoading ? "Loading..." : "Proceed to donate",
               onClick: () => updateState({ currentPage: "confirm" }),
             }}

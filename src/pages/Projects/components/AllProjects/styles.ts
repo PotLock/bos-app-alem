@@ -21,6 +21,9 @@ export const ProjectsContainer = styled.div`
   width: 100%;
   overflow-y: hidden;
   padding-top: 5px;
+  > div {
+    width: 100%;
+  }
 `;
 
 export const FilterWrapper = styled.div`
