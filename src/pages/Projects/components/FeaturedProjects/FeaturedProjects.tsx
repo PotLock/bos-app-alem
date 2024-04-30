@@ -28,7 +28,7 @@ const FeaturedProjects = ({ projectsData }: { projectsData: any }) => {
     () => (
       <>
         {projects.map((project: any) => {
-          return <Card projectId={project.registrant_id} allowDonate={true} />;
+          return <Card projectId={project.registrant_id} />;
         })}
       </>
     ),

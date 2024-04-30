@@ -1,12 +1,12 @@
 import { Container, HeroContainer, Line } from "./styles";
 import DonationStats from "@app/pages/Projects/components/DonationStats/DonationStats";
 import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
-import { context, useMemo, useState } from "alem";
-import ModalDonation from "@app/modals/ModalDonation";
+import { context, useContext, useMemo, useState } from "alem";
 
 const NewHero = ({ projectsData }: any) => {
   const { allProjects, approvedProjects } = projectsData;
-  const [donateTo, setDonateTo] = useState("");
+
+  const { setDonationModalProps } = useContext<any>("donation-modal");
 
   const getRandomProject = () => {
     if (approvedProjects) {
@@ -16,11 +16,9 @@ const NewHero = ({ projectsData }: any) => {
   };
 
   const openDonateRandomlyModal = () => {
-    setDonateTo(getRandomProject());
-  };
-
-  const closeDonateRandomlyModal = () => {
-    setDonateTo("");
+    setDonationModalProps({
+      projectId: getRandomProject(),
+    });
   };
 
   const accountId = context.accountId;
@@ -55,7 +53,6 @@ const NewHero = ({ projectsData }: any) => {
       </HeroContainer>
       <DonationStats />
       <Line />
-      {donateTo && <ModalDonation projectId={donateTo} onClose={closeDonateRandomlyModal} />}
     </Container>
   );
 };

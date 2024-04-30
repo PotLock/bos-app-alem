@@ -1,5 +1,5 @@
 import { PotDetail } from "@app/types";
-import { useState, context, useParams, useEffect, Markdown, Near, State } from "alem";
+import { useState, context, useParams, useEffect, Markdown, Near, State, useContext } from "alem";
 import constants from "@app/constants";
 import PotSDK from "@app/SDK/pot";
 import { ButtonsWrapper, Container, Description, Fund, HeaderWrapper, Referral, Title } from "./styles";
@@ -12,9 +12,7 @@ import PoolAllocationTable from "../PoolAllocationTable/PoolAllocationTable";
 import NewApplicationModal from "../NewApplicationModal/NewApplicationModal";
 import FundModal from "../FundModal/FundModal";
 import ChallengeModal from "../ChallengeModal/ChallengeModal";
-import ModalDonation from "@app/modals/ModalDonation";
 import calculatePayouts from "@app/utils/calculatePayouts";
-import ModalSuccess from "@app/modals/ModalSuccess/ModalSuccess";
 
 const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonations: any }) => {
   const {
@@ -36,13 +34,13 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
 
   const { potId } = useParams();
 
+  const { setDonationModalProps } = useContext<any>("donation-modal");
+
   const NADABOT_ICON_URL = IPFS_BASE_URL + "bafkreiecgkoybmplo4o542fphclxrhh4nlof5uit3lkzyv4eo2qymrpsru";
   const accountId = context.accountId || "";
 
   const [isMatchingPoolModalOpen, setIsMatchingPoolModalOpen] = useState(false);
-  const [isModalDonationOpen, setIsModalDonationOpen] = useState(false);
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
-  const [successfulDonation, setSuccessfulDonation] = useState(null);
   const [showChallengePayoutsModal, setShowChallengePayoutsModal] = useState(false);
   const [projects, setProjects] = useState<any>(null);
   const [registryStatus, setRegistryStatus] = useState<any>(null);
@@ -169,7 +167,7 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
               onClick={
                 canDonate
                   ? () => {
-                      setIsModalDonationOpen(true);
+                      setDonationModalProps({ potId, potDetail, projects, multiple: true });
                     }
                   : () => {}
               }
@@ -237,32 +235,6 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
         <ChallengeModal
           existingChallengeForUser={existingChallengeForUser}
           onClose={() => setShowChallengePayoutsModal(false)}
-        />
-      )}
-
-      {isModalDonationOpen && (
-        <ModalDonation
-          {...{
-            isModalOpen: isModalDonationOpen,
-            onClose: () => setIsModalDonationOpen(false),
-            potId,
-            potDetail,
-            projects,
-            multiple: true,
-            openDonationModalSuccess: (donation: any) => {
-              setIsModalDonationOpen(false);
-              setSuccessfulDonation(donation);
-            },
-          }}
-        />
-      )}
-      {successfulDonation && (
-        <ModalSuccess
-          {...{
-            successfulDonation: successfulDonation,
-            isModalOpen: successfulDonation != null,
-            onClose: () => setSuccessfulDonation(null),
-          }}
         />
       )}
     </Container>

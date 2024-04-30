@@ -1,4 +1,4 @@
-import { State, context, useMemo, useState } from "alem";
+import { State, context, useContext, useMemo, useState } from "alem";
 import {
   Button,
   ButtonRegisterProject,
@@ -11,10 +11,9 @@ import {
   Underline,
 } from "./styles";
 import DonationStats from "../../pages/Projects/components/DonationStats/DonationStats";
-import ModalDonation from "@app/modals/ModalDonation";
 
 const Hero = ({ projectsData }: { projectsData: any }) => {
-  const [donateTo, setDonateTo] = useState("");
+  const { setDonationModalProps } = useContext<any>("donation-modal");
 
   const getRandomProject = () => {
     const approvedProjects = projectsData.approvedProjects;
@@ -25,11 +24,9 @@ const Hero = ({ projectsData }: { projectsData: any }) => {
   };
 
   const openDonateRandomlyModal = () => {
-    setDonateTo(getRandomProject());
-  };
-
-  const closeDonateRandomlyModal = () => {
-    setDonateTo("");
+    setDonationModalProps({
+      projectId: getRandomProject(),
+    });
   };
 
   const accountId = context.accountId;
@@ -72,7 +69,6 @@ const Hero = ({ projectsData }: { projectsData: any }) => {
         <ButtonsContainer>
           <Button onClick={openDonateRandomlyModal}>Donate Randomly</Button>
           {/* <ButtonRegisterProject href={"?tab=createproject"}>Register Your Project</ButtonRegisterProject> */}
-          {donateTo && <ModalDonation projectId={donateTo} onClose={closeDonateRandomlyModal} />}
           <ButtonRegisterProject
             href={isRegisteredProject ? `?tab=project&projectId=${accountId}` : "?tab=createproject"}
           >

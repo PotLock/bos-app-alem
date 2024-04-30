@@ -42,13 +42,7 @@ const ConfirmDirect = ({
     }
   };
 
-  const pollForDonationSuccess = ({
-    projectId: donatedProject,
-    afterTs,
-    accountId,
-    openDonationSuccessModal,
-    isPotDonation,
-  }: any) => {
+  const pollForDonationSuccess = ({ projectId: donatedProject, afterTs, accountId, isPotDonation }: any) => {
     // poll for updates
     // TODO: update this to also poll Pot contract
     const pollIntervalMs = 1000;
@@ -138,7 +132,6 @@ const ConfirmDirect = ({
       projectId,
       afterTs: now,
       accountId,
-      openDonationSuccessModal,
       isPotDonation,
     };
 

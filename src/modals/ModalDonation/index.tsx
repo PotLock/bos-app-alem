@@ -7,6 +7,7 @@ import {
   fetch,
   state,
   useCache,
+  useContext,
   useEffect,
   useMemo,
   useParams,
@@ -21,23 +22,21 @@ import { Banner, Container, HeaderIcons } from "./styles";
 import FormPot from "./FormPot/FormPot";
 import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
 import ConfirmPot from "./ConfirmPot/ConfirmPot";
-import { PotDetail } from "@app/types";
 
-type DonationModalProps = {
-  projectId?: string;
-  onClose: () => void;
-  multiple?: boolean;
-  potDetail?: PotDetail;
-};
-
-const ModalDonation = (donationProps: DonationModalProps) => {
+const ModalDonation = () => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
+
+  const { setDonationModalProps, donationModalProps, setSuccessfulDonation } = useContext<any>("donation-modal");
+
+  const onClose = () => {
+    setDonationModalProps(null);
+  };
 
   const { potId, referrerId } = useParams();
 
-  const { projectId, onClose, multiple } = donationProps;
+  const { projectId, multiple } = donationModalProps;
 
-  const potDetail = donationProps.potDetail ?? PotSDK.getConfig(potId);
+  const potDetail = donationModalProps.potDetail ?? PotSDK.getConfig(potId);
 
   const accountId = context.accountId;
 
@@ -261,7 +260,7 @@ const ModalDonation = (donationProps: DonationModalProps) => {
           </Banner>
         </div>
         <ActivePageComponent
-          {...donationProps}
+          {...donationModalProps}
           {...state}
           accountId={accountId}
           potId={potId}
@@ -270,6 +269,7 @@ const ModalDonation = (donationProps: DonationModalProps) => {
           ftBalance={ftBalance}
           activeRounds={activeRounds}
           DENOMINATION_OPTION={DENOMINATION_OPTIONS}
+          openDonationSuccessModal={setSuccessfulDonation}
         />
       </Container>
     </ModalOverlay>

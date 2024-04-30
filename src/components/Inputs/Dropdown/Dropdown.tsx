@@ -14,8 +14,8 @@ type Props = {
   title?: any;
   FilterMenuCustomClass?: string;
   showCount?: boolean;
-  menuStyle?: CSSStyleDeclaration;
-  buttonStyle?: CSSStyleDeclaration;
+  menuStyle?: React.CSSProperties;
+  buttonStyle?: React.CSSProperties;
 };
 
 const Dropdown = (componentProps: Props) => {
