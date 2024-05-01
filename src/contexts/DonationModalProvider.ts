@@ -2,7 +2,7 @@
 import { createContext } from "alem";
 
 // Interface
-interface UserContextProps {
+export interface UserContextProps {
   setSuccessfulDonation: (newValue: any) => void;
   successfulDonation: any;
   donationModalProps: {
@@ -13,28 +13,20 @@ interface UserContextProps {
     multiple?: boolean;
   } | null;
   setDonationModalProps: (newValue: any) => void;
-  // test: "test";
-  // transactionHashes: null | string;
-  // setTransactionHashes: (newValue: any) => void;
 }
 
 const DonationModalProvider = () => {
   // Create a provider using a reference key
   const { setDefaultData, updateData, getSelf } = createContext<UserContextProps>("donation-modal");
 
-  const self = getSelf();
+  // const { successfulDonation, donationModalProps } = getSelf();
 
   setDefaultData({
     successfulDonation: null,
     donationModalProps: null,
-    // test: "test",
-    // transactionHashes: null,
-    // setTransactionHashes: (transactionHashes: any) => {
-    //   updateData({
-    //     transactionHashes,
-    //   });
-    // },
     setSuccessfulDonation: (successfulDonation: any) => {
+      console.log("successfulDonation", successfulDonation);
+
       updateData({
         successfulDonation,
       });
@@ -45,8 +37,9 @@ const DonationModalProvider = () => {
       });
     },
   });
+  // console.log("test", successfulDonation);
 
-  return self;
+  // return { successfulDonation, donationModalProps };
 };
 
 export default DonationModalProvider;

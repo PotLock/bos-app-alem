@@ -5,6 +5,8 @@ import {
   State,
   asyncFetch,
   context,
+  getLocation,
+  navigate,
   state,
   useContext,
   useEffect,
@@ -29,6 +31,7 @@ import yoctosToUsd from "@app/utils/yoctosToUsd";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import VerifyInfo from "../ModalDonation/Banners/VerifyInfo";
 import hrefWithParams from "@app/utils/hrefWithParams";
+import { useDonationModal } from "@app/hooks/useDonationModal";
 
 type Props = {
   successfulDonation: any;
@@ -39,13 +42,9 @@ const ModalSuccess = () => {
   const POTLOCK_TWITTER_ACCOUNT_ID = "PotLock_";
   const DEFAULT_SHARE_HASHTAGS = ["BOS", "PublicGoods", "Donations"];
 
-  const { transactionHashes } = useParams();
-
-  const {
-    setSuccessfulDonation: _setSuccessfulDonation,
-    successfulDonation: _successfulDonation,
-    setTransactionHashes,
-  } = useContext<any>("donation-modal");
+  const params = useParams();
+  const { transactionHashes } = params;
+  const { setSuccessfulDonation: _setSuccessfulDonation, successfulDonation: _successfulDonation } = useDonationModal();
 
   const { NADABOT_CONTRACT_ID, NADABOT_HUMAN_METHOD, ownerId } = constants;
 
@@ -55,7 +54,10 @@ const ModalSuccess = () => {
 
   const onClose = () => {
     _setSuccessfulDonation(null);
-    setTransactionHashes(null);
+    const location = getLocation();
+    delete params.transactionHashes;
+
+    navigate.to(location.pathname, params);
   };
 
   const [successfulDonation, setSuccessfulDonation] = useState(_successfulDonation);

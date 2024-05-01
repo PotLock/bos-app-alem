@@ -2,6 +2,7 @@ import { RouterContext, loadExternalStyles } from "alem";
 import Spinner from "./components/Spinner";
 
 import Main from "./Main";
+import DonationModalProvider from "./contexts/DonationModalProvider";
 // import ProjectsProvider from "./contexts/ProjectsProvider";
 
 const App = () => {
@@ -22,7 +23,7 @@ const App = () => {
 
   // console.log(isRegistryAdmin);
   RouterContext();
-
+  DonationModalProvider();
   return <div className="app-container">{fontsLoaded ? <Main /> : <Spinner />}</div>;
 };
 

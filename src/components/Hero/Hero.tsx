@@ -11,9 +11,10 @@ import {
   Underline,
 } from "./styles";
 import DonationStats from "../../pages/Projects/components/DonationStats/DonationStats";
+import { useDonationModal } from "@app/hooks/useDonationModal";
 
 const Hero = ({ projectsData }: { projectsData: any }) => {
-  const { setDonationModalProps } = useContext<any>("donation-modal");
+  const { setDonationModalProps } = useDonationModal();
 
   const getRandomProject = () => {
     const approvedProjects = projectsData.approvedProjects;

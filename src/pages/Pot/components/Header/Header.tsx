@@ -13,6 +13,7 @@ import NewApplicationModal from "../NewApplicationModal/NewApplicationModal";
 import FundModal from "../FundModal/FundModal";
 import ChallengeModal from "../ChallengeModal/ChallengeModal";
 import calculatePayouts from "@app/utils/calculatePayouts";
+import { useDonationModal } from "@app/hooks/useDonationModal";
 
 const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonations: any }) => {
   const {
@@ -34,7 +35,7 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
 
   const { potId } = useParams();
 
-  const { setDonationModalProps } = useContext<any>("donation-modal");
+  const { setDonationModalProps } = useDonationModal();
 
   const NADABOT_ICON_URL = IPFS_BASE_URL + "bafkreiecgkoybmplo4o542fphclxrhh4nlof5uit3lkzyv4eo2qymrpsru";
   const accountId = context.accountId || "";

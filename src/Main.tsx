@@ -6,12 +6,18 @@ import Banner from "./components/Banner/Banner";
 import ModalSuccess from "./modals/ModalSuccess/ModalSuccess";
 import DonationModalProvider from "./contexts/DonationModalProvider";
 import ModalDonation from "./modals/ModalDonation";
+import { useDonationModal } from "./hooks/useDonationModal";
 
 const Main = () => {
   const { transactionHashes: _transactionHashes } = useParams();
+  const { successfulDonation, donationModalProps } = useDonationModal();
+  // const { successfulDonation, donationModalProps } = DonationModalProvider();
 
-  const { successfulDonation, donationModalProps } = DonationModalProvider();
+  console.log("test", successfulDonation);
 
+  useEffect(() => {
+    console.log("useEffect", successfulDonation);
+  }, [successfulDonation]);
   return (
     // <DonationsInfoProvider>
     <>

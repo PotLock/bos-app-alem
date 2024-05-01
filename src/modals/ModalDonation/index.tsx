@@ -22,11 +22,12 @@ import { Banner, Container, HeaderIcons } from "./styles";
 import FormPot from "./FormPot/FormPot";
 import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
 import ConfirmPot from "./ConfirmPot/ConfirmPot";
+import { useDonationModal } from "@app/hooks/useDonationModal";
 
 const ModalDonation = () => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
 
-  const { setDonationModalProps, donationModalProps, setSuccessfulDonation } = useContext<any>("donation-modal");
+  const { setDonationModalProps, donationModalProps, setSuccessfulDonation } = useDonationModal();
 
   const onClose = () => {
     setDonationModalProps(null);
@@ -34,9 +35,9 @@ const ModalDonation = () => {
 
   const { potId, referrerId } = useParams();
 
-  const { projectId, multiple } = donationModalProps;
+  const { projectId, multiple } = donationModalProps || {};
 
-  const potDetail = donationModalProps.potDetail ?? PotSDK.getConfig(potId);
+  const potDetail = donationModalProps?.potDetail ?? PotSDK.getConfig(potId);
 
   const accountId = context.accountId;
 
@@ -269,7 +270,14 @@ const ModalDonation = () => {
           ftBalance={ftBalance}
           activeRounds={activeRounds}
           DENOMINATION_OPTION={DENOMINATION_OPTIONS}
-          openDonationSuccessModal={setSuccessfulDonation}
+          onClose={onClose}
+          openDonationSuccessModal={(successfulDonation: any) => {
+            // console.log("setSuccessfulDonation", setSuccessfulDonation);
+            // console.log("successfulDonation", successfulDonation);
+
+            setSuccessfulDonation(successfulDonation);
+            onClose();
+          }}
         />
       </Container>
     </ModalOverlay>

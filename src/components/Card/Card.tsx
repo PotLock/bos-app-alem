@@ -28,12 +28,13 @@ import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import Image from "../mob.near/Image";
 import _address from "@app/utils/_address";
+import { useDonationModal } from "@app/hooks/useDonationModal";
 
 const Card = (props: any) => {
   const { payoutDetails, allowDonate: _allowDonate } = props;
   const { potId } = useParams();
 
-  const { setDonationModalProps } = useContext<any>("donation-modal");
+  const { setDonationModalProps } = useDonationModal();
 
   // TODO: Bug -> não esta importando o utils
   // Só importa funcóes que retornam algo, um objeto direto está falhando.
@@ -41,8 +42,6 @@ const Card = (props: any) => {
   // console.log(utils);
 
   const [ready, isReady] = useState(false);
-
-  const { setSuccessfulDonation } = useContext<any>("donation-modal");
 
   const projectId = props.project.registrant_id || props.projectId;
   const profile = Social.getr(`${projectId}/profile`) as any;
