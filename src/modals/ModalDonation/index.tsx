@@ -27,7 +27,7 @@ import { useDonationModal } from "@app/hooks/useDonationModal";
 const ModalDonation = () => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
 
-  const { setDonationModalProps, donationModalProps, setSuccessfulDonation } = useDonationModal();
+  const { donationModalProps, setSuccessfulDonation, setDonationModalProps } = useDonationModal();
 
   const onClose = () => {
     setDonationModalProps(null);

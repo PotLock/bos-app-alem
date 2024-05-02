@@ -11,6 +11,7 @@ import NearIcon from "@app/assets/svgs/near-icon";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import hrefWithParams from "@app/utils/hrefWithParams";
+import { useDonationModal } from "@app/hooks/useDonationModal";
 
 const ConfirmDirect = ({
   selectedDenomination,
@@ -42,12 +43,31 @@ const ConfirmDirect = ({
       return ["", 0, 0];
     }
   };
-
+  const { setSuccessfulDonation } = useDonationModal();
   const pollForDonationSuccess = ({ projectId: donatedProject, afterTs, accountId, isPotDonation }: any) => {
     // poll for updates
     // TODO: update this to also poll Pot contract
     const pollIntervalMs = 1000;
     // const totalPollTimeMs = 60000; // consider adding in to make sure interval doesn't run indefinitely
+
+    // setSuccessfulDonation({
+    //   "alem-lib.near": {
+    //     id: 37,
+    //     donor_id: "baam25.near",
+    //     total_amount: "100000000000000000000000",
+    //     net_amount: "91230000000000000000000",
+    //     message: "",
+    //     donated_at: 1714553743577,
+    //     project_id: "alem-lib.near",
+    //     referrer_id: null,
+    //     referrer_fee: null,
+    //     protocol_fee: "2000000000000000000000",
+    //     matching_pool: false,
+    //     chef_id: null,
+    //     chef_fee: null,
+    //   },
+    // });
+    // onClose();
     const pollId = setInterval(() => {
       (isPotDonation
         ? PotSDK.asyncGetDonationsForDonor(selectedRound, accountId)
@@ -55,14 +75,6 @@ const ConfirmDirect = ({
       ).then((donations: any) => {
         for (const donation of donations) {
           const { recipient_id, project_id, donated_at_ms, donated_at } = donation; // donation contract uses recipient_id, pot contract uses project_id; donation contract uses donated_at_ms, pot contract uses donated_at
-          console.log("recipient_id", {
-            project_id,
-            donated_at,
-          });
-          console.log("project_id", {
-            afterTs,
-            donatedProject,
-          });
 
           if (
             ((project_id || recipient_id) === donatedProject && (donated_at_ms || donated_at) > afterTs) ||
@@ -70,6 +82,7 @@ const ConfirmDirect = ({
           ) {
             // display success message
             clearInterval(pollId);
+
             openDonationSuccessModal({
               [donatedProject]: donation,
             });

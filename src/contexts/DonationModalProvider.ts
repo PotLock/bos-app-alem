@@ -25,10 +25,9 @@ const DonationModalProvider = () => {
     successfulDonation: null,
     donationModalProps: null,
     setSuccessfulDonation: (successfulDonation: any) => {
-      console.log("successfulDonation", successfulDonation);
-
       updateData({
         successfulDonation,
+        donationModalProps: null,
       });
     },
     setDonationModalProps: (donationModalProps: any) => {
