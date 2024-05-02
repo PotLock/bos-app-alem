@@ -1,20 +1,20 @@
-import { VM } from "alem";
+import { useCart } from "@app/hooks/useCart";
 import { CartButton, CartCountContainer, CartText } from "./styles";
-
-const { getCartItemCount } = VM.require("potlock.near/widget/SDK.cart") ?? {
-  getCartItemCount: () => 0,
-};
-
-// const { CartModal } = VM.require("potlock.near/widget/Cart.Modal") ?? {
-//   CartModal: () => <></>,
-// };
-
-const numCartItems = getCartItemCount();
+import { navigate } from "alem";
 
 const NavItem = () => {
+  const { cart } = useCart();
+  console.log("cart", cart);
+
+  const numCartItems = cart ? Object.keys(cart).length : 0;
   return (
     <>
-      <CartButton numCartItems={numCartItems} onClick={() => {}}>
+      <CartButton
+        numCartItems={numCartItems}
+        onClick={() => {
+          numCartItems > 0 ? navigate.to("cart") : {};
+        }}
+      >
         <CartText>Cart</CartText>
         {numCartItems > 0 && (
           <CartCountContainer>

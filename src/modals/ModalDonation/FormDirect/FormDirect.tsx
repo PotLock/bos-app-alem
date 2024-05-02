@@ -10,6 +10,7 @@ import Alert from "../Banners/Alert";
 import Nadabot from "../Banners/Nadabot";
 import Button from "@app/components/Button";
 import VerifyInfo from "../Banners/VerifyInfo";
+import { useCart } from "@app/hooks/useCart";
 
 const FormDirect = (props: any) => {
   const {
@@ -24,9 +25,12 @@ const FormDirect = (props: any) => {
     ftBalance,
     activeRounds,
     accountId,
+    selectedRound,
   } = props;
 
   const { NADABOT_HUMAN_METHOD, NADABOT_CONTRACT_ID } = constants;
+
+  const { addItemstoCart } = useCart();
 
   const isUserHumanVerified = Near.view(NADABOT_CONTRACT_ID, NADABOT_HUMAN_METHOD, {
     account_id: accountId,
@@ -129,6 +133,20 @@ const FormDirect = (props: any) => {
               disabled: amountError || !amount || !accountId,
               text: !accountId ? "Sign In to Proceed" : isLoading ? "Loading..." : "Proceed to donate",
               onClick: () => updateState({ currentPage: "confirm" }),
+            }}
+          />
+          <Button
+            {...{
+              type: "primary",
+              disabled: amountError || !amount || !accountId,
+              text: "Add tp cart",
+              onClick: () =>
+                addItemstoCart({
+                  id: projectId,
+                  amount,
+                  token: selectedDenomination,
+                  potId: selectedRound,
+                }),
             }}
           />
         </CustomButton>
