@@ -64,7 +64,7 @@ const ModalDonation = () => {
   const {
     // amount,
     // denomination,
-    // donationType,
+    donationType,
     // showBreakdownm,
     // bypassProtocolFee,
     // bypassChefFee,
@@ -157,7 +157,7 @@ const ModalDonation = () => {
 
   // Get Ft Balances
   useEffect(() => {
-    if (!ftBalances && !potId) {
+    if (donationType === "direct") {
       asyncFetch(`https://near-mainnet.api.pagoda.co/eapi/v1/accounts/${accountId}/balances/FT`, {
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +187,7 @@ const ModalDonation = () => {
         })
         .catch((err) => console.log("fetching Ft balances faild"));
     }
-  }, [ftBalances]);
+  }, [ftBalances, donationType]);
 
   const nearBalanceRes = fetch(`https://near-mainnet.api.pagoda.co/eapi/v1/accounts/${accountId}/balances/NEAR`, {
     headers: {
