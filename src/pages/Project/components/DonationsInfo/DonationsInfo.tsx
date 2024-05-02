@@ -1,10 +1,10 @@
-import { Big, props, useContext, useMemo, useParams } from "alem";
-import constants from "@app/constants";
-import { Container } from "./styles";
-import nearToUsdWithFallback from "@app/utils/nearToUsdWithFallback";
+import { Big, useMemo, useParams } from "alem";
 import Button from "@app/components/Button";
-import FollowButton from "../FollowButton/FollowButton";
+import constants from "@app/constants";
 import { useDonationModal } from "@app/hooks/useDonationModal";
+import nearToUsdWithFallback from "@app/utils/nearToUsdWithFallback";
+import FollowButton from "../FollowButton/FollowButton";
+import { Container } from "./styles";
 
 const DonationsInfo = ({ projectId, donations }: any) => {
   const { potId } = useParams();

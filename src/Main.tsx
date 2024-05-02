@@ -1,18 +1,16 @@
 import { ModulesProvider, useParams } from "alem";
-import Nav from "./components/Nav/Nav";
-import Routes from "./routes/Routes";
-// import DonationsInfoProvider from "./contexts/DonationsInfoProvider";
 import Banner from "./components/Banner/Banner";
-import ModalSuccess from "./modals/ModalSuccess/ModalSuccess";
-import ModalDonation from "./modals/ModalDonation";
+import Nav from "./components/Nav/Nav";
 import { useDonationModal } from "./hooks/useDonationModal";
+import ModalDonation from "./modals/ModalDonation";
+import ModalSuccess from "./modals/ModalSuccess/ModalSuccess";
+import Routes from "./routes/Routes";
 
 const Main = () => {
   const { transactionHashes: _transactionHashes } = useParams();
   const { successfulDonation, donationModalProps } = useDonationModal();
 
   return (
-    // <DonationsInfoProvider>
     <>
       <ModulesProvider />
       <Nav />
@@ -23,7 +21,6 @@ const Main = () => {
       {(successfulDonation || _transactionHashes) && <ModalSuccess />}
       {donationModalProps && <ModalDonation />}
     </>
-    // </DonationsInfoProvider>
   );
 };
 
