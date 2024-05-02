@@ -30,9 +30,14 @@ export const Banner = styled.div`
   padding: 1.5rem 2rem;
   gap: 0.5rem;
   overflow: hidden;
-  background: #dd3345;
+  background: #f8d3b0;
   color: white;
   font-size: 22px;
+  div {
+    color: #3f130b;
+    font-size: 20px;
+    font-weight: 600;
+  }
   .left-pattern {
     position: absolute;
     left: 0;

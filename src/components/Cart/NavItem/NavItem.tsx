@@ -4,7 +4,6 @@ import { navigate } from "alem";
 
 const NavItem = () => {
   const { cart } = useCart();
-  console.log("cart", cart);
 
   const numCartItems = cart ? Object.keys(cart).length : 0;
   return (

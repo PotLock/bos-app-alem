@@ -22,7 +22,7 @@ export type CartContextProps = {
    * @param item
    * @returns
    */
-  addItemstoCart: (cart: CartItem) => void;
+  addItemstoCart: (cart: CartItem[]) => void;
   removeItemsFromCart: (idsToRemove: CartItem["id"][]) => void;
   clearCart: () => void;
 };
@@ -35,13 +35,13 @@ const CartProvider = () => {
   // Set default data
   setDefaultData({
     cart: DEFAULT_CART,
-    addItemstoCart: (item: CartItem) => {
+    addItemstoCart: (items: CartItem[]) => {
       const { cart } = getSelf();
+      items.forEach((item) => {
+        cart[item.id] = item;
+      });
       updateData({
-        cart: {
-          ...cart,
-          [item.id]: item,
-        },
+        cart,
       });
     },
     clearCart: () => {

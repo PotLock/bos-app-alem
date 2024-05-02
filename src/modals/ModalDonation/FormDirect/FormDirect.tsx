@@ -1,5 +1,5 @@
 import { Near } from "alem";
-import { CustomButton, CurrentBalance, Form, Label, PotWrapper } from "./styles";
+import { CustomButton, CurrentBalance, Form, Label, PotWrapper, Button } from "./styles";
 import constants from "@app/constants";
 import PotSDK from "@app/SDK/pot";
 import Loading from "@app/components/Loading";
@@ -8,7 +8,6 @@ import SelectPot from "../SelectPot";
 import AmountInput from "../AmountInput/AmountInput";
 import Alert from "../Banners/Alert";
 import Nadabot from "../Banners/Nadabot";
-import Button from "@app/components/Button";
 import VerifyInfo from "../Banners/VerifyInfo";
 import { useCart } from "@app/hooks/useCart";
 
@@ -77,6 +76,8 @@ const FormDirect = (props: any) => {
 
   const isLoading = donationType === "pot" ? isUserHumanVerified === null || activeRounds === null : false;
 
+  const isDisabled = amountError || !amount || !accountId;
+
   return projectId ? (
     profile === null ? (
       <Loading />
@@ -129,26 +130,29 @@ const FormDirect = (props: any) => {
         <CustomButton>
           <Button
             {...{
-              type: "primary",
-              disabled: amountError || !amount || !accountId,
-              text: !accountId ? "Sign In to Proceed" : isLoading ? "Loading..." : "Proceed to donate",
+              className: `filled ${isDisabled ? "disabled" : ""}`,
               onClick: () => updateState({ currentPage: "confirm" }),
             }}
-          />
+          >
+            {" "}
+            {!accountId ? "Sign In to Proceed" : isLoading ? "Loading..." : "Proceed to donate"}{" "}
+          </Button>
           <Button
             {...{
-              type: "primary",
-              disabled: amountError || !amount || !accountId,
-              text: "Add tp cart",
+              className: `outline ${isDisabled ? "disabled" : ""}`,
               onClick: () =>
-                addItemstoCart({
-                  id: projectId,
-                  amount,
-                  token: selectedDenomination,
-                  potId: selectedRound,
-                }),
+                addItemstoCart([
+                  {
+                    id: projectId,
+                    amount,
+                    token: selectedDenomination,
+                    potId: selectedRound,
+                  },
+                ]),
             }}
-          />
+          >
+            Add to cart
+          </Button>
         </CustomButton>
       </Form>
     )

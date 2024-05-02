@@ -3,10 +3,10 @@ import PotSDK from "@app/SDK/pot";
 import DonateSDK from "@app/SDK/donate";
 import constants from "@app/constants";
 import { Amout, ButtonWrapper, Container, FeesRemoval, Label, NoteWrapper } from "./styles";
+import { Button } from "../FormDirect/styles";
 import nearToUsd from "@app/utils/nearToUsd";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
-import Button from "@app/components/Button";
 import NearIcon from "@app/assets/svgs/near-icon";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
@@ -368,7 +368,9 @@ const ConfirmDirect = ({
         </NoteWrapper>
       )}
       <ButtonWrapper>
-        <Button type="primary" text="Confirm donation" onClick={handleDonate} />
+        <Button className="filled" onClick={handleDonate}>
+          Confirm donation
+        </Button>
       </ButtonWrapper>
     </Container>
   );

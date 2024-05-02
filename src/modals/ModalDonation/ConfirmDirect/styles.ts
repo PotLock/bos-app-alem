@@ -90,9 +90,4 @@ export const ButtonWrapper = styled.div`
   display: flex;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
-  button {
-    padding: 12px 16px;
-    width: 100%;
-    font-weight: 500;
-  }
 `;

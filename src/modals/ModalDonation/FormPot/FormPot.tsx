@@ -10,6 +10,7 @@ import Button from "@app/components/Button";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import constants from "@app/constants";
 import VerifyInfo from "../Banners/VerifyInfo";
+import { useCart } from "@app/hooks/useCart";
 
 const FormPot = ({
   amount,
@@ -20,8 +21,9 @@ const FormPot = ({
   donationType,
   ftBalance,
   selectedProjects,
+  selectedRound,
 }: any) => {
-  const ProfileImg = ({ profile }: any) => <ProfileImage profile={profile} style={{}} />;
+  const { addItemstoCart } = useCart();
 
   const donationTypes = [
     {
@@ -103,6 +105,16 @@ const FormPot = ({
     account_id: context.accountId,
   });
 
+  const handleAddToCart = () => {
+    const cartItems = projects.map(({ project_id }: { project_id: string }) => ({
+      id: project_id,
+      amount,
+      token: selectedDenomination,
+      potId: selectedRound,
+    }));
+    addItemstoCart(cartItems);
+  };
+
   return (
     <Form>
       <Content>
@@ -181,7 +193,7 @@ const FormPot = ({
               key={project_id}
               onClick={() => (donationType == "auto" ? handleAddProject(project_id) : {})}
             >
-              <ProfileImg profile={profile} />
+              <ProfileImage profile={profile} style={{}} />{" "}
               <div className="info">
                 {profile?.name && <div className="name">{_address(profile?.name, 20)}</div>}
                 <a className="address" href={hrefWithParams(`?tab=project&projectId=${project_id}`)} target="_blank">
@@ -247,6 +259,7 @@ const FormPot = ({
             },
           }}
         />
+        <div onClick={handleAddToCart}>Add to cart</div>
       </CustomButton>
     </Form>
   );
