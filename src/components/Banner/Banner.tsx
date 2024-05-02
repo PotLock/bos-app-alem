@@ -52,15 +52,17 @@ const Banner = () => {
   return showLiveBanner ? (
     <Wrapper>
       <Container>
-        <div className="text">
-          {isSingleRound ? textForOneRound : textForMultipleRounds}
-          <a
-            href={hrefWithParams(isSingleRound ? `?tab=pot&potId=${activeRounds[0].pot_id}` : `?tab=pots`)}
-            className="link"
-          >
-            <ReferrerIcon />
-            Donate now
-          </a>
+        <div>
+          <div className="text">
+            {isSingleRound ? textForOneRound : textForMultipleRounds}
+            <a
+              href={hrefWithParams(isSingleRound ? `?tab=pot&potId=${activeRounds[0].pot_id}` : `?tab=pots`)}
+              className="link"
+            >
+              <ReferrerIcon />
+              Donate now
+            </a>
+          </div>
         </div>
       </Container>
     </Wrapper>

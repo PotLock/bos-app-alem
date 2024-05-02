@@ -14,22 +14,21 @@ export const Container = styled.div`
   z-index: 999;
   bottom: 0;
   left: 0;
-  background: linear-gradient(0deg, rgba(252, 207, 207, 0.6) 0%, rgba(252, 207, 207, 0.6) 100%),
-    radial-gradient(
-      545.83% 50.85% at 50.66% 50%,
-      rgba(254, 230, 229, 0.71) 0%,
-      rgba(252, 233, 213, 0.78) 55.1%,
-      rgba(244, 179, 125, 0.48) 98%
-    );
-  background-blend-mode: overlay, normal;
+  background: #faa7a8;
   width: 100%;
   height: 46px;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
   font-size: 14px;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-blend-mode: overlay, normal;
+    background: radial-gradient(circle, #fef3f2 0%, #feefe0 55.1%, #f8d3b0 100%);
+  }
   .text {
     font-size: 14px;
     font-weight: 500;

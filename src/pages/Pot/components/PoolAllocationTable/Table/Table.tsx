@@ -19,7 +19,7 @@ const Table = ({ donations, totalAmount, totalUniqueDonors, title, allPayouts, p
         {totalAmount}
         <span>raised from</span>
         {totalUniqueDonors}
-        <span>{allPayouts?.length > 0 ? "donors" : "sponsors"}</span>
+        <span>{title === "sponsors" ? "sponsors" : "donors"}</span>
       </div>
       <div className="sort">
         <div className="title">Top {title} </div>
