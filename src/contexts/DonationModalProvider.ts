@@ -19,8 +19,6 @@ const DonationModalProvider = () => {
   // Create a provider using a reference key
   const { setDefaultData, updateData, getSelf } = createContext<UserContextProps>("donation-modal");
 
-  // const { successfulDonation, donationModalProps } = getSelf();
-
   setDefaultData({
     successfulDonation: null,
     donationModalProps: null,
@@ -36,9 +34,6 @@ const DonationModalProvider = () => {
       });
     },
   });
-  // console.log("test", successfulDonation);
-
-  // return { successfulDonation, donationModalProps };
 };
 
 export default DonationModalProvider;

@@ -11,7 +11,6 @@ import NearIcon from "@app/assets/svgs/near-icon";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import { useDonationModal } from "@app/hooks/useDonationModal";
 
 const ConfirmDirect = ({
   selectedDenomination,
@@ -43,31 +42,11 @@ const ConfirmDirect = ({
       return ["", 0, 0];
     }
   };
-  const { setSuccessfulDonation } = useDonationModal();
   const pollForDonationSuccess = ({ projectId: donatedProject, afterTs, accountId, isPotDonation }: any) => {
     // poll for updates
-    // TODO: update this to also poll Pot contract
     const pollIntervalMs = 1000;
-    // const totalPollTimeMs = 60000; // consider adding in to make sure interval doesn't run indefinitely
+    const totalPollTimeMs = 60000;
 
-    // setSuccessfulDonation({
-    //   "alem-lib.near": {
-    //     id: 37,
-    //     donor_id: "baam25.near",
-    //     total_amount: "100000000000000000000000",
-    //     net_amount: "91230000000000000000000",
-    //     message: "",
-    //     donated_at: 1714553743577,
-    //     project_id: "alem-lib.near",
-    //     referrer_id: null,
-    //     referrer_fee: null,
-    //     protocol_fee: "2000000000000000000000",
-    //     matching_pool: false,
-    //     chef_id: null,
-    //     chef_fee: null,
-    //   },
-    // });
-    // onClose();
     const pollId = setInterval(() => {
       (isPotDonation
         ? PotSDK.asyncGetDonationsForDonor(selectedRound, accountId)
@@ -92,7 +71,7 @@ const ConfirmDirect = ({
       setTimeout(() => {
         onClose();
         clearInterval(pollId);
-      }, 60000);
+      }, totalPollTimeMs);
     }, pollIntervalMs);
   };
 
@@ -154,7 +133,7 @@ const ConfirmDirect = ({
     const potId = selectedRound || null;
     const isPotDonation = potId && donationType === "pot";
 
-    const now = 1714553743570;
+    const now = Date.now();
 
     const successArgs = {
       projectId,
@@ -259,8 +238,6 @@ const ConfirmDirect = ({
         Near.call(transactions);
         // NB: we won't get here if user used a web wallet, as it will redirect to the wallet
         // <-------- EXTENSION WALLET HANDLING -------->
-        console.log("successArgs", successArgs);
-
         pollForDonationSuccess(successArgs);
       });
     } else {

@@ -109,7 +109,7 @@ const ConfirmPot = ({
 
   const autoProjectAmount = donationAmountIndivisible(projectAmount);
   const handleDonate = () => {
-    const now = 1714553743570;
+    const now = Date.now();
 
     const successArgs = {
       projectIds: Object.keys(selectedProjects),

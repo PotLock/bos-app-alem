@@ -9,9 +9,7 @@ import { useDonationModal } from "@app/hooks/useDonationModal";
 const DonationsInfo = ({ projectId, donations }: any) => {
   const { potId } = useParams();
 
-  const { setDonationModalProps, successfulDonation, setSuccessfulDonation } = useDonationModal();
-
-  // console.log("successfulDonation", successfulDonation);
+  const { setDonationModalProps } = useDonationModal();
 
   // Get total donations & Unique donors count
   const [totalDonationAmountNear, uniqueDonors] = useMemo(() => {
@@ -40,23 +38,6 @@ const DonationsInfo = ({ projectId, donations }: any) => {
           type="primary"
           text="Donate"
           onClick={() =>
-            // setSuccessfulDonation({
-            //   "alem-lib.near": {
-            //     id: 37,
-            //     donor_id: "baam25.near",
-            //     total_amount: "100000000000000000000000",
-            //     net_amount: "91230000000000000000000",
-            //     message: "",
-            //     donated_at: 1714553743577,
-            //     project_id: "alem-lib.near",
-            //     referrer_id: null,
-            //     referrer_fee: null,
-            //     protocol_fee: "2000000000000000000000",
-            //     matching_pool: false,
-            //     chef_id: null,
-            //     chef_fee: null,
-            //   },
-            // })
             setDonationModalProps({
               projectId,
               potId,

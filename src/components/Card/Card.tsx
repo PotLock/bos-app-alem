@@ -193,7 +193,7 @@ const Card = (props: any) => {
                 }}
                 disabled={!context.accountId}
               >
-                {"Donate"}
+                Donate
               </DonationButton>
             )}
           </DonationsInfoContainer>
