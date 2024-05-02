@@ -2,7 +2,7 @@
   "name": "alem-app",
   "version": "1.0.0",
   "description": "The base template for Create Alem dApp",
-  "repository": "git@github.com:wpdas/create-alem-dapp.git",
+  "repository": "https://github.com/PotLock/bos-app-alem",
   "license": "MIT",
   "scripts": {
     "start": "alem dev",
