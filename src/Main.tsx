@@ -1,12 +1,10 @@
 import { ModulesProvider } from "alem";
+import Banner from "./components/Banner/Banner";
 import Nav from "./components/Nav/Nav";
 import Routes from "./routes/Routes";
-// import DonationsInfoProvider from "./contexts/DonationsInfoProvider";
-import Banner from "./components/Banner/Banner";
 
 const Main = () => {
   return (
-    // <DonationsInfoProvider>
     <>
       <ModulesProvider />
       <Nav />
@@ -15,7 +13,6 @@ const Main = () => {
       </div>
       <Banner />
     </>
-    // </DonationsInfoProvider>
   );
 };
 

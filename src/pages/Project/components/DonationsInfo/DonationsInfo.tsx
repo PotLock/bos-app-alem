@@ -1,11 +1,11 @@
 import { Big, props, useMemo, useState } from "alem";
-import constants from "@app/constants";
-import { Container } from "./styles";
-import nearToUsdWithFallback from "@app/utils/nearToUsdWithFallback";
 import Button from "@app/components/Button";
-import FollowButton from "../FollowButton/FollowButton";
+import constants from "@app/constants";
 import ModalDonation from "@app/modals/ModalDonation";
 import ModalSuccess from "@app/modals/ModalSuccess/ModalSuccess";
+import nearToUsdWithFallback from "@app/utils/nearToUsdWithFallback";
+import FollowButton from "../FollowButton/FollowButton";
+import { Container } from "./styles";
 
 const DonationsInfo = ({ projectId, donations, referrerId }: any) => {
   const [isModalDonationOpen, setIsModalDonationOpen] = useState(false);
