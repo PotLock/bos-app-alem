@@ -1,11 +1,15 @@
 import PotSDK from "@app/SDK/pot";
 import PotFactorySDK from "@app/SDK/potfactory";
-import { useEffect, useState } from "alem";
+import { getLocation, useEffect, useState } from "alem";
 import { Container, Wrapper } from "./styles";
 import hrefWithParams from "@app/utils/hrefWithParams";
+import ReferrerIcon from "@app/assets/svgs/ReferrerIcon";
 
 const Banner = () => {
   const [activeRounds, setActiveRounds] = useState<any>([]);
+
+  const { pathname } = getLocation();
+  const showLiveBanner = !(pathname === "pots" || pathname === "pot");
 
   const pots = PotFactorySDK.getPots();
 
@@ -45,7 +49,7 @@ const Banner = () => {
   const textForMultipleRounds = `Pot round is live for ${potName} and +${activeRounds.length - 1} More`;
 
   if (!activeRounds.length) return "";
-  return (
+  return showLiveBanner ? (
     <Wrapper>
       <Container>
         <div className="text">
@@ -54,15 +58,14 @@ const Banner = () => {
             href={hrefWithParams(isSingleRound ? `?tab=pot&potId=${activeRounds[0].pot_id}` : `?tab=pots`)}
             className="link"
           >
-            {isSingleRound ? "Donate" : "Check Now"}
-            <img
-              src="https://ipfs.near.social/ipfs/bafkreigots5l4o5d3a4zksfimch3gvqw7ezb2quundmjwml33abo5atgwi"
-              alt="arrow"
-            />
+            <ReferrerIcon />
+            Donate now
           </a>
         </div>
       </Container>
     </Wrapper>
+  ) : (
+    ""
   );
 };
 
