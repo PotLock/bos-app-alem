@@ -1,4 +1,4 @@
-import { Big, RouteLink, Social, State, context, useEffect, useMemo, useParams, useState } from "alem";
+import { Big, RouteLink, Social, State, context, useContext, useEffect, useMemo, useParams, useState } from "alem";
 import CardSkeleton from "../../pages/Projects/components/CardSkeleton";
 import {
   Amount,
@@ -28,21 +28,25 @@ import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import Image from "../mob.near/Image";
 import _address from "@app/utils/_address";
-import ModalDonation from "@app/modals/ModalDonation";
+import { useDonationModal } from "@app/hooks/useDonationModal";
 
 const Card = (props: any) => {
-  const { payoutDetails } = props;
+  const { payoutDetails, allowDonate: _allowDonate } = props;
   const { potId } = useParams();
+
+  const { setDonationModalProps } = useDonationModal();
+
   // TODO: Bug -> não esta importando o utils
   // Só importa funcóes que retornam algo, um objeto direto está falhando.
   // const { ipfsUrlFromCid, yoctosToNear, yoctosToUsdWithFallback } = utils;
   // console.log(utils);
 
   const [ready, isReady] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const projectId = props.project.registrant_id || props.projectId;
   const profile = Social.getr(`${projectId}/profile`) as any;
+
+  const allowDonate = _allowDonate ?? true;
 
   const MAX_DESCRIPTION_LENGTH = 80;
 
@@ -109,7 +113,7 @@ const Card = (props: any) => {
 
   return (
     <>
-      <RouteLink to={routesPath.PROJECT_DETAIL_TAB} params={{ projectId }}>
+      <RouteLink to={routesPath.PROJECT_DETAIL_TAB} params={{ projectId, ...(potId ? { potId } : {}) }}>
         <CardContainer>
           <HeaderContainer className="pt-0 position-relative">
             <BackgroundImageContainer>
@@ -183,15 +187,17 @@ const Card = (props: any) => {
                 <AmountDescriptor>{payoutDetails.donorCount === 1 ? "Donor" : "Donors"}</AmountDescriptor>
               </DonationsInfoItem>
             )}
-            {props.allowDonate && context.accountId && (
+            {allowDonate && context.accountId && (
               <DonationButton
                 onClick={(e) => {
                   e.preventDefault();
-                  setIsOpen(true);
+                  setDonationModalProps({
+                    projectId,
+                  });
                 }}
                 disabled={!context.accountId}
               >
-                {props.requireVerification ? "Verify to donate" : "Donate"}
+                Donate
               </DonationButton>
             )}
           </DonationsInfoContainer>
@@ -203,7 +209,6 @@ const Card = (props: any) => {
           )}
         </CardContainer>
       </RouteLink>
-      {isOpen && <ModalDonation projectId={projectId} onClose={() => setIsOpen(false)} />}
     </>
   );
 };

@@ -1,17 +1,13 @@
 import styled from "styled-components";
 
-export const ContainerHeader = styled.div<{ tab: string }>`
+export const ContainerHeader = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   gap: 48px;
-  padding-top: 20px;
-  @media screen and (min-width: 740px) and (max-width: 1400px) {
-    padding-top: 120px;
-  }
-  /* mobile */
-  @media screen and (max-width: 739px) {
-    padding-top: 40px;
+  padding: 48px 40px 0;
+  @media screen and (max-width: 768px) {
+    padding: 40px 8px 0;
   }
 `;
 
@@ -48,7 +44,7 @@ export const ProjectList = styled.div<{ maxCols?: number }>`
 
   /* For desktop devices (3 columns) */
   @media screen and (min-width: 1024px) {
-    grid-template-columns: repeat(${!props.maxCols || props.maxCols > 2 ? "3" : "2"}, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 

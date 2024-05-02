@@ -1,15 +1,15 @@
-import { Big, props, useMemo, useState } from "alem";
+import { Big, props, useContext, useMemo, useParams } from "alem";
 import constants from "@app/constants";
 import { Container } from "./styles";
 import nearToUsdWithFallback from "@app/utils/nearToUsdWithFallback";
 import Button from "@app/components/Button";
 import FollowButton from "../FollowButton/FollowButton";
-import ModalDonation from "@app/modals/ModalDonation";
-import ModalSuccess from "@app/modals/ModalSuccess/ModalSuccess";
+import { useDonationModal } from "@app/hooks/useDonationModal";
 
-const DonationsInfo = ({ projectId, donations, referrerId }: any) => {
-  const [isModalDonationOpen, setIsModalDonationOpen] = useState(false);
-  const [successfulDonation, setSuccessfulDonation] = useState(null);
+const DonationsInfo = ({ projectId, donations }: any) => {
+  const { potId } = useParams();
+
+  const { setDonationModalProps } = useDonationModal();
 
   // Get total donations & Unique donors count
   const [totalDonationAmountNear, uniqueDonors] = useMemo(() => {
@@ -34,34 +34,18 @@ const DonationsInfo = ({ projectId, donations, referrerId }: any) => {
         </div>
       </div>
       <div className="btn-wrapper">
-        <Button type="primary" text="Donate" onClick={() => setIsModalDonationOpen(true)} />
+        <Button
+          type="primary"
+          text="Donate"
+          onClick={() =>
+            setDonationModalProps({
+              projectId,
+              potId,
+            })
+          }
+        />
         <FollowButton accountId={projectId} />
       </div>
-      {isModalDonationOpen && (
-        <ModalDonation
-          {...{
-            ...props,
-            isModalOpen: isModalDonationOpen,
-            onClose: () => setIsModalDonationOpen(false),
-            projectId,
-            referrerId,
-            openDonationModalSuccess: (donation: any) => {
-              setIsModalDonationOpen(false);
-              setSuccessfulDonation(donation);
-            },
-          }}
-        />
-      )}
-      {successfulDonation && (
-        <ModalSuccess
-          {...{
-            ...props,
-            successfulDonation: successfulDonation,
-            isModalOpen: successfulDonation != null,
-            onClose: () => setSuccessfulDonation(null),
-          }}
-        />
-      )}
     </Container>
   );
 };

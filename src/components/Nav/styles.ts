@@ -6,7 +6,7 @@ const navHeightPxMobile = 96;
 export const NavContainer = styled.div`
   width: 100%;
   display: flex;
-  padding: 0 64px 0 64px;
+  padding: 0 40px;
   justify-content: start;
   align-items: center;
   align-self: stretch;

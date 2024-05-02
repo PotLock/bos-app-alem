@@ -7,6 +7,7 @@ import {
   fetch,
   state,
   useCache,
+  useContext,
   useEffect,
   useMemo,
   useParams,
@@ -21,23 +22,22 @@ import { Banner, Container, HeaderIcons } from "./styles";
 import FormPot from "./FormPot/FormPot";
 import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
 import ConfirmPot from "./ConfirmPot/ConfirmPot";
-import { PotDetail } from "@app/types";
+import { useDonationModal } from "@app/hooks/useDonationModal";
 
-type DonationModalProps = {
-  projectId?: string;
-  onClose: () => void;
-  multiple?: boolean;
-  potDetail?: PotDetail;
-};
-
-const ModalDonation = (donationProps: DonationModalProps) => {
+const ModalDonation = () => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
+
+  const { donationModalProps, setSuccessfulDonation, setDonationModalProps } = useDonationModal();
+
+  const onClose = () => {
+    setDonationModalProps(null);
+  };
 
   const { potId, referrerId } = useParams();
 
-  const { projectId, onClose, multiple } = donationProps;
+  const { projectId, multiple } = donationModalProps || {};
 
-  const potDetail = donationProps.potDetail ?? PotSDK.getConfig(potId);
+  const potDetail = donationModalProps?.potDetail ?? PotSDK.getConfig(potId);
 
   const accountId = context.accountId;
 
@@ -64,7 +64,7 @@ const ModalDonation = (donationProps: DonationModalProps) => {
   const {
     // amount,
     // denomination,
-    // donationType,
+    donationType,
     // showBreakdownm,
     // bypassProtocolFee,
     // bypassChefFee,
@@ -157,7 +157,7 @@ const ModalDonation = (donationProps: DonationModalProps) => {
 
   // Get Ft Balances
   useEffect(() => {
-    if (!ftBalances && !potId) {
+    if (donationType === "direct") {
       asyncFetch(`https://near-mainnet.api.pagoda.co/eapi/v1/accounts/${accountId}/balances/FT`, {
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +187,7 @@ const ModalDonation = (donationProps: DonationModalProps) => {
         })
         .catch((err) => console.log("fetching Ft balances faild"));
     }
-  }, [ftBalances]);
+  }, [ftBalances, donationType]);
 
   const nearBalanceRes = fetch(`https://near-mainnet.api.pagoda.co/eapi/v1/accounts/${accountId}/balances/NEAR`, {
     headers: {
@@ -261,7 +261,7 @@ const ModalDonation = (donationProps: DonationModalProps) => {
           </Banner>
         </div>
         <ActivePageComponent
-          {...donationProps}
+          {...donationModalProps}
           {...state}
           accountId={accountId}
           potId={potId}
@@ -270,6 +270,10 @@ const ModalDonation = (donationProps: DonationModalProps) => {
           ftBalance={ftBalance}
           activeRounds={activeRounds}
           DENOMINATION_OPTION={DENOMINATION_OPTIONS}
+          onClose={onClose}
+          openDonationSuccessModal={(successfulDonation: any) => {
+            setSuccessfulDonation(successfulDonation);
+          }}
         />
       </Container>
     </ModalOverlay>
