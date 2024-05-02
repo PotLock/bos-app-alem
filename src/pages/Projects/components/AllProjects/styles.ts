@@ -3,9 +3,9 @@ import styled from "styled-components";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding-top: 64px;
+  padding: 48px 40px 0;
   @media screen and (max-width: 768px) {
-    padding-top: 64px;
+    padding: 40px 20px 0;
   }
 `;
 export const Header = styled.div`

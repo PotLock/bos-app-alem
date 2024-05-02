@@ -9,7 +9,7 @@ const ListProjects = ({ projects }: { projects: any }) => {
   const loadNumbers = (page: number) => {
     const toDisplay: any = projects
       .slice(0, lastNumber + page * 9)
-      .map((project: Project) => <Card projectId={project.registrant_id} allowDonate={true} />);
+      .map((project: Project) => <Card projectId={project.registrant_id} />);
 
     setDisplay(toDisplay);
     setLastNumber(lastNumber + page * 10);

@@ -157,7 +157,7 @@ const AllProjects = ({ projectsData }: { projectsData: any }) => {
         {filteredProjects.length ? (
           <ListSection
             items={filteredProjects}
-            renderItem={(project: Project) => <Card projectId={project.registrant_id} allowDonate={true} />}
+            renderItem={(project: Project) => <Card projectId={project.registrant_id} />}
           />
         ) : (
           <div style={{ alignSelf: "flex-start", margin: "24px 0px" }}>No results</div>

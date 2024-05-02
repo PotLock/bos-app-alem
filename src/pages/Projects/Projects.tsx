@@ -3,6 +3,7 @@ import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
 import AllProjects from "./components/AllProjects/AllProjects";
 import { useState } from "alem";
 import ListsSDK from "@app/SDK/lists";
+import NewHero from "@app/components/NewHero/NewHero";
 
 const ProjectsPage = () => {
   // NOTE: Usar o getProjects() service é mais performatico do ponto de vista de renderização pois
@@ -33,7 +34,7 @@ const ProjectsPage = () => {
 
   return (
     <>
-      <Hero projectsData={projectsData} />
+      <NewHero projectsData={projectsData} />
       <FeaturedProjects projectsData={projectsData} />
       <AllProjects projectsData={projectsData} />
     </>
