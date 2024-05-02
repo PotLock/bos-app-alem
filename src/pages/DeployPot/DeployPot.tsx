@@ -2,8 +2,8 @@ import { state } from "alem";
 import { Container, HeaderContainer, HeaderTitle, SuccessContainer } from "./styles";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import Button from "@app/components/Button";
-import HomeBannerBackground from "@app/assets/svgs/HomeBannerBackground";
 import ConfigForm from "../Pot/NavPages/ConfigForm/ConfigForm";
+import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
 
 type Props = {
   deploymentSuccess?: boolean;
@@ -25,9 +25,11 @@ const DeployPot = (props: Props) => {
     </SuccessContainer>
   ) : (
     <Container>
-      <HeaderContainer>
-        <HomeBannerBackground className="background" />
-
+      <HeaderContainer
+        style={{
+          ...HomeBannerStyle,
+        }}
+      >
         <div className="content">
           <h3 className="sub-title">Deploy pot</h3>
           <h1 className="title">

@@ -27,6 +27,7 @@ const ConfirmDirect = ({
   amount,
   openDonationSuccessModal,
   donationType,
+  onClose,
 }: any) => {
   const getFeesBasisPoints = (protocolConfig: any, potDetail: any, donationContractConfig: any) => {
     if (protocolConfig) {
@@ -41,20 +42,16 @@ const ConfirmDirect = ({
       return ["", 0, 0];
     }
   };
-
-  const pollForDonationSuccess = ({
-    projectId: donatedProject,
-    afterTs,
-    accountId,
-    openDonationSuccessModal,
-    isPotDonation,
-  }: any) => {
+  const pollForDonationSuccess = ({ projectId: donatedProject, afterTs, accountId, isPotDonation }: any) => {
     // poll for updates
-    // TODO: update this to also poll Pot contract
     const pollIntervalMs = 1000;
-    // const totalPollTimeMs = 60000; // consider adding in to make sure interval doesn't run indefinitely
+    const totalPollTimeMs = 60000;
+
     const pollId = setInterval(() => {
-      (isPotDonation ? PotSDK : DonateSDK).asyncGetDonationsForDonor(accountId).then((donations: any) => {
+      (isPotDonation
+        ? PotSDK.asyncGetDonationsForDonor(selectedRound, accountId)
+        : DonateSDK.asyncGetDonationsForDonor(accountId)
+      ).then((donations: any) => {
         for (const donation of donations) {
           const { recipient_id, project_id, donated_at_ms, donated_at } = donation; // donation contract uses recipient_id, pot contract uses project_id; donation contract uses donated_at_ms, pot contract uses donated_at
 
@@ -66,11 +63,15 @@ const ConfirmDirect = ({
             clearInterval(pollId);
 
             openDonationSuccessModal({
-              projectId: donation,
+              [donatedProject]: donation,
             });
           }
         }
       });
+      setTimeout(() => {
+        onClose();
+        clearInterval(pollId);
+      }, totalPollTimeMs);
     }, pollIntervalMs);
   };
 
@@ -138,7 +139,6 @@ const ConfirmDirect = ({
       projectId,
       afterTs: now,
       accountId,
-      openDonationSuccessModal,
       isPotDonation,
     };
 

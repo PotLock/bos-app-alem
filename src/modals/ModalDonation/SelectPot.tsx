@@ -7,12 +7,16 @@ const SelectPot = ({ selectedRound, activeRoundsOptions, updateState }: any) => 
     > div:last-of-type {
       width: 100%;
     }
+    .custom-menu-style {
+      left: 0;
+      right: auto;
+    }
   `;
 
   return (
     <PotSelector>
       <Dropdown
-        {...({
+        {...{
           sortVal: activeRoundsOptions ? activeRoundsOptions[selectedRound].label : "",
           showCount: false,
           sortList: Object.values(activeRoundsOptions),
@@ -26,13 +30,13 @@ const SelectPot = ({ selectedRound, activeRoundsOptions, updateState }: any) => 
           menuStyle: {
             top: "120%",
           },
-          FilterMenuCustomStyle: `left:0; right:auto;`,
+          FilterMenuCustomClass: "custom-menu-style",
           handleSortChange: ({ val }: any) => {
             updateState({
               selectedRound: val,
             });
           },
-        } as any)}
+        }}
       />
     </PotSelector>
   );

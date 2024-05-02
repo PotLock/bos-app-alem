@@ -1,5 +1,19 @@
 import constants from "@app/constants";
-import { Big, Near, State, asyncFetch, context, props, state, useEffect, useMemo, useState } from "alem";
+import {
+  Big,
+  Near,
+  State,
+  asyncFetch,
+  context,
+  getLocation,
+  navigate,
+  state,
+  useContext,
+  useEffect,
+  useMemo,
+  useParams,
+  useState,
+} from "alem";
 import ModalOverlay from "../ModalOverlay";
 import {
   Amount,
@@ -16,22 +30,37 @@ import {
 import yoctosToUsd from "@app/utils/yoctosToUsd";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import VerifyInfo from "../ModalDonation/Banners/VerifyInfo";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import { useDonationModal } from "@app/hooks/useDonationModal";
 
 type Props = {
-  onClose?: () => void;
+  successfulDonation: any;
 };
 
-const ModalSuccess = ({ onClose }: Props) => {
+const ModalSuccess = () => {
   const DEFAULT_GATEWAY = "https://bos.potlock.org/";
   const POTLOCK_TWITTER_ACCOUNT_ID = "PotLock_";
   const DEFAULT_SHARE_HASHTAGS = ["BOS", "PublicGoods", "Donations"];
+
+  const params = useParams();
+  const { transactionHashes } = params;
+  const { setSuccessfulDonation: _setSuccessfulDonation, successfulDonation: _successfulDonation } = useDonationModal();
 
   const { NADABOT_CONTRACT_ID, NADABOT_HUMAN_METHOD, ownerId } = constants;
 
   State.init({
     showBreakdown: false,
   });
-  const [successfulDonation, setSuccessfulDonation] = useState(props.successfulDonation);
+
+  const onClose = () => {
+    _setSuccessfulDonation(null);
+    const location = getLocation();
+    delete params.transactionHashes;
+
+    navigate.to(location.pathname, params);
+  };
+
+  const [successfulDonation, setSuccessfulDonation] = useState(_successfulDonation);
   const [ftMetadata, setFtMetadata] = useState<any>(null);
   const { recipientProfile, successfulApplication } = state;
 
@@ -73,11 +102,11 @@ const ModalSuccess = ({ onClose }: Props) => {
 
   const totalAmount = getTotalAmount();
 
-  if (props.isModalOpen && !successfulDonation) {
-    const transactionHashes = props.transactionHashes.split(",");
+  if (transactionHashes && !successfulDonation) {
+    const transactionHashesList = transactionHashes.split(",");
 
-    for (let i = 0; i < transactionHashes.length; i++) {
-      const txHash = transactionHashes[i];
+    for (let i = 0; i < transactionHashesList.length; i++) {
+      const txHash = transactionHashesList[i];
       const body = JSON.stringify({
         jsonrpc: "2.0",
         id: "dontcare",
@@ -263,7 +292,7 @@ const ModalSuccess = ({ onClose }: Props) => {
               <ProjectName>
                 <div>Has been donated to</div>
                 <a
-                  href={props.hrefWithParams(
+                  href={hrefWithParams(
                     `?tab=project&projectId=${
                       successfulDonationVals[0]?.recipient_id || successfulDonationVals[0]?.project_id
                     }`,
@@ -280,7 +309,6 @@ const ModalSuccess = ({ onClose }: Props) => {
             </ModalMiddel>
             <BreakdownSummary
               {...{
-                ...props,
                 referrerId: successfulDonationVals[0]?.referrer_id,
                 totalAmount: Big(totalAmount)
                   .div(Big(10).pow(ftMetadata?.decimals || 24))

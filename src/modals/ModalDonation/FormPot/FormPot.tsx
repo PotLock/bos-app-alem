@@ -1,4 +1,4 @@
-import { Near, Social, context, props } from "alem";
+import { Near, Social, context } from "alem";
 import Alert from "../Banners/Alert";
 import Checks from "../Checks/Checks";
 import AmountInput from "../AmountInput/AmountInput";
@@ -22,6 +22,7 @@ const FormPot = ({
   ftBalance,
   selectedProjects,
   selectedRound,
+  projects: _projects,
 }: any) => {
   const { addItemstoCart } = useCart();
 
@@ -44,7 +45,7 @@ const FormPot = ({
     return Object.keys(obj).length === 0;
   };
 
-  const projects = props.projects ?? [];
+  const projects = _projects ?? [];
   const projectHegiht = 58;
   const projectsContaienrHegiht = projects.length > 4 ? 234 : projectHegiht * projects.length;
 
