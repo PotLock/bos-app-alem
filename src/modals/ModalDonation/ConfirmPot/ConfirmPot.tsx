@@ -33,6 +33,7 @@ const ConfirmPot = ({
   selectedProjects,
   donationType,
   toggleAmount,
+  onClose,
 }: any) => {
   const ProfileImg = ({ accountId, profile }: any) => (
     <ProfileImage accountId={accountId} profile={profile} style={{}} />
@@ -56,7 +57,7 @@ const ConfirmPot = ({
     }
   };
 
-  const pollForDonationSuccess = ({ projectIds, afterTs, accountId, openDonationSuccessModal, potId }: any) => {
+  const pollForDonationSuccess = ({ projectIds, afterTs }: any) => {
     // poll for updates
     const pollIntervalMs = 1000;
     // const totalPollTimeMs = 60000; // consider adding in to make sure interval doesn't run indefinitely
@@ -78,7 +79,13 @@ const ConfirmPot = ({
         })
         .catch((err: any) => {
           console.log(err);
+          onClose();
         });
+      // Clear the interval after 30 seconds
+      setTimeout(() => {
+        onClose();
+        clearInterval(pollId);
+      }, 60000);
     }, pollIntervalMs);
   };
 
@@ -101,17 +108,12 @@ const ConfirmPot = ({
   const projectAmount = parseFloat(amount) / Object.keys(selectedProjects).length;
 
   const autoProjectAmount = donationAmountIndivisible(projectAmount);
-
   const handleDonate = () => {
     const now = Date.now();
 
     const successArgs = {
       projectIds: Object.keys(selectedProjects),
       afterTs: now,
-      accountId,
-      openDonationSuccessModal,
-      amount,
-      potId,
     };
 
     const transactions: any[] = [];

@@ -1,6 +1,7 @@
 import { RouterContext, loadExternalStyles } from "alem";
 import Main from "./Main";
 import Spinner from "./components/Spinner";
+import DonationModalProvider from "./contexts/DonationModalProvider";
 
 const App = () => {
   const fontsLoaded = loadExternalStyles([
@@ -8,7 +9,7 @@ const App = () => {
   ]);
 
   RouterContext();
-
+  DonationModalProvider();
   return <div className="app-container">{fontsLoaded ? <Main /> : <Spinner />}</div>;
 };
 
