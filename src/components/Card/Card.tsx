@@ -52,9 +52,12 @@ const Card = (props: any) => {
 
   const { name, description } = profile;
 
-  const donationsForProject = potId
-    ? PotSDK.getDonationsForProject(potId, projectId)
-    : DonateSDK.getDonationsForRecipient(projectId);
+  const donationsForProject =
+    potId && !payoutDetails
+      ? PotSDK.getDonationsForProject(potId, projectId)
+      : !potId
+      ? DonateSDK.getDonationsForRecipient(projectId)
+      : [];
 
   useEffect(() => {
     if (profile !== null && !ready) {
@@ -63,6 +66,7 @@ const Card = (props: any) => {
   }, [profile, donationsForProject]);
 
   const totalAmountNear = useMemo(() => {
+    if (payoutDetails) return payoutDetails.totalAmount;
     if (!donationsForProject) return "0";
     let totalDonationAmountNear = new Big(0);
     for (const donation of donationsForProject) {
@@ -71,7 +75,7 @@ const Card = (props: any) => {
       }
     }
     return totalDonationAmountNear.toString();
-  }, [donationsForProject]);
+  }, [donationsForProject, payoutDetails]);
 
   const getImageSrc = (image: any) => {
     const defaultImageUrl = "https://ipfs.near.social/ipfs/bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";

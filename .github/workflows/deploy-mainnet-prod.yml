@@ -1,0 +1,12 @@
+name: Deploy app to Mainnet (Production)
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy-mainnet:
+    uses: wpdas/alem/.github/workflows/deploy.yml@main
+    with:
+      signer-account-address: potlock.near
+      signer-public-key: ed25519:89GJgK9CXwaGXD4Rv3BKybqwGifDa8Cdap1M5zc3w4BY
+    secrets:
+      SIGNER_PRIVATE_KEY: ${{ secrets.SIGNER_PRIVATE_KEY }}

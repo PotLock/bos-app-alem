@@ -1,25 +1,31 @@
-## PotLock - Using Além [WIP]
+## PotLock - BOS App
 
-PotLock application refactoring using Além.
+PotLock application. Project built using [Além](https://alem.dev/).
 
-[Access the staging app here.](https://app.potlock.org/staging.potlock.near/widget/IndexLoader)
+You can access Potlock using one of the environments below:
 
-### How to use
+- [Production](https://app.potlock.org/)
+- [Staging](https://app.potlock.org/staging.potlock.near/widget/IndexLoader)
 
-Create the `.env` file with the following content:
+### Getting Started
+
+1. Install packagesCreate the `.env` file with the following content:
 
 ```sh
 NODE_ENV=development
 ```
 
-Install dependencies
+2. Install packagesInstall dependencies
 
 ```sh
 yarn install
 ```
 
-Run the app
+3. Start development
 
 ```sh
 yarn start
+
+# This command below won't open a new browser tab
+# yarn start -no-open
 ```
