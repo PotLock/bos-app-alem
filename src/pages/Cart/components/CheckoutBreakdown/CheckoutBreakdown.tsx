@@ -67,11 +67,11 @@ const CheckoutBreakdown = (props: any) => {
         });
       } else {
         // pot & generic contract args
-        args.project_id = projectId;
+        if (potId) args.project_id = projectId;
+        else args.recipient_id = projectId;
         args.referrer_id = referrerId;
         args.message = note;
         // donation contract args
-        args.recipient_id = projectId;
         // other
         potIdContained = potId;
       }

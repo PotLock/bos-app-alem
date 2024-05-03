@@ -52,7 +52,7 @@ export const Pot = styled.div`
   background: #fff;
   padding: 0.75rem 1rem;
 `;
-export const CustomButton = styled.div`
+export const DirectButton = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 4rem;

@@ -1,5 +1,5 @@
 import { Near } from "alem";
-import { CustomButton, CurrentBalance, Form, Label, PotWrapper, Button } from "./styles";
+import { DirectButton, CurrentBalance, Form, Label, PotWrapper, Button } from "./styles";
 import constants from "@app/constants";
 import PotSDK from "@app/SDK/pot";
 import Loading from "@app/components/Loading";
@@ -7,9 +7,7 @@ import Checks from "../Checks/Checks";
 import SelectPot from "../SelectPot";
 import AmountInput from "../AmountInput/AmountInput";
 import Alert from "../Banners/Alert";
-import Nadabot from "../Banners/Nadabot";
 import VerifyInfo from "../Banners/VerifyInfo";
-import { useCart } from "@app/hooks/useCart";
 
 const FormDirect = (props: any) => {
   const {
@@ -25,11 +23,10 @@ const FormDirect = (props: any) => {
     activeRounds,
     accountId,
     selectedRound,
+    handleAddToCart,
   } = props;
 
   const { NADABOT_HUMAN_METHOD, NADABOT_CONTRACT_ID } = constants;
-
-  const { addItemstoCart } = useCart();
 
   const isUserHumanVerified = Near.view(NADABOT_CONTRACT_ID, NADABOT_HUMAN_METHOD, {
     account_id: accountId,
@@ -126,8 +123,8 @@ const FormDirect = (props: any) => {
           </CurrentBalance>
         )}
         {amountError && <Alert error={amountError} />}
-        {needsToVerify && <VerifyInfo />}
-        <CustomButton>
+        {needsToVerify && !isLoading && <VerifyInfo />}
+        <DirectButton>
           <Button
             {...{
               className: `filled ${isDisabled ? "disabled" : ""}`,
@@ -141,19 +138,19 @@ const FormDirect = (props: any) => {
             {...{
               className: `outline ${isDisabled ? "disabled" : ""}`,
               onClick: () =>
-                addItemstoCart([
+                handleAddToCart([
                   {
                     id: projectId,
                     amount,
                     token: selectedDenomination,
-                    potId: selectedRound,
+                    potId: donationType === "pot" ? selectedRound : null,
                   },
                 ]),
             }}
           >
             Add to cart
           </Button>
-        </CustomButton>
+        </DirectButton>
       </Form>
     )
   ) : (

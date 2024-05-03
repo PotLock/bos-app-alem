@@ -4,13 +4,12 @@ import Checks from "../Checks/Checks";
 import AmountInput from "../AmountInput/AmountInput";
 import nearToUsd from "@app/utils/nearToUsd";
 import { CustomButton, Content, CurrentBalance, Form, Label, ProjectAmount, Projects, TotalAmount } from "./styles";
+import { Button } from "../FormDirect/styles";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import _address from "@app/utils/_address";
-import Button from "@app/components/Button";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import constants from "@app/constants";
 import VerifyInfo from "../Banners/VerifyInfo";
-import { useCart } from "@app/hooks/useCart";
 
 const FormPot = ({
   amount,
@@ -23,9 +22,9 @@ const FormPot = ({
   selectedProjects,
   selectedRound,
   projects: _projects,
+  handleAddToCart,
+  potDetail,
 }: any) => {
-  const { addItemstoCart } = useCart();
-
   const donationTypes = [
     {
       label: "Auto",
@@ -106,15 +105,11 @@ const FormPot = ({
     account_id: context.accountId,
   });
 
-  const handleAddToCart = () => {
-    const cartItems = projects.map(({ project_id }: { project_id: string }) => ({
-      id: project_id,
-      amount,
-      token: selectedDenomination,
-      potId: selectedRound,
-    }));
-    addItemstoCart(cartItems);
-  };
+  const isDisabled =
+    isEmpty(selectedProjects) ||
+    (donationType === "auto"
+      ? amountError || parseFloat(amount) === 0 || !amount
+      : totalAmountAllocated > ftBalance || amountError || parseFloat(totalAmountAllocated.toString()) === 0);
 
   return (
     <Form>
@@ -179,7 +174,7 @@ const FormPot = ({
           )}
         </CurrentBalance>
         {amountError && <Alert error={amountError} />}
-        {!isUserHumanVerified && <VerifyInfo />}
+        {isUserHumanVerified !== null && !isUserHumanVerified && <VerifyInfo />}
       </Content>
       <Projects style={{ height: projectsContaienrHegiht + "px" }}>
         {projects.map(({ project_id }: any) => {
@@ -244,23 +239,31 @@ const FormPot = ({
       </Projects>
       <CustomButton>
         <Button
-          {...{
-            type: "primary",
-            disabled:
-              isEmpty(selectedProjects) ||
-              (donationType === "auto"
-                ? amountError || parseFloat(amount) === 0 || !amount
-                : totalAmountAllocated > ftBalance || amountError || parseFloat(totalAmountAllocated.toString()) === 0),
-            text: "Proceed to donate",
-            onClick: () => {
-              if (donationType === "auto") updateState({ currentPage: "confirmPot" });
-              else {
-                updateState({ currentPage: "confirmPot", amount: totalAmountAllocated });
-              }
-            },
+          className={`filled ${isDisabled ? "disabled" : ""}`}
+          onClick={() => {
+            if (donationType === "auto") updateState({ currentPage: "confirmPot" });
+            else {
+              updateState({ currentPage: "confirmPot", amount: totalAmountAllocated });
+            }
           }}
-        />
-        <div onClick={handleAddToCart}>Add to cart</div>
+        >
+          Proceed to donate
+        </Button>
+        <Button
+          className={`outline ${isDisabled ? "disabled" : ""}`}
+          onClick={() => {
+            const cartItems = Object.entries(selectedProjects).map(([project_id, project_amount]: [string, any]) => ({
+              id: project_id,
+              amount: project_amount || parseFloat(amount) / Object.keys(selectedProjects).length,
+              token: selectedDenomination,
+              potId: selectedRound,
+              potDetail,
+            }));
+            handleAddToCart(cartItems);
+          }}
+        >
+          Add to cart
+        </Button>
       </CustomButton>
     </Form>
   );

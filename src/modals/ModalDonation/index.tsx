@@ -23,11 +23,14 @@ import FormPot from "./FormPot/FormPot";
 import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
 import ConfirmPot from "./ConfirmPot/ConfirmPot";
 import { useDonationModal } from "@app/hooks/useDonationModal";
+import { useCart } from "@app/hooks/useCart";
+import { CartItem } from "@app/contexts/CartProvider";
 
 const ModalDonation = () => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];
 
   const { donationModalProps, setSuccessfulDonation, setDonationModalProps } = useDonationModal();
+  const { addItemstoCart } = useCart();
 
   const onClose = () => {
     setDonationModalProps(null);
@@ -271,6 +274,11 @@ const ModalDonation = () => {
           activeRounds={activeRounds}
           DENOMINATION_OPTION={DENOMINATION_OPTIONS}
           onClose={onClose}
+          potDetail={potDetail}
+          handleAddToCart={(items: CartItem[]) => {
+            addItemstoCart(items);
+            onClose();
+          }}
           openDonationSuccessModal={(successfulDonation: any) => {
             setSuccessfulDonation(successfulDonation);
           }}

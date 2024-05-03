@@ -67,6 +67,9 @@ export const HeaderIcons = styled.div`
     width: 14px;
     cursor: pointer;
     transition: all 300ms ease-in-out;
+    path {
+      fill: #3f130b;
+    }
   }
   .close-icon {
     margin-left: auto;

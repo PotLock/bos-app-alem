@@ -1,13 +1,14 @@
 import { useCart } from "@app/hooks/useCart";
 import { CartButton, CartCountContainer, CartText } from "./styles";
-import { navigate } from "alem";
+import { RouteLink, navigate } from "alem";
+import routesPath from "@app/routes/routesPath";
 
 const NavItem = () => {
   const { cart } = useCart();
 
   const numCartItems = cart ? Object.keys(cart).length : 0;
   return (
-    <>
+    <RouteLink to={routesPath.CART_TAB}>
       <CartButton
         numCartItems={numCartItems}
         onClick={() => {
@@ -21,7 +22,7 @@ const NavItem = () => {
           </CartCountContainer>
         )}
       </CartButton>
-    </>
+    </RouteLink>
   );
 };
 

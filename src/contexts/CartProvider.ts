@@ -1,6 +1,6 @@
-import { createContext } from "alem";
+import { Storage, createContext } from "alem";
 
-type CartItem = {
+export type CartItem = {
   id: string;
   amount: string;
   token: string;
@@ -29,25 +29,35 @@ export type CartContextProps = {
 
 const DEFAULT_CART = {};
 
+const CART_KEY = "cart";
+
+const getCart = () => JSON.parse(Storage.get(CART_KEY)) || DEFAULT_CART;
+
 const CartProvider = () => {
   const { setDefaultData, updateData, getSelf } = createContext<CartContextProps>("cart-context");
 
+  const updateCart = (cart: Cart) => {
+    Storage.set(CART_KEY, JSON.stringify(cart));
+    updateData({
+      cart,
+    });
+  };
+
   // Set default data
   setDefaultData({
-    cart: DEFAULT_CART,
+    cart: getCart(),
     addItemstoCart: (items: CartItem[]) => {
       const { cart } = getSelf();
       items.forEach((item) => {
         cart[item.id] = item;
       });
-      updateData({
-        cart,
-      });
+      updateCart(cart);
     },
     clearCart: () => {
       updateData({
         cart: DEFAULT_CART,
       });
+      updateCart(DEFAULT_CART);
     },
     removeItemsFromCart: (idsToRemove: CartItem["id"][]) => {
       const { cart } = getSelf();
@@ -58,9 +68,7 @@ const CartProvider = () => {
           delete cart[id];
         }
       });
-      updateData({
-        cart,
-      });
+      updateCart(cart);
     },
   });
 };

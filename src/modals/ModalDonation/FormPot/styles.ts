@@ -161,12 +161,10 @@ export const CustomButton = styled.div`
   margin-top: 4rem;
   margin-bottom: 0.5rem;
   padding: 0 2rem;
-  button {
-    padding: 12px 16px;
-    width: 100%;
-    font-weight: 500;
-  }
+  gap: 1rem;
+  justify-content: flex-end;
   @media only screen and (max-width: 480px) {
+    padding: 0px 1.125rem;
     margin-top: 2rem;
   }
 `;

@@ -179,16 +179,6 @@ const Cart = () => {
               },
             }}
           />
-          <Button
-            {...{
-              href: hrefWithParams(`?tab=projects`),
-              type: twitterIntent ? "secondary" : "primary",
-              text: "Explore projects",
-              style: {
-                width: "300px",
-              },
-            }}
-          />
         </SuccessContainer>
       ) : (
         <>
