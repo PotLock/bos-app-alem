@@ -1,5 +1,5 @@
 import { Near } from "alem";
-import { CustomButton, CurrentBalance, Form, Label, PotWrapper } from "./styles";
+import { DirectButton, CurrentBalance, Form, Label, PotWrapper, Button } from "./styles";
 import constants from "@app/constants";
 import PotSDK from "@app/SDK/pot";
 import Loading from "@app/components/Loading";
@@ -7,8 +7,6 @@ import Checks from "../Checks/Checks";
 import SelectPot from "../SelectPot";
 import AmountInput from "../AmountInput/AmountInput";
 import Alert from "../Banners/Alert";
-import Nadabot from "../Banners/Nadabot";
-import Button from "@app/components/Button";
 import VerifyInfo from "../Banners/VerifyInfo";
 
 const FormDirect = (props: any) => {
@@ -24,6 +22,8 @@ const FormDirect = (props: any) => {
     ftBalance,
     activeRounds,
     accountId,
+    selectedRound,
+    handleAddToCart,
   } = props;
 
   const { NADABOT_HUMAN_METHOD, NADABOT_CONTRACT_ID } = constants;
@@ -73,6 +73,8 @@ const FormDirect = (props: any) => {
 
   const isLoading = donationType === "pot" ? isUserHumanVerified === null || activeRounds === null : false;
 
+  const isDisabled = amountError || !amount || !accountId;
+
   return projectId ? (
     profile === null ? (
       <Loading />
@@ -121,17 +123,34 @@ const FormDirect = (props: any) => {
           </CurrentBalance>
         )}
         {amountError && <Alert error={amountError} />}
-        {needsToVerify && <VerifyInfo />}
-        <CustomButton>
+        {needsToVerify && !isLoading && <VerifyInfo />}
+        <DirectButton>
           <Button
             {...{
-              type: "primary",
-              disabled: amountError || !amount || !accountId,
-              text: !accountId ? "Sign In to Proceed" : isLoading ? "Loading..." : "Proceed to donate",
+              className: `filled ${isDisabled ? "disabled" : ""}`,
               onClick: () => updateState({ currentPage: "confirm" }),
             }}
-          />
-        </CustomButton>
+          >
+            {" "}
+            {!accountId ? "Sign In to Proceed" : isLoading ? "Loading..." : "Proceed to donate"}{" "}
+          </Button>
+          <Button
+            {...{
+              className: `outline ${isDisabled ? "disabled" : ""}`,
+              onClick: () =>
+                handleAddToCart([
+                  {
+                    id: projectId,
+                    amount,
+                    token: selectedDenomination,
+                    potId: donationType === "pot" ? selectedRound : null,
+                  },
+                ]),
+            }}
+          >
+            Add to cart
+          </Button>
+        </DirectButton>
       </Form>
     )
   ) : (

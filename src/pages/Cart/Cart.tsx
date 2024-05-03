@@ -9,17 +9,17 @@ import {
   SuccessContainer,
   Title,
 } from "./styles";
-import CartSDK from "@app/SDK/cart";
 import Button from "@app/components/Button";
 import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import { Near, State, context, state, useEffect, useMemo, useParams, useState } from "alem";
 import CheckoutItem from "./components/CheckoutItem/CheckoutItem";
 import CheckoutBreakdown from "./components/CheckoutBreakdown/CheckoutBreakdown";
+import { useCart } from "@app/hooks/useCart";
 
 const Cart = () => {
-  const numCartItems = CartSDK.getCartItemCount();
-  const cart = CartSDK.getCart();
+  const { cart, removeItemsFromCart } = useCart();
+  const numCartItems = Object.keys(cart).length;
 
   const { transactionHashes: passedTransactionHashes } = useParams();
 
@@ -179,16 +179,6 @@ const Cart = () => {
               },
             }}
           />
-          <Button
-            {...{
-              href: hrefWithParams(`?tab=projects`),
-              type: twitterIntent ? "secondary" : "primary",
-              text: "Explore projects",
-              style: {
-                width: "300px",
-              },
-            }}
-          />
         </SuccessContainer>
       ) : (
         <>
@@ -226,7 +216,7 @@ const Cart = () => {
                   // doesn't do anything if nothing selected
                   if (state.selectedProjectIds.length === 0) return;
                   // delete selected projects
-                  CartSDK.removeItemsFromCart(state.selectedProjectIds.map((id: any) => ({ id })));
+                  removeItemsFromCart(state.selectedProjectIds);
                   // uncheck box
                   State.update({ selectedProjectIds: [], masterSelectorSelected: false });
                 }}

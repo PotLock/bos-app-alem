@@ -20,6 +20,8 @@ import Tag from "@app/components/PotCard/Tag/Tag";
 import Text from "@app/components/Inputs/Text/Text";
 import Select from "@app/components/Inputs/Select/Select";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
+import PotSDK from "@app/SDK/pot";
+import { PotDetail } from "@app/types";
 
 const CheckoutItem = (props: {
   cartItem: any;
@@ -38,11 +40,24 @@ const CheckoutItem = (props: {
 
   const [itemAmount, setItemAmount] = useState(cartItem?.amount);
   const [itemToken, setItemToken] = useState(cartItem?.token);
+  const [potDetail, setPotDetail] = useState<PotDetail | null>(null);
 
   State.init({
     ftBalances: null,
     denominationOptions: [{ text: "NEAR", value: "NEAR", selected: itemToken.text === "NEAR", decimals: 24 }],
   });
+
+  if (!potDetail && cartItem.potId) {
+    if (cartItem.potDetail) {
+      setPotDetail(cartItem.potDetail);
+    } else {
+      PotSDK.asyncGetConfig(cartItem.potId)
+        .then((potDetail: PotDetail) => {
+          setPotDetail(potDetail);
+        })
+        .catch((err: any) => console.log("error while fetching pot detail for cart Item ", err));
+    }
+  }
 
   // * REMOVING FTs FROM CHECKOUT FOR NOW *
   // const ftBalancesRes = useCache(
@@ -122,7 +137,7 @@ const CheckoutItem = (props: {
                 backgroundColor: isPotDonation ? "#FEF6EE" : "#F6F5F3",
                 borderColor: isPotDonation ? "rgba(219, 82, 27, 0.36)" : "#DBDBDB",
                 textColor: isPotDonation ? "#EA6A25" : "#292929",
-                text: isPotDonation ? (cartItem.potDetail ? cartItem.potDetail.pot_name : "-") : "Direct Donation",
+                text: isPotDonation ? potDetail?.pot_name ?? cartItem.potId.slice(0, 20) : "Direct Donation",
               }}
             />
           </Row>

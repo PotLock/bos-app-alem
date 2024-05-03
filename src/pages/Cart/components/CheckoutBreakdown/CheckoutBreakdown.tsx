@@ -12,15 +12,15 @@ import {
   TotalContainer,
   TotalText,
 } from "./styles";
-import CartSDK from "@app/SDK/cart";
 import DonateSDK from "@app/SDK/donate";
 import PotSDK from "@app/SDK/pot";
 import { Big, Near, context, useMemo } from "alem";
 import constants from "@app/constants";
 import Button from "@app/components/Button";
+import { useCart } from "@app/hooks/useCart";
 
 const CheckoutBreakdown = (props: any) => {
-  const cart = CartSDK.getCart();
+  const { cart, clearCart } = useCart();
 
   const { SUPPORTED_FTS } = constants;
 
@@ -67,11 +67,11 @@ const CheckoutBreakdown = (props: any) => {
         });
       } else {
         // pot & generic contract args
-        args.project_id = projectId;
+        if (potId) args.project_id = projectId;
+        else args.recipient_id = projectId;
         args.referrer_id = referrerId;
         args.message = note;
         // donation contract args
-        args.recipient_id = projectId;
         // other
         potIdContained = potId;
       }
@@ -130,7 +130,7 @@ const CheckoutBreakdown = (props: any) => {
           // display success message & clear cart
           clearInterval(pollId);
           props.updateSuccessfulDonationRecipientId(foundDonations[0].recipient_id);
-          CartSDK.clearCart();
+          clearCart();
         }
       });
     }, pollIntervalMs);
