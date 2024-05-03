@@ -6,7 +6,6 @@ import NearIcon from "@app/assets/svgs/near-icon";
 import nearToUsd from "@app/utils/nearToUsd";
 import _address from "@app/utils/_address";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
-import Button from "@app/components/Button";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import {
   Amout,
@@ -18,6 +17,7 @@ import {
   ProjectAmount,
   Projects,
 } from "./styles";
+import { Button } from "../FormDirect/styles";
 
 const ConfirmPot = ({
   selectedDenomination,
@@ -267,7 +267,9 @@ const ConfirmPot = ({
         </FeesRemoval>
       </ContentScrollable>
       <ButtonWrapper>
-        <Button type="primary" text="Confirm donation" onClick={handleDonate} />
+        <Button className="filled" onClick={handleDonate}>
+          Confirm donation
+        </Button>
       </ButtonWrapper>
     </Container>
   );
