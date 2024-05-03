@@ -1,6 +1,22 @@
-import ListsSDK from "@app/SDK/lists";
-import InfoSegment from "@app/components/InfoSegment/InfoSegment";
 import { Big, Near, State, asyncFetch, context, state, useEffect, useMemo, useParams } from "alem";
+import ListsSDK from "@app/SDK/lists";
+import Button from "@app/components/Button";
+import InfoSegment from "@app/components/InfoSegment/InfoSegment";
+import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import Select from "@app/components/Inputs/Select/Select";
+import SelectMultiple from "@app/components/Inputs/SelectMultiple/SelectMultiple";
+import Text from "@app/components/Inputs/Text/Text";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
+import BannerHeader from "@app/pages/Profile/components/BannerHeader/BannerHeader";
+import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
+import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import validateEVMAddress from "@app/utils/validateEVMAddress";
+import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
+import validateNearAddress from "@app/utils/validateNearAddress";
+import AccountsStack from "../AccountsStack/AccountsStack";
+import ModalAddFundingSource from "../ModalAddFundingSource/ModalAddFundingSource";
 import {
   AddTeamMembers,
   ButtonsContainer,
@@ -23,22 +39,6 @@ import {
   SvgContainer,
   Table,
 } from "./styles";
-import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
-import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import validateNearAddress from "@app/utils/validateNearAddress";
-import Button from "@app/components/Button";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import BannerHeader from "@app/pages/Profile/components/BannerHeader/BannerHeader";
-import AccountsStack from "../AccountsStack/AccountsStack";
-import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
-import Text from "@app/components/Inputs/Text/Text";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
-import SelectMultiple from "@app/components/Inputs/SelectMultiple/SelectMultiple";
-import Select from "@app/components/Inputs/Select/Select";
-import validateEVMAddress from "@app/utils/validateEVMAddress";
-import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
-import ModalAddFundingSource from "../ModalAddFundingSource/ModalAddFundingSource";
-import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
 
 const CreateForm = (props: { edit: boolean }) => {
   const { projectId } = useParams();

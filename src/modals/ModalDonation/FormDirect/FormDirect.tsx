@@ -1,13 +1,13 @@
 import { Near } from "alem";
-import { DirectButton, CurrentBalance, Form, Label, PotWrapper, Button } from "./styles";
-import constants from "@app/constants";
 import PotSDK from "@app/SDK/pot";
 import Loading from "@app/components/Loading";
-import Checks from "../Checks/Checks";
-import SelectPot from "../SelectPot";
+import constants from "@app/constants";
 import AmountInput from "../AmountInput/AmountInput";
 import Alert from "../Banners/Alert";
 import VerifyInfo from "../Banners/VerifyInfo";
+import Checks from "../Checks/Checks";
+import SelectPot from "../SelectPot";
+import { DirectButton, CurrentBalance, Form, Label, PotWrapper, Button } from "./styles";
 
 const FormDirect = (props: any) => {
   const {

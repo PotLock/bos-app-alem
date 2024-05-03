@@ -1,19 +1,19 @@
-import { PotDetail } from "@app/types";
 import { useState, context, useParams, useEffect, Markdown, Near, State, useContext } from "alem";
-import constants from "@app/constants";
 import PotSDK from "@app/SDK/pot";
-import { ButtonsWrapper, Container, Description, Fund, HeaderWrapper, Referral, Title } from "./styles";
+import Button from "@app/components/Button";
+import constants from "@app/constants";
+import { useDonationModal } from "@app/hooks/useDonationModal";
+import CopyIcon from "@app/pages/Project/components/CopyIcon";
+import { PotDetail } from "@app/types";
+import calculatePayouts from "@app/utils/calculatePayouts";
 import nearToUsd from "@app/utils/nearToUsd";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
-import Button from "@app/components/Button";
-import CopyIcon from "@app/pages/Project/components/CopyIcon";
-import PoolAllocationTable from "../PoolAllocationTable/PoolAllocationTable";
-import NewApplicationModal from "../NewApplicationModal/NewApplicationModal";
-import FundModal from "../FundModal/FundModal";
 import ChallengeModal from "../ChallengeModal/ChallengeModal";
-import calculatePayouts from "@app/utils/calculatePayouts";
-import { useDonationModal } from "@app/hooks/useDonationModal";
+import FundModal from "../FundModal/FundModal";
+import NewApplicationModal from "../NewApplicationModal/NewApplicationModal";
+import PoolAllocationTable from "../PoolAllocationTable/PoolAllocationTable";
+import { ButtonsWrapper, Container, Description, Fund, HeaderWrapper, Referral, Title } from "./styles";
 
 const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonations: any }) => {
   const {

@@ -1,5 +1,15 @@
-import { Big, RouteLink, Social, State, context, useContext, useEffect, useMemo, useParams, useState } from "alem";
+import { Big, RouteLink, Social, context, useEffect, useMemo, useParams, useState } from "alem";
+import DonateSDK from "@app/SDK/donate";
+import PotSDK from "@app/SDK/pot";
+import { useDonationModal } from "@app/hooks/useDonationModal";
+import routesPath from "@app/routes/routesPath";
+import _address from "@app/utils/_address";
+import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
+import ipfsUrlFromCid from "@app/utils/ipfsUrlFromCid";
+import yoctosToNear from "@app/utils/yoctosToNear";
+import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import CardSkeleton from "../../pages/Projects/components/CardSkeleton";
+import Image from "../mob.near/Image";
 import {
   Amount,
   AmountDescriptor,
@@ -19,29 +29,13 @@ import {
   Tags,
   Title,
 } from "./styles";
-import PotSDK from "@app/SDK/pot";
-import DonateSDK from "@app/SDK/donate";
-import ipfsUrlFromCid from "@app/utils/ipfsUrlFromCid";
-import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
-import routesPath from "@app/routes/routesPath";
-import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
-import yoctosToNear from "@app/utils/yoctosToNear";
-import Image from "../mob.near/Image";
-import _address from "@app/utils/_address";
-import { useDonationModal } from "@app/hooks/useDonationModal";
 
 const Card = (props: any) => {
+  const [ready, isReady] = useState(false);
   const { payoutDetails, allowDonate: _allowDonate } = props;
   const { potId } = useParams();
 
   const { setDonationModalProps } = useDonationModal();
-
-  // TODO: Bug -> não esta importando o utils
-  // Só importa funcóes que retornam algo, um objeto direto está falhando.
-  // const { ipfsUrlFromCid, yoctosToNear, yoctosToUsdWithFallback } = utils;
-  // console.log(utils);
-
-  const [ready, isReady] = useState(false);
 
   const projectId = props.project.registrant_id || props.projectId;
   const profile = Social.getr(`${projectId}/profile`) as any;
@@ -58,12 +52,6 @@ const Card = (props: any) => {
       : !potId
       ? DonateSDK.getDonationsForRecipient(projectId)
       : [];
-
-  useEffect(() => {
-    if (profile !== null && !ready) {
-      isReady(true);
-    }
-  }, [profile, donationsForProject]);
 
   const totalAmountNear = useMemo(() => {
     if (payoutDetails) return payoutDetails.totalAmount;
@@ -108,6 +96,12 @@ const Card = (props: any) => {
   };
 
   const tags = getTagsFromSocialProfileData(profile);
+
+  useEffect(() => {
+    if (profile !== null && !ready) {
+      isReady(true);
+    }
+  }, [profile, donationsForProject, tags]);
 
   if (!ready) return <CardSkeleton />;
 

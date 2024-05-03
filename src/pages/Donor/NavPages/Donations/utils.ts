@@ -1,5 +1,5 @@
-import { PotDetail } from "@app/types";
 import PotSDK from "@app/SDK/pot";
+import { PotDetail } from "@app/types";
 
 export const getPotDonations = (
   potId: string,

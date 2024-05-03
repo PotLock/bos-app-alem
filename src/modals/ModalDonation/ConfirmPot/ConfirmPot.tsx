@@ -1,12 +1,13 @@
 import { Big, Near, Social, props } from "alem";
 import PotSDK from "@app/SDK/pot";
+import NearIcon from "@app/assets/svgs/near-icon";
+import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
-import NearIcon from "@app/assets/svgs/near-icon";
-import nearToUsd from "@app/utils/nearToUsd";
 import _address from "@app/utils/_address";
-import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import hrefWithParams from "@app/utils/hrefWithParams";
+import nearToUsd from "@app/utils/nearToUsd";
+import { Button } from "../FormDirect/styles";
 import {
   Amout,
   ButtonWrapper,
@@ -17,7 +18,6 @@ import {
   ProjectAmount,
   Projects,
 } from "./styles";
-import { Button } from "../FormDirect/styles";
 
 const ConfirmPot = ({
   selectedDenomination,

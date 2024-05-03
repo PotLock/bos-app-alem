@@ -1,8 +1,8 @@
-import { Container, HeroContainer, Line } from "./styles";
-import DonationStats from "@app/pages/Projects/components/DonationStats/DonationStats";
+import { context, useMemo } from "alem";
 import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
-import { context, useContext, useMemo, useState } from "alem";
 import { useDonationModal } from "@app/hooks/useDonationModal";
+import DonationStats from "@app/pages/Projects/components/DonationStats/DonationStats";
+import { Container, HeroContainer, Line } from "./styles";
 
 const NewHero = ({ projectsData }: any) => {
   const { allProjects, approvedProjects } = projectsData;

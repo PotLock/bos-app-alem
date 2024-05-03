@@ -1,8 +1,8 @@
 import { context } from "alem";
-import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
-import { Container } from "./styles";
-import hrefWithParams from "@app/utils/hrefWithParams";
 import PotFactorySDK from "@app/SDK/potfactory";
+import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import { Container } from "./styles";
 
 const Banner = () => {
   const canDeploy = PotFactorySDK.canUserDeployPot(context.accountId);

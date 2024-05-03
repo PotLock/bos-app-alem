@@ -1,5 +1,6 @@
 import { State, props, state } from "alem";
 import DonateSDK from "@app/SDK/donate";
+import NearIcon from "@app/assets/svgs/near-icon";
 import constants from "@app/constants";
 import basisPointsToPercent from "@app/utils/basisPointsToPercent";
 import {
@@ -12,7 +13,6 @@ import {
   Header,
   Icon,
 } from "./styles";
-import NearIcon from "@app/assets/svgs/near-icon";
 
 const BreakdownSummary = ({
   referrerId,

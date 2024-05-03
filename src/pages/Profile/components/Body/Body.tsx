@@ -1,14 +1,14 @@
 import { Near, context, props, useState, useParams, useMemo } from "alem";
-import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
+import ListsSDK from "@app/SDK/lists";
+import Button from "@app/components/Button";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import constants from "@app/constants";
+import ModalOverlay from "@app/modals/ModalOverlay";
+import Select from "../../../../components/Inputs/Select/Select";
 import BannerHeader from "../BannerHeader/BannerHeader";
 import BodyHeader from "../BodyHeader/BodyHeader";
-import Select from "../../../../components/Inputs/Select/Select";
 import Tabs from "../Tabs";
-import ListsSDK from "@app/SDK/lists";
-import ModalOverlay from "@app/modals/ModalOverlay";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
-import Button from "@app/components/Button";
+import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
 
 // type Props = {
 //   projectId?: string;

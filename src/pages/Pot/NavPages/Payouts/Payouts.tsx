@@ -1,4 +1,12 @@
+import { context, useParams, State, state } from "alem";
+import PotSDK from "@app/SDK/pot";
+import ArrowDown from "@app/assets/svgs/ArrowDown";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import { PotDetail } from "@app/types";
+import calculatePayouts from "@app/utils/calculatePayouts";
+import yoctosToNear from "@app/utils/yoctosToNear";
+import FlaggedAccounts from "../../components/FlaggedAccounts/FlaggedAccounts";
+import PayoutsChallenges from "../../components/PayoutsChallenges/PayoutsChallenges";
 import {
   AlertSvg,
   Container,
@@ -16,14 +24,6 @@ import {
   TableContainer,
   WarningText,
 } from "./styles";
-import PotSDK from "@app/SDK/pot";
-import { PotDetail } from "@app/types";
-import calculatePayouts from "@app/utils/calculatePayouts";
-import { context, useParams, State, state } from "alem";
-import yoctosToNear from "@app/utils/yoctosToNear";
-import ArrowDown from "@app/assets/svgs/ArrowDown";
-import FlaggedAccounts from "../../components/FlaggedAccounts/FlaggedAccounts";
-import PayoutsChallenges from "../../components/PayoutsChallenges/PayoutsChallenges";
 
 const Payouts = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonations: any }) => {
   const { potId } = useParams();

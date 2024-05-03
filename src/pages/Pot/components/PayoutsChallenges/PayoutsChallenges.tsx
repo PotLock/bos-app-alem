@@ -1,11 +1,11 @@
-import PotSDK from "@app/SDK/pot";
-import { Challenge, Container, Table, Title, Line } from "./styles";
 import { State, context, state, useParams } from "alem";
-import ProfileImage from "@app/components/mob.near/ProfileImage";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import getTimePassed from "@app/utils/getTimePassed";
+import PotSDK from "@app/SDK/pot";
 import AdminIcon from "@app/assets/svgs/AdminIcon";
+import ProfileImage from "@app/components/mob.near/ProfileImage";
+import getTimePassed from "@app/utils/getTimePassed";
+import hrefWithParams from "@app/utils/hrefWithParams";
 import ChallangeResolveModal from "../ChallangeResolveModal/ChallangeResolveModal";
+import { Challenge, Container, Table, Title, Line } from "./styles";
 
 const PayoutsChallenges = () => {
   const { potId } = useParams();
