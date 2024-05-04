@@ -159,14 +159,9 @@ const FlagModal = (props: any) => {
             <button className="cancel" onClick={onCancel}>
               Cancel
             </button>
-            <Button
-              {...{
-                type: "primary",
-                text: "Confirm",
-                disabled: !reason || !!reasonErr,
-                onClick: handleFlag,
-              }}
-            />
+            <Button disabled={!reason || !!reasonErr} onClick={handleFlag}>
+              Confirm
+            </Button>
           </ButtonsWrapper>
         </Content>
       </Container>

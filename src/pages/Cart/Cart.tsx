@@ -157,28 +157,28 @@ const Cart = () => {
           <Title>Thanks for donating!</Title>
           {twitterIntent && (
             <Button
-              {...{
-                href: twitterIntent,
-                target: "_blank",
-                type: "primary",
-                text: "Share to Twitter",
-                disabled: !twitterIntent,
-                style: {
-                  width: "300px",
-                },
+              href={twitterIntent}
+              target="_blank"
+              disabled={!twitterIntent}
+              style={{
+                width: "300px",
               }}
-            />
+            >
+              {" "}
+              Share to Twitter
+            </Button>
           )}
           <Button
             {...{
               href: hrefWithParams(`?tab=projects`),
-              type: twitterIntent ? "secondary" : "primary",
-              text: "Explore projects",
+              varient: twitterIntent ? "tonal" : "filled",
               style: {
                 width: "300px",
               },
             }}
-          />
+          >
+            Explore projects
+          </Button>
         </SuccessContainer>
       ) : (
         <>

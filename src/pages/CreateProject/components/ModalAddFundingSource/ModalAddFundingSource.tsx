@@ -35,6 +35,40 @@ const ModalAddFundingSource = (props: any) => {
     State.update(initalState);
   }, [fundingSources, fundingSourceIndex]);
 
+  const isDisabled =
+    !state.investorName ||
+    !!state.investorNameError ||
+    !!state.dateError ||
+    !state.description ||
+    !!state.descriptionError ||
+    !state.denomination ||
+    !!state.denominationError ||
+    !state.amountReceived ||
+    !!state.amountReceivedError;
+
+  const handleAddingSrc = () => {
+    const fundingSource = {
+      investorName: state.investorName,
+      date: state.date,
+      description: state.description,
+      denomination: state.denomination,
+      amountReceived: state.amountReceived,
+    };
+    State.update({
+      investorName: "",
+      investorNameError: "",
+      date: "",
+      dateError: "",
+      description: "",
+      descriptionError: "",
+      denomination: "",
+      denominationError: "",
+      amountReceived: "",
+      amountReceivedError: "",
+    });
+    handleAddFundingSource(fundingSource);
+  };
+
   return (
     <ModalOverlay overlayStyle={onClose}>
       <ModalHeader>
@@ -148,44 +182,9 @@ const ModalAddFundingSource = (props: any) => {
         />
 
         <Row style={{ width: "100%", justifyContent: "flex-end" }}>
-          <Button
-            {...{
-              type: "primary",
-              text: "Add Funding Source",
-              disabled:
-                !state.investorName ||
-                !!state.investorNameError ||
-                !!state.dateError ||
-                !state.description ||
-                !!state.descriptionError ||
-                !state.denomination ||
-                !!state.denominationError ||
-                !state.amountReceived ||
-                !!state.amountReceivedError,
-              onClick: () => {
-                const fundingSource = {
-                  investorName: state.investorName,
-                  date: state.date,
-                  description: state.description,
-                  denomination: state.denomination,
-                  amountReceived: state.amountReceived,
-                };
-                State.update({
-                  investorName: "",
-                  investorNameError: "",
-                  date: "",
-                  dateError: "",
-                  description: "",
-                  descriptionError: "",
-                  denomination: "",
-                  denominationError: "",
-                  amountReceived: "",
-                  amountReceivedError: "",
-                });
-                handleAddFundingSource(fundingSource);
-              },
-            }}
-          />
+          <Button disabled={isDisabled} onClick={handleAddingSrc}>
+            Add Funding Source
+          </Button>
         </Row>
       </ModalBody>
     </ModalOverlay>

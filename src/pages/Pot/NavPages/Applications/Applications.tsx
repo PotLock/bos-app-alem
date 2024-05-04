@@ -16,7 +16,6 @@ import { PotDetail } from "@app/types";
 import APPLICATIONS_FILTERS_TAGS from "./APPLICATIONS_FILTERS_TAGS";
 import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
-import daysUntil from "@app/utils/daysUntil";
 import Button from "@app/components/Button";
 import ApplicationReviewModal from "../../components/ApplicationReviewModal/ApplicationReviewModal";
 import daysAgo from "@app/utils/daysAgo";
@@ -251,20 +250,15 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
                       {status !== "Approved" && (
                         <Button
                           {...{
-                            type: "secondary",
-                            text: "Approve",
+                            varient: "tonal",
                             onClick: () => handleApproveApplication(project_id),
                           }}
-                        />
+                        >
+                          Approve
+                        </Button>
                       )}
                       {status !== "Rejected" && (
-                        <Button
-                          {...{
-                            type: "primary",
-                            text: "Reject",
-                            onClick: () => handleRejectApplication(project_id),
-                          }}
-                        />
+                        <Button onClick={() => handleRejectApplication(project_id)}>Reject</Button>
                       )}
                     </>
                   )}

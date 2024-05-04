@@ -88,21 +88,12 @@ const ApplicationReviewModal = ({
         />
       </ModalBody>
       <ModalFooter>
-        <Button
-          {...{
-            type: "tertiary",
-            text: "Cancel",
-            onClick: handleCancel,
-          }}
-        />
-        <Button
-          {...{
-            type: "primary",
-            text: "Submit",
-            disabled: !reviewMessage || !!reviewMessageError,
-            onClick: handleSubmit,
-          }}
-        />
+        <Button onClick={handleCancel} varient="outline">
+          Cancel
+        </Button>
+        <Button disabled={!reviewMessage || !!reviewMessageError} onClick={handleSubmit}>
+          Submit
+        </Button>
       </ModalFooter>
     </ModalOverlay>
   );

@@ -65,21 +65,12 @@ const ChallengeModal = ({ onClose, existingChallengeForUser }: any) => {
         />
       </ModalBody>
       <ModalFooter>
-        <Button
-          {...{
-            type: "tertiary",
-            text: "Cancel",
-            onClick: handleCancelChallenge,
-          }}
-        />
-        <Button
-          {...{
-            type: "primary",
-            text: "Submit Challenge",
-            disabled: !challengeReason || !!challengeReasonError,
-            onClick: handleSubmitChallenge,
-          }}
-        />
+        <Button varient="outline" onClick={handleCancelChallenge}>
+          Cancel
+        </Button>
+        <Button disabled={!challengeReason || !!challengeReasonError} onClick={handleSubmitChallenge}>
+          Submit Challenge
+        </Button>
       </ModalFooter>
     </ModalOverlay>
   );

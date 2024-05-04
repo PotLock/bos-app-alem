@@ -137,14 +137,6 @@ const NewApplicationModal = ({
       {isDao && <Text {...textProps} />}
       <Row style={{ justifyContent: "flex-end", marginTop: "12px" }}>
         <Button
-          type="primary"
-          text={
-            isDao
-              ? "Propose to Send Application"
-              : registrationApprovedOrNoRegistryProvider
-              ? "Send application"
-              : "Register to apply"
-          }
           onClick={
             (isDao || registrationApprovedOrNoRegistryProvider) && !isError
               ? () => {
@@ -155,7 +147,13 @@ const NewApplicationModal = ({
           disabled={isError}
           href={isDao || registrationApprovedOrNoRegistryProvider ? "" : hrefWithParams(`?tab=createproject`)}
           target={isDao || registrationApprovedOrNoRegistryProvider ? "_self" : "_blank"}
-        />
+        >
+          {isDao
+            ? "Propose to Send Application"
+            : registrationApprovedOrNoRegistryProvider
+            ? "Send application"
+            : "Register to apply"}
+        </Button>
       </Row>
     </ModalOverlay>
   );

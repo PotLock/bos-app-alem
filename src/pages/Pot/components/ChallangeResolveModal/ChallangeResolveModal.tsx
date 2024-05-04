@@ -91,21 +91,12 @@ const ChallangeResolveModal = ({
         />
       </ModalBody>
       <ModalFooter>
-        <Button
-          {...{
-            type: "tertiary",
-            text: "Cancel",
-            onClick: handleCancelAdminUpdateChallenge,
-          }}
-        />
-        <Button
-          {...{
-            type: "primary",
-            text: "Submit",
-            disabled: !challengeAdminNotes || !!challengeAdminNotesError,
-            onClick: handleAdminUpdateChallenge,
-          }}
-        />
+        <Button varient="outline" onClick={handleCancelAdminUpdateChallenge}>
+          Cancel
+        </Button>
+        <Button disabled={!challengeAdminNotes || !!challengeAdminNotesError} onClick={handleAdminUpdateChallenge}>
+          Submit
+        </Button>
       </ModalFooter>
     </ModalOverlay>
   );

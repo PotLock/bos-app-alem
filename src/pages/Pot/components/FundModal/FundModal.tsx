@@ -315,14 +315,11 @@ const FundModal = ({ potDetail, onClose }: Props) => {
         </FeeText>
       </Row>
       <Row style={{ justifyContent: "flex-end", marginTop: "12px" }}>
-        <Button
-          type="primary"
-          disabled={disabled}
-          text={`${fundAsDao ? "Create proposal to contribute " : "Contribute"}${
+        <Button disabled={disabled} onClick={disabled ? () => {} : handleMatchingPoolDonation}>
+          {`${fundAsDao ? "Create proposal to contribute " : "Contribute"}${
             matchingPoolDonationAmountNear ? ` ${matchingPoolDonationAmountNear} ${base_currency.toUpperCase()}` : ""
           } to matching pool`}
-          onClick={disabled ? () => {} : handleMatchingPoolDonation}
-        />
+        </Button>
       </Row>
     </ModalOverlay>
   );

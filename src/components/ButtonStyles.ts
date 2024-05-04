@@ -1,197 +1,118 @@
 import styled from "styled-components";
 
-type ButtonProps = {
-  direction: "right" | "left";
-  type: "outline" | "tonal" | "standard" | "primary" | "brand-outline";
-};
+export const Container = styled.a`
+  &:hover {
+    text-decoration: none;
+  }
+  --Primary-50: #fef3f2;
+  --primary-400: #f6767a;
+  --Primary-600: #dd3345;
+  --Peach-50: #fef6ee;
+  --Neutral-700: #525252;
+  --Neutral-800: #464646;
 
-export const Icon = styled.img`
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
+  .button {
+    display: flex;
+    font-size: 14px;
+    line-break: 157%;
+    align-items: center;
+    justify-content: center;
+    color: #292929;
+    padding: 9px 16px;
+    gap: 8px;
+    font-weight: 500;
+    border-radius: 6px;
+    text-decoration: none;
+    width: 100%;
+    cursor: pointer;
+    transition: all 200ms ease-in-out;
+    &:focus {
+      box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(166, 166, 166, 0.3) inset,
+        0px 0px 0px 2px rgba(166, 166, 166, 0.3) inset, 0px 0px 0px 2px #fff, 0px 0px 0px 4px rgba(0, 0, 0, 0.84);
+    }
+    &.disabled {
+      pointer-events: none;
+    }
+  }
+
+  /* Brand Button */
+  .brand.filled {
+    color: white;
+    background: var(--Primary-600);
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(246, 118, 122, 0.5) inset,
+      0px 0px 0px 2px rgba(246, 118, 122, 0.5) inset, 0px 1.5px 0px 0px rgba(0, 0, 0, 0.84);
+    transform: translateY(-1.5px);
+    &:hover {
+      box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(246, 118, 122, 0.5) inset,
+        0px 0px 0px 2px rgba(246, 118, 122, 0.5) inset;
+      transform: translateY(0);
+    }
+  }
+  .brand.tonal {
+    background: var(--Peach-50);
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px #fff inset, 0px 0px 0px 2px #fff inset,
+      0px 1.5px 0px 0px rgba(0, 0, 0, 0.84);
+    transform: translateY(-1.5px);
+    &:hover {
+      box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px #fff inset,
+        0px 0px 0px 2px rgba(255, 255, 255, 0.8) inset;
+      transform: translateY(0);
+    }
+  }
+
+  .brand.Plain {
+    color: var(--Primary-600);
+    &:hover {
+      color: var(--Primary-400);
+    }
+  }
+
+  .brand.outline {
+    color: var(--Primary-600);
+    background: rgba(255, 255, 255, 0.01);
+    box-shadow: 0px 0px 0px 1px rgba(243, 78, 95, 0.78) inset, 0px -1px 0px 0px rgba(73, 8, 19, 0.5) inset,
+      0px 1px 2px -0.5px rgba(73, 8, 19, 0.2);
+    &:hover {
+      background: #fef3f2;
+    }
+  }
+  /* Standard Button */
+  .standard.filled {
+    background: var(--Neutral-800);
+    color: white;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(166, 166, 166, 0.4) inset,
+      0px 0px 0px 2px rgba(166, 166, 166, 0.4) inset, 0px 1px 2px 0px rgba(15, 15, 15, 0.15),
+      0px 1px 3px -1px rgba(5, 5, 5, 0.08);
+    &:hover {
+      background: var(--Neutral-700);
+    }
+  }
+
+  .standard.outline {
+    background: #fff;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.22) inset, 0px -1px 0px 0px rgba(15, 15, 15, 0.15) inset,
+      0px 1px 2px -0.5px rgba(5, 5, 5, 0.08);
+    &:hover {
+      background: var(--Neutral-50);
+    }
+  }
+
+  .standard.plain {
+  }
+
+  /* Disabled Button */
+  .filled.disabled {
+    color: #a6a6a6;
+    background: var(--Neutral-100, #ebebeb);
+    box-shadow: 0px 0px 0px 1px rgba(15, 15, 15, 0.15) inset;
+  }
+  .outline.disabled {
+    color: #c7c7c7;
+    background: var(--Neutral-White, #fff);
+    box-shadow: 0px 0px 0px 1px rgba(15, 15, 15, 0.15) inset;
+  }
 `;
 
-export const ButtonContainer = styled.div`
-  all: unset;
-  width: 120px;
-  height: 22px;
-  border-radius: 6px;
-  padding: 9px 16px 9px 12px;
-  justify-content: center;
-  align-items: center;
-  display: inline-flex;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  // font-family: "Mona Sans", sans-serif;
-  line-height: 22px;
-  text-align: center;
-  font-feature-settings: "ss01" on, "salt" on;
-  /* Mona sans/Text sm/14px:Medium */
-
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 22px; /* 157.143% */
-  flex-shrink: 0;
-  transition: all 200ms cubic-bezier(0.17, 0.67, 0.83, 0.67);
-
-  flex-direction: ${(props: ButtonProps) => {
-    if (props.direction === "right") {
-      return "row";
-    } else if (props.direction === "left") {
-      return "row-reverse";
-    }
-  }};
-
-  svg path {
-    fill: ${(props: ButtonProps) => {
-      switch (props.type) {
-        case "outline":
-          return "rgba(123, 123, 123, 1)";
-        case "tonal":
-          return "#656565";
-        case "standard":
-          return "#FFFFFF";
-        case "primary":
-          return "#FFFFFF";
-        case "brand-outline":
-          return "hsla(358, 88%, 71%, 1)";
-      }
-    }};
-  }
-
-  background: ${(props: ButtonProps) => {
-    switch (props.type) {
-      case "outline":
-        return "var(--button-outline-bg, Neutral/White)";
-      case "tonal":
-        return "var(--button-tonal-bg,#FEF6EE) ";
-      case "standard":
-        return "var(--button-standard-bg, #3D3D3D)";
-      case "primary":
-        return "var(--button-primary-bg, #DD3345)";
-      case "brand-outline":
-        return "hsla(0, 0%, 100%, 0.01)";
-    }
-  }};
-
-  color: ${(props: ButtonProps) => {
-    switch (props.type) {
-      case "outline":
-        return "var(--button-outline-color, #292929)";
-      case "tonal":
-        return "var(--button-tonal-color,#292929) ";
-      case "standard":
-        return "var(--button-standard-color, #FFFFFF)";
-      case "primary":
-        return "var(--button-primary-color, #FFFFFF)";
-      case "brand-outline":
-        return "hsla(354, 71%, 53%, 1)";
-    }
-  }};
-
-  box-shadow: ${(props: ButtonProps) => {
-    switch (props.type) {
-      case "outline":
-        return "0px 0px 0px 1px rgba(0, 0, 0, 0.22) inset, 0px -1px 0px 0px rgba(15, 15, 15, 0.15) inset, 0px 1px 2px -0.5px rgba(5, 5, 5, 0.08);";
-      case "tonal":
-        return "0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px #FFF inset, 0px 0px 0px 2px #FFF inset, 0px 1.5px 0px 0px rgba(0, 0, 0, 0.84);";
-      case "standard":
-        return "0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(166, 166, 166, 0.40) inset, 0px 0px 0px 2px rgba(166, 166, 166, 0.40) inset, 0px 1px 2px 0px rgba(15, 15, 15, 0.15), 0px 1px 3px -1px rgba(5, 5, 5, 0.08);";
-      case "primary":
-        return "0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(246, 118, 122, 0.50) inset, 0px 0px 0px 2px rgba(246, 118, 122, 0.50) inset, 0px 1.5px 0px 0px rgba(0, 0, 0, 0.84);";
-      case "brand-outline":
-        return "0px 0px 0px 1px rgba(243, 78, 95, 0.78) inset, 0px -1px 0px 0px rgba(73, 8, 19, 0.50) inset, 0px 1px 2px -0.5px rgba(73, 8, 19, 0.20);";
-    }
-  }};
-
-  &:hover:not(:disabled) {
-    transform: ${(props: ButtonProps) => {
-      switch (props.type) {
-        case "primary":
-        case "tonal":
-          return "translateY(1px)";
-      }
-    }};
-    box-shadow: ${(props: ButtonProps) => {
-      switch (props.type) {
-        case "primary":
-          return " 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px #ED464F inset;";
-        case "outline":
-          return " 0px 0px 0px 1px rgba(0, 0, 0, 0.22) inset, 0px -1px 0px 0px rgba(15, 15, 15, 0.15) inset, 0px 1px 2px -0.5px rgba(5, 5, 5, 0.08);";
-        case "standard":
-          return " 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(166, 166, 166, 0.40) inset, 0px 0px 0px 2px rgba(166, 166, 166, 0.40) inset, 0px 1px 2px 0px rgba(15, 15, 15, 0.15), 0px 1px 3px -1px rgba(5, 5, 5, 0.08);";
-        case "tonal":
-          return "0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px #FFF inset;";
-        case "brand-outline":
-          return "0px 0px 0px 1px rgba(243, 78, 95, 0.78) inset, 0px -1px 0px 0px rgba(73, 8, 19, 0.50) inset, 0px 1px 2px -0.5px rgba(73, 8, 19, 0.20);";
-      }
-    }};
-    background: ${(props: ButtonProps) => {
-      switch (props.type) {
-        case "primary":
-          return " #DD3345";
-        case "outline":
-          return "Neutral/50";
-        case "standard":
-          return " #525252";
-        case "tonal":
-          return "0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px #FFF inset;";
-        case "brand-outline":
-          return "#FEF3F2";
-      }
-    }};
-  }
-
-  &:focus:not(:disabled) {
-    box-shadow: ${(props: ButtonProps) => {
-      switch (props.type) {
-        case "outline":
-          return "0px 0px 0px 1px rgba(0, 0, 0, 0.22) inset, 0px -1px 0px 0px rgba(15, 15, 15, 0.15) inset, 0px 1px 2px -0.5px rgba(5, 5, 5, 0.08), 0px 0px 0px 2px #FFF, 0px 0px 0px 4px rgba(0, 0, 0, 0.84);";
-        case "primary":
-          return "0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 0px 0px 2px #FFF, 0px 0px 0px 4px rgba(0, 0, 0, 0.84);";
-        case "standard":
-          return "0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(166, 166, 166, 0.30) inset, 0px 0px 0px 2px rgba(166, 166, 166, 0.30) inset, 0px 0px 0px 2px #FFF, 0px 0px 0px 4px rgba(0, 0, 0, 0.84);";
-        case "tonal":
-          return "0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 0px 0px 2px #FFF, 0px 0px 0px 4px rgba(0, 0, 0, 0.84);";
-        case "brand-outline":
-          return "0px 0px 0px 1px rgba(243, 78, 95, 0.78) inset, 0px -1px 0px 0px rgba(73, 8, 19, 0.50) inset, 0px 1px 2px -0.5px rgba(5, 5, 5, 0.08), 0px 0px 0px 2px #FFF, 0px 0px 0px 4px rgba(0, 0, 0, 0.84);";
-      }
-    }};
-  }
-
-  &:disabled {
-    color: ${(props: ButtonProps) => {
-      switch (props.type) {
-        case "outline":
-          return "hsla(0, 0%, 78%, 1)"; // Adjust color value
-        case "standard":
-          return "hsla(0, 0%, 65%, 1)"; // Use CSS variable for color or specify a fallback
-        default:
-          return "inherit"; // Fallback to default color
-      }
-    }};
-
-    box-shadow: ${(props: ButtonProps) => {
-      switch (props.type) {
-        case "outline":
-          return "0px 0px 0px 1px rgba(15, 15, 15, 0.15) inset;"; // Adjust box-shadow value
-        case "standard":
-          return "0px 0px 0px 1px rgba(15, 15, 15, 0.15) inset;"; // Adjust box-shadow value
-        default:
-          return "none"; // No box-shadow for other types
-      }
-    }};
-    background: ${(props: ButtonProps) => {
-      switch (props.type) {
-        case "outline":
-          return "var(--button-outline-bg-disabled, #fff)"; // Use CSS variable for background or specify a fallback
-        case "standard":
-          return "var(--button-standard-bg-disabled, #EBEBEB)"; // Use CSS variable for background or specify a fallback
-        default:
-          return "inherit"; // Fallback to default background
-      }
-    }};
-  }
+export const Icon = styled.img`
+  width: 16px;
 `;

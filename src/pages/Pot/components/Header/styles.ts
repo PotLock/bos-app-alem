@@ -69,7 +69,6 @@ export const ButtonsWrapper = styled.div`
   a,
   button {
     width: 180px;
-    padding: 16px;
   }
   @media only screen and (max-width: 480px) {
     flex-direction: column;

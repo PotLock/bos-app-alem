@@ -1,11 +1,10 @@
-import { Big, RouteLink, Social, State, context, useContext, useEffect, useMemo, useParams, useState } from "alem";
+import { Big, RouteLink, Social, context, useEffect, useMemo, useParams, useState } from "alem";
 import CardSkeleton from "../../pages/Projects/components/CardSkeleton";
 import {
   Amount,
   AmountDescriptor,
   BackgroundImageContainer,
   CardContainer,
-  DonationButton,
   DonationsInfoContainer,
   DonationsInfoItem,
   HeaderContainer,
@@ -29,6 +28,7 @@ import yoctosToNear from "@app/utils/yoctosToNear";
 import Image from "../mob.near/Image";
 import _address from "@app/utils/_address";
 import { useDonationModal } from "@app/hooks/useDonationModal";
+import Button from "../Button";
 
 const Card = (props: any) => {
   const { payoutDetails, allowDonate: _allowDonate } = props;
@@ -188,7 +188,8 @@ const Card = (props: any) => {
               </DonationsInfoItem>
             )}
             {allowDonate && context.accountId && (
-              <DonationButton
+              <Button
+                varient="tonal"
                 onClick={(e) => {
                   e.preventDefault();
                   setDonationModalProps({
@@ -198,7 +199,7 @@ const Card = (props: any) => {
                 disabled={!context.accountId}
               >
                 Donate
-              </DonationButton>
+              </Button>
             )}
           </DonationsInfoContainer>
           {payoutDetails && (
