@@ -1,14 +1,14 @@
 import { Social, context, fetch, props, useMemo, useParams, useState } from "alem";
-import getProjectByProjectId from "../../services/getProjectByProjectId";
-import PotFactorySDK from "../../SDK/potfactory";
-import { Wrapper } from "./styles";
-import BannerSkeleton from "./components/BannerSkeleton";
-import ProjectBanner from "./components/ProjectBanner/ProjectBanner";
-import Body from "../Profile/components/Body/Body";
-import ProjectOptions from "./utils/ProjectOptions";
+import DonateSDK from "@app/SDK/donate";
 import ListsSDK from "@app/SDK/lists";
 import PotSDK from "@app/SDK/pot";
-import DonateSDK from "@app/SDK/donate";
+import PotFactorySDK from "../../SDK/potfactory";
+import getProjectByProjectId from "../../services/getProjectByProjectId";
+import Body from "../Profile/components/Body/Body";
+import BannerSkeleton from "./components/BannerSkeleton";
+import ProjectBanner from "./components/ProjectBanner/ProjectBanner";
+import { Wrapper } from "./styles";
+import ProjectOptions from "./utils/ProjectOptions";
 
 const ProjectPage = () => {
   const { projectId } = useParams();
@@ -102,9 +102,6 @@ const ProjectPage = () => {
   const profile = Social.getr(`${projectId}/profile`);
 
   if (project === null) return <BannerSkeleton />;
-  if (project == undefined) {
-    return <div style={{ marginTop: "1rem", fontSize: "1.5rem" }}>Project not found</div>;
-  }
 
   const { nav } = useParams();
 
