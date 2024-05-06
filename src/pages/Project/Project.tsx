@@ -107,11 +107,6 @@ const ProjectPage = () => {
     return allDonations;
   }, [matchingRoundDonations, directDonations, potPayouts]);
 
-  console.log("Project - Render!");
-  console.log("Pot Payouts:", potPayouts);
-
-  // return <p>oi</p>;
-
   return (
     <Wrapper>
       {registration.status !== "Approved" && <ProjectBanner registration={registration} />}
