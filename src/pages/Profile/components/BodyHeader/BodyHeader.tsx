@@ -72,19 +72,18 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
             </AccountInfoContainer>
             {canEdit && (
               <Button
-                type="secondary"
-                text="Edit profile"
+                varient="tonal"
                 style={{ marginLeft: "auto" }}
                 href={hrefWithParams(`?tab=editproject&projectId=${projectId}`)}
-              />
+              >
+                edit profile
+              </Button>
             )}
             {accountId === context.accountId && !projectId && (
-              <Button
-                type="secondary"
-                text="Edit profile"
-                style={{ marginLeft: "auto" }}
-                href={hrefWithParams(`?tab=editprofile`)}
-              />
+              <Button varient="tonal" style={{ marginLeft: "auto" }} href={hrefWithParams(`?tab=editprofile`)}>
+                {" "}
+                Edit profile
+              </Button>
             )}
           </NameContainer>
           <ProfileTags projectId={projectId} accountId={accountId} />

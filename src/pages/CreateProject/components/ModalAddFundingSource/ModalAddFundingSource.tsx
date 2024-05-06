@@ -1,10 +1,10 @@
 import { State, state, useEffect } from "alem";
-import { CloseIcon, Icon, ModalBody, ModalHeader, ModalHeaderText, Row } from "./styles";
-import ModalOverlay from "@app/modals/ModalOverlay";
-import Text from "@app/components/Inputs/Text/Text";
-import DateInput from "@app/components/Inputs/Date/Date";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import Button from "@app/components/Button";
+import DateInput from "@app/components/Inputs/Date/Date";
+import Text from "@app/components/Inputs/Text/Text";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ModalOverlay from "@app/modals/ModalOverlay";
+import { CloseIcon, Icon, ModalBody, ModalHeader, ModalHeaderText, Row } from "./styles";
 
 type Props = {
   fundingSourceIndex: number;
@@ -34,6 +34,40 @@ const ModalAddFundingSource = (props: any) => {
   useEffect(() => {
     State.update(initalState);
   }, [fundingSources, fundingSourceIndex]);
+
+  const isDisabled =
+    !state.investorName ||
+    !!state.investorNameError ||
+    !!state.dateError ||
+    !state.description ||
+    !!state.descriptionError ||
+    !state.denomination ||
+    !!state.denominationError ||
+    !state.amountReceived ||
+    !!state.amountReceivedError;
+
+  const handleAddingSrc = () => {
+    const fundingSource = {
+      investorName: state.investorName,
+      date: state.date,
+      description: state.description,
+      denomination: state.denomination,
+      amountReceived: state.amountReceived,
+    };
+    State.update({
+      investorName: "",
+      investorNameError: "",
+      date: "",
+      dateError: "",
+      description: "",
+      descriptionError: "",
+      denomination: "",
+      denominationError: "",
+      amountReceived: "",
+      amountReceivedError: "",
+    });
+    handleAddFundingSource(fundingSource);
+  };
 
   return (
     <ModalOverlay overlayStyle={onClose}>
@@ -148,44 +182,9 @@ const ModalAddFundingSource = (props: any) => {
         />
 
         <Row style={{ width: "100%", justifyContent: "flex-end" }}>
-          <Button
-            {...{
-              type: "primary",
-              text: "Add Funding Source",
-              disabled:
-                !state.investorName ||
-                !!state.investorNameError ||
-                !!state.dateError ||
-                !state.description ||
-                !!state.descriptionError ||
-                !state.denomination ||
-                !!state.denominationError ||
-                !state.amountReceived ||
-                !!state.amountReceivedError,
-              onClick: () => {
-                const fundingSource = {
-                  investorName: state.investorName,
-                  date: state.date,
-                  description: state.description,
-                  denomination: state.denomination,
-                  amountReceived: state.amountReceived,
-                };
-                State.update({
-                  investorName: "",
-                  investorNameError: "",
-                  date: "",
-                  dateError: "",
-                  description: "",
-                  descriptionError: "",
-                  denomination: "",
-                  denominationError: "",
-                  amountReceived: "",
-                  amountReceivedError: "",
-                });
-                handleAddFundingSource(fundingSource);
-              },
-            }}
-          />
+          <Button isDisabled={isDisabled} onClick={handleAddingSrc}>
+            Add Funding Source
+          </Button>
         </Row>
       </ModalBody>
     </ModalOverlay>

@@ -1,19 +1,19 @@
-import { PotDetail } from "@app/types";
-import { useState, context, useParams, useEffect, Markdown, Near, State, useContext } from "alem";
-import constants from "@app/constants";
+import { useState, context, useParams, useEffect, Markdown, Near } from "alem";
 import PotSDK from "@app/SDK/pot";
-import { ButtonsWrapper, Container, Description, Fund, HeaderWrapper, Referral, Title } from "./styles";
+import Button from "@app/components/Button";
+import constants from "@app/constants";
+import { useDonationModal } from "@app/hooks/useDonationModal";
+import CopyIcon from "@app/pages/Project/components/CopyIcon";
+import { PotDetail } from "@app/types";
+import calculatePayouts from "@app/utils/calculatePayouts";
 import nearToUsd from "@app/utils/nearToUsd";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
-import Button from "@app/components/Button";
-import CopyIcon from "@app/pages/Project/components/CopyIcon";
-import PoolAllocationTable from "../PoolAllocationTable/PoolAllocationTable";
-import NewApplicationModal from "../NewApplicationModal/NewApplicationModal";
-import FundModal from "../FundModal/FundModal";
 import ChallengeModal from "../ChallengeModal/ChallengeModal";
-import calculatePayouts from "@app/utils/calculatePayouts";
-import { useDonationModal } from "@app/hooks/useDonationModal";
+import FundModal from "../FundModal/FundModal";
+import NewApplicationModal from "../NewApplicationModal/NewApplicationModal";
+import PoolAllocationTable from "../PoolAllocationTable/PoolAllocationTable";
+import { ButtonsWrapper, Container, Description, Fund, HeaderWrapper, Referral, Title } from "./styles";
 
 const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonations: any }) => {
   const {
@@ -162,8 +162,6 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
         <ButtonsWrapper>
           {canDonate && (
             <Button
-              type="primary"
-              text={"Donate"}
               href={canDonate ? "" : NADA_BOT_URL}
               onClick={
                 canDonate
@@ -174,36 +172,32 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
               }
               target={canDonate ? "_self" : "_blank"}
               iconSrc={canDonate ? "" : NADABOT_ICON_URL}
-            />
+            >
+              Donate
+            </Button>
           )}
           {now < public_round_end_ms && (
-            <Button type="secondary" text="Fund matching pool" onClick={() => setIsMatchingPoolModalOpen(true)} />
+            <Button onClick={() => setIsMatchingPoolModalOpen(true)} varient="tonal">
+              Fund matching pool
+            </Button>
           )}
           {canApply && (
             <Button
-              type={registrationApproved || projectNotRegistered ? "primary" : "tertiary"}
-              text={registryStatus && !registrationApproved ? `Project Registration ${registryStatus}` : "Apply to pot"}
+              varient={registrationApproved || projectNotRegistered ? "filled" : "outline"}
               style={{ marginRight: "24px" }}
-              disabled={registryStatus && !registrationApproved}
+              isDisabled={registryStatus && !registrationApproved}
               onClick={() => setIsApplicationModalOpen(true)}
-            />
+            >
+              {registryStatus && !registrationApproved ? `Project Registration ${registryStatus}` : "Apply to pot"}
+            </Button>
           )}
           {now > public_round_end_ms && now < cooldown_end_ms && (
-            <Button
-              type="secondary"
-              text={existingChallengeForUser ? "Update challenge" : "Challenge payouts"}
-              onClick={() => setShowChallengePayoutsModal(true)}
-            />
+            <Button varient="tonal" onClick={() => setShowChallengePayoutsModal(true)}>
+              {existingChallengeForUser ? "Update challenge" : "Challenge payouts"}
+            </Button>
           )}
-          {canPayoutsBeSet && (
-            <Button
-              {...{
-                text: "Set Payouts",
-                onClick: handleSetPayouts,
-              }}
-            />
-          )}
-          {canPayoutsBeProcessed && <Button type="primary" text="Process Payouts" onClick={handleProcessPayouts} />}
+          {canPayoutsBeSet && <Button onClick={handleSetPayouts}> Set Payouts </Button>}
+          {canPayoutsBeProcessed && <Button onClick={handleProcessPayouts}>Process Payouts</Button>}
         </ButtonsWrapper>
         <Referral>
           <CopyIcon textToCopy={potLink} />

@@ -179,20 +179,21 @@ const CreateForm = (props: { edit: boolean }) => {
           <ButtonsContainer>
             <Button
               {...{
-                type: "primary",
-                text: "View your project",
-                disabled: false,
+                isDisabled: false,
                 href: hrefWithParams(`?tab=project&projectId=${registeredProject?.id || context.accountId}`),
               }}
-            />
+            >
+              View your project
+            </Button>
             <Button
               {...{
-                type: "secondary",
-                text: "View all projects",
-                disabled: false,
+                varient: "tonal",
+                isDisabled: false,
                 href: hrefWithParams(`?tab=projects`),
               }}
-            />
+            >
+              View all projects
+            </Button>
           </ButtonsContainer>
         </>
       ) : (
@@ -532,16 +533,17 @@ const CreateForm = (props: { edit: boolean }) => {
                     })}
                     <Button
                       {...{
-                        type: "tertiary",
-                        text: "Add another repository",
-                        disabled: !state.githubRepos[state.githubRepos.length - 1][0],
+                        varient: "outline",
+                        isDisabled: !state.githubRepos[state.githubRepos.length - 1][0],
                         onClick: () => {
                           State.update({
                             githubRepos: [...state.githubRepos, [""]],
                           });
                         },
                       }}
-                    />
+                    >
+                      Add another repository
+                    </Button>
                   </FormSectionRightDiv>
                 </FormSectionContainer>
               </>
@@ -650,9 +652,8 @@ const CreateForm = (props: { edit: boolean }) => {
 
                     <Button
                       {...{
-                        type: "tertiary",
-                        text: "Add another contract",
-                        disabled:
+                        varient: "outline",
+                        isDisabled:
                           !state.smartContracts[state.smartContracts.length - 1][0] &&
                           !state.smartContracts[state.smartContracts.length - 1][1],
                         onClick: () => {
@@ -661,7 +662,9 @@ const CreateForm = (props: { edit: boolean }) => {
                           });
                         },
                       }}
-                    />
+                    >
+                      Add another contract
+                    </Button>
                   </FormSectionRightDiv>
                 </FormSectionContainer>
               </>
@@ -760,14 +763,13 @@ const CreateForm = (props: { edit: boolean }) => {
                 )}
                 <Button
                   {...{
-                    type: "tertiary",
-                    text: "Add funding source",
+                    varient: "outline",
                     style: {
                       width: "fit-content",
                       marginTop: "1rem",
                       marginBottom: "3rem",
                     },
-                    disabled: state.fundingSources.some(
+                    isDisabled: state.fundingSources.some(
                       (fs: any) => !fs.investorName || !fs.amountReceived || !fs.denomination || !fs.description,
                     ),
                     onClick: () => {
@@ -787,7 +789,9 @@ const CreateForm = (props: { edit: boolean }) => {
                       });
                     },
                   }}
-                />
+                >
+                  Add funding source
+                </Button>
               </>
             )}
             <FormDivider />
@@ -884,19 +888,19 @@ const CreateForm = (props: { edit: boolean }) => {
 
                 <Button
                   {...{
-                    type: "primary",
                     prefix: "https://",
-                    text: props.edit
-                      ? state.isDao
-                        ? "Add proposal to update project"
-                        : "Update your project"
-                      : state.isDao
-                      ? "Add proposal to create project"
-                      : "Create new project",
-                    disabled: isCreateProjectDisabled,
+                    isDisabled: isCreateProjectDisabled,
                     onClick: handleCreateOrUpdateProject,
                   }}
-                />
+                >
+                  {props.edit
+                    ? state.isDao
+                      ? "Add proposal to update project"
+                      : "Update your project"
+                    : state.isDao
+                    ? "Add proposal to create project"
+                    : "Create new project"}
+                </Button>
 
                 <Space
                   style={{

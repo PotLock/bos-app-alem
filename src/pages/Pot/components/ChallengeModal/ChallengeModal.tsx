@@ -1,9 +1,9 @@
-import { ModalBody, ModalFooter, ModalHeader } from "./styles";
 import { State, state, useEffect, useParams } from "alem";
 import PotSDK from "@app/SDK/pot";
-import ModalOverlay from "@app/modals/ModalOverlay";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import Button from "@app/components/Button";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ModalOverlay from "@app/modals/ModalOverlay";
+import { ModalBody, ModalFooter, ModalHeader } from "./styles";
 
 const ChallengeModal = ({ onClose, existingChallengeForUser }: any) => {
   const { potId } = useParams();
@@ -65,21 +65,12 @@ const ChallengeModal = ({ onClose, existingChallengeForUser }: any) => {
         />
       </ModalBody>
       <ModalFooter>
-        <Button
-          {...{
-            type: "tertiary",
-            text: "Cancel",
-            onClick: handleCancelChallenge,
-          }}
-        />
-        <Button
-          {...{
-            type: "primary",
-            text: "Submit Challenge",
-            disabled: !challengeReason || !!challengeReasonError,
-            onClick: handleSubmitChallenge,
-          }}
-        />
+        <Button varient="outline" onClick={handleCancelChallenge}>
+          Cancel
+        </Button>
+        <Button isDisabled={!challengeReason || !!challengeReasonError} onClick={handleSubmitChallenge}>
+          Submit Challenge
+        </Button>
       </ModalFooter>
     </ModalOverlay>
   );

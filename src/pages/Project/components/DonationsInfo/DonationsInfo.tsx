@@ -35,15 +35,15 @@ const DonationsInfo = ({ projectId, donations }: any) => {
       </div>
       <div className="btn-wrapper">
         <Button
-          type="primary"
-          text="Donate"
           onClick={() =>
             setDonationModalProps({
               projectId,
               potId,
             })
           }
-        />
+        >
+          Donate
+        </Button>
         <FollowButton accountId={projectId} />
       </div>
     </Container>

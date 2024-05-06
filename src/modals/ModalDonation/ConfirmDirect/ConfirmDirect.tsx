@@ -1,16 +1,16 @@
 import { Big, Near, props } from "alem";
-import PotSDK from "@app/SDK/pot";
 import DonateSDK from "@app/SDK/donate";
-import constants from "@app/constants";
-import { Amout, ButtonWrapper, Container, FeesRemoval, Label, NoteWrapper } from "./styles";
-import { Button } from "../FormDirect/styles";
-import nearToUsd from "@app/utils/nearToUsd";
-import ProfileImage from "@app/components/mob.near/ProfileImage";
-import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import PotSDK from "@app/SDK/pot";
 import NearIcon from "@app/assets/svgs/near-icon";
+import Button from "@app/components/Button";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
+import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ProfileImage from "@app/components/mob.near/ProfileImage";
+import constants from "@app/constants";
 import hrefWithParams from "@app/utils/hrefWithParams";
+import nearToUsd from "@app/utils/nearToUsd";
+import { Amout, ButtonWrapper, Container, FeesRemoval, Label, NoteWrapper } from "./styles";
 
 const ConfirmDirect = ({
   selectedDenomination,
@@ -368,7 +368,7 @@ const ConfirmDirect = ({
         </NoteWrapper>
       )}
       <ButtonWrapper>
-        <Button className="filled" onClick={handleDonate}>
+        <Button type="standard" varient="filled" onClick={handleDonate}>
           Confirm donation
         </Button>
       </ButtonWrapper>
