@@ -23,6 +23,7 @@ import setSocialData from "../../utils/setSocialData";
 import { projectDisabled } from "../../utils/socialData";
 import uploadFileUpdateState from "../../utils/uploadFileUpdateState";
 import AccountsStack from "../AccountsStack/AccountsStack";
+import DAOInProgress from "../DAOInProgress/DAOInProgress";
 import FormSectionLeft from "../FormSectionLeft/FormSectionLeft";
 import ModalAddFundingSource from "../ModalAddFundingSource/ModalAddFundingSource";
 import {
@@ -97,8 +98,6 @@ const CreateForm = (props: { edit: boolean }) => {
     return ListsSDK.getRegistration(null, state.isDao ? state.daoAddress : context.accountId);
   }, [state.isDao, state.daoAddress]);
 
-  console.log("registeredProject: ", registeredProject);
-
   const proposals: any = Near.view(state.daoAddress, "get_proposals", {
     from_index: 0,
     limit: 1000,
@@ -142,37 +141,7 @@ const CreateForm = (props: { edit: boolean }) => {
       {!state.socialDataFetched || !registrations ? (
         <div className="spinner-border text-secondary" role="status" />
       ) : proposalInProgress ? (
-        <Container
-          style={{
-            padding: "32px 16px",
-            justifyContent: "center",
-            alignItems: "center",
-            wordWrap: "break-word",
-          }}
-        >
-          <h1 style={{ textAlign: "center" }}>You have a DAO proposal in progress.</h1>
-          <h5 style={{ wordWrap: "break-word", textAlign: "center" }}>
-            Please come back once voting on your proposal has been completed.
-          </h5>
-          <div
-            style={{
-              fontStyle: "italic",
-              fontFamily: "sans-serif",
-              wordWrap: "break-word",
-              textAlign: "center",
-            }}
-          >
-            NB: This proposal consists of 3 steps (individual proposals): Register information on NEAR Social, register
-            on Potlock, and register on NEAR Horizon.
-          </div>
-          <a
-            target="_blank"
-            href={`https://near.org/sking.near/widget/DAO.Page?daoId=${state.daoAddress}&tab=proposal&proposalId=${proposalInProgress.id}`}
-            style={{ marginTop: "16px" }}
-          >
-            View DAO Proposal
-          </a>
-        </Container>
+        <DAOInProgress proposalInProgress={proposalInProgress} />
       ) : !props.edit && (registeredProject || state.registrationSuccess) ? (
         <>
           <h1 style={{ textAlign: "center" }}>You've successfully registered!</h1>
