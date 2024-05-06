@@ -1,6 +1,30 @@
+import { Big, Near, State, context, state, useEffect, useMemo, useParams } from "alem";
 import ListsSDK from "@app/SDK/lists";
+import DeleteIcon from "@app/assets/svgs/DeleteIcon";
+import Button from "@app/components/Button";
 import InfoSegment from "@app/components/InfoSegment/InfoSegment";
-import { Big, Near, State, asyncFetch, context, state, useEffect, useMemo, useParams } from "alem";
+import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import Select from "@app/components/Inputs/Select/Select";
+import SelectMultiple from "@app/components/Inputs/SelectMultiple/SelectMultiple";
+import Text from "@app/components/Inputs/Text/Text";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
+import BannerHeader from "@app/pages/Profile/components/BannerHeader/BannerHeader";
+import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import validateEVMAddress from "@app/utils/validateEVMAddress";
+import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
+import validateNearAddress from "@app/utils/validateNearAddress";
+import { CATEGORY_MAPPINGS } from "../../utils/categories";
+import { CHAIN_OPTIONS } from "../../utils/chainOptions";
+import DEFAULT_STATE from "../../utils/defaultState";
+import handleCreateOrUpdateProject from "../../utils/handleCreateOrUpdateProject";
+import setSocialData from "../../utils/setSocialData";
+import { projectDisabled } from "../../utils/socialData";
+import uploadFileUpdateState from "../../utils/uploadFileUpdateState";
+import AccountsStack from "../AccountsStack/AccountsStack";
+import FormSectionLeft from "../FormSectionLeft/FormSectionLeft";
+import ModalAddFundingSource from "../ModalAddFundingSource/ModalAddFundingSource";
 import {
   AddTeamMembers,
   ButtonsContainer,
@@ -8,50 +32,20 @@ import {
   FormBody,
   FormDivider,
   FormSectionContainer,
-  FormSectionDescription,
-  FormSectionIsRequired,
-  FormSectionLeftDiv,
   FormSectionRightDiv,
-  FormSectionTitle,
-  Icon,
   InputPrefix,
   LowerBannerContainer,
   LowerBannerContainerLeft,
   LowerBannerContainerRight,
   Row,
   Space,
-  SvgContainer,
   Table,
 } from "./styles";
-import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
-import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import validateNearAddress from "@app/utils/validateNearAddress";
-import Button from "@app/components/Button";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import BannerHeader from "@app/pages/Profile/components/BannerHeader/BannerHeader";
-import AccountsStack from "../AccountsStack/AccountsStack";
-import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
-import Text from "@app/components/Inputs/Text/Text";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
-import SelectMultiple from "@app/components/Inputs/SelectMultiple/SelectMultiple";
-import Select from "@app/components/Inputs/Select/Select";
-import validateEVMAddress from "@app/utils/validateEVMAddress";
-import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
-import ModalAddFundingSource from "../ModalAddFundingSource/ModalAddFundingSource";
-import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
 
 const CreateForm = (props: { edit: boolean }) => {
   const { projectId } = useParams();
 
-  const HORIZON_CONTRACT_ID = "nearhorizon.near";
-  const SOCIAL_CONTRACT_ID = "social.near";
-  const ownerId = "potlock.near";
   Big.PE = 100;
-  const FIFTY_TGAS = "50000000000000";
-  const THREE_HUNDRED_TGAS = "300000000000000";
-  const MIN_PROPOSAL_DEPOSIT_FALLBACK = "100000000000000000000000"; // 0.1N
-
-  const DEFAULT_BANNER_IMAGE_CID = "bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";
 
   if (!context.accountId) {
     return (
@@ -64,108 +58,9 @@ const CreateForm = (props: { edit: boolean }) => {
     );
   }
 
-  const existingHorizonProject = Near.view(HORIZON_CONTRACT_ID, "get_project", {
-    account_id: context.accountId,
-  });
-
   const registrations = ListsSDK.getRegistrations() || [];
 
-  State.init({
-    isDao: false,
-    daoAddressTemp: "", // used while input is focused
-    daoAddress: "", // set on input blur
-    daoAddressError: "",
-    existingSocialData: {},
-    backgroundImage: {
-      ipfs_cid: DEFAULT_BANNER_IMAGE_CID,
-    },
-    profileImage: "",
-    name: "",
-    nameError: "",
-    originalCategories: [], // to keep track of removals
-    categories: [],
-    categoriesError: "",
-    description: "",
-    descriptionError: "",
-    publicGoodReason: "",
-    publicGoodReasonError: "",
-    hasSmartContracts: false,
-    originalSmartContracts: [], // to keep track of removals
-    smartContracts: [["", ""]], // [chain, contractAddress]
-    originalGithubRepos: [], // to keep track of removals
-    githubRepos: [[""]],
-    hasReceivedFunding: false,
-    fundingSourceIndex: null,
-    originalFundingSources: [], // to keep track of removals
-    fundingSources: [],
-    website: "",
-    websiteError: "",
-    twitter: "",
-    twitterError: "",
-    telegram: "",
-    telegramError: "",
-    github: "",
-    githubError: "",
-    socialDataFetched: false,
-    socialDataIsFetching: false,
-    isMultiAccountModalOpen: false,
-    teamMember: "",
-    teamMembers: [],
-    nearAccountIdError: "",
-    registrationSuccess: false,
-    showAlert: false,
-    alertMessage: "",
-  });
-
-  const CATEGORY_MAPPINGS: any = {
-    SOCIAL_IMPACT: "Social Impact",
-    NON_PROFIT: "NonProfit",
-    CLIMATE: "Climate",
-    PUBLIC_GOOD: "Public Good",
-    DE_SCI: "DeSci",
-    OPEN_SOURCE: "Open Source",
-    COMMUNITY: "Community",
-    EDUCATION: "Education",
-    _deprecated: {
-      "social-impact": "SOCIAL_IMPACT",
-      "non-profit": "NON_PROFIT",
-      climate: "CLIMATE",
-      "public-good": "PUBLIC_GOOD",
-      "de-sci": "DE_SCI",
-      "open-source": "OPEN_SOURCE",
-      community: "COMMUNITY",
-      education: "EDUCATION",
-    },
-  };
-
-  const CHAIN_OPTIONS: any = {
-    NEAR: { isEVM: false },
-    Solana: { isEVM: false },
-    Ethereum: { isEVM: true },
-    Polygon: { isEVM: true },
-    Avalanche: { isEVM: true },
-    Optimism: { isEVM: true },
-    Arbitrum: { isEVM: true },
-    BNB: { isEVM: true },
-    Sui: { isEVM: false },
-    Aptos: { isEVM: false },
-    Polkadot: { isEVM: false },
-    Stellar: { isEVM: false },
-    ZkSync: { isEVM: false }, // Note: ZkSync aims for EVM compatibility but might not fully be considered as traditional EVM at the time of writing.
-    Celo: { isEVM: true },
-    Aurora: { isEVM: true },
-    Injective: { isEVM: true },
-    Base: { isEVM: false },
-    Manta: { isEVM: false }, // Listed twice in the original list; included once here.
-    Fantom: { isEVM: true },
-    ZkEVM: { isEVM: true }, // Considering the name, assuming it aims for EVM compatibility.
-    Flow: { isEVM: false },
-    Tron: { isEVM: true },
-    MultiverseX: { isEVM: false }, // Formerly known as Elrond, not traditionally EVM but has some level of compatibility.
-    Scroll: { isEVM: true }, // Assuming EVM compatibility based on the context of ZkEVM.
-    Linea: { isEVM: true }, // Assuming non-EVM due to lack of information.
-    Metis: { isEVM: true },
-  };
+  State.init(DEFAULT_STATE);
 
   const accountId = projectId ? projectId : state.isDao ? state.daoAddress : context.accountId;
   const policy: any = Near.view(accountId, "get_policy", {});
@@ -176,134 +71,6 @@ const CreateForm = (props: { edit: boolean }) => {
       ? doesUserHaveDaoFunctionCallProposalPermissions(context.accountId, policy)
       : projectId === context.accountId;
 
-  // const userHasPermissions = useMemo(() => {
-  //   if (policy == undefined) return true;
-  //   if (policy == null) return false;
-  //   return doesUserHaveDaoFunctionCallProposalPermissions(policy);
-  // }, [policy]);
-
-  //   const getImageUrlFromSocialImage = (image: any) => {
-  //     if (image.url) {
-  //       return image.url;
-  //     } else if (image.ipfs_cid) {
-  //       return IPFS_BASE_URL + image.ipfs_cid;
-  //     }
-  //   };
-
-  //   const Modal = ({ isOpen, onClose, children }: any) => {
-  //     if (!isOpen) return null;
-
-  //     return (
-  //       <ModalOverlay onClick={onClose}>
-  //         <ModalContent onClick={(e) => e.stopPropagation()}>{children}</ModalContent>
-  //       </ModalOverlay>
-  //     );
-  //   };
-
-  const setSocialData = (accountId: string, shouldSetTeamMembers?: any) => {
-    Near.asyncView("social.near", "get", { keys: [`${accountId}/**`] })
-      .then((socialData) => {
-        if (!socialData || !socialData[accountId].profile) {
-          State.update({
-            socialDataFetched: true,
-            name: "",
-            originalCategories: [],
-            categories: [],
-            description: "",
-            website: "",
-            twitter: "",
-            telegram: "",
-            github: "",
-            teamMembers: [],
-          });
-          return;
-        }
-        const profileData = socialData[accountId].profile;
-        const backgroundImage = profileData.backgroundImage;
-        const profileImage = profileData.image || "";
-        const description = profileData.description || "";
-        const publicGoodReason = profileData.plPublicGoodReason || "";
-        let categories = [];
-        if (profileData.plCategories) {
-          categories = JSON.parse(profileData.plCategories);
-        } else if (profileData.category) {
-          // old/deprecated version
-          if (typeof profileData.category == "string") {
-            const availableCategory = CATEGORY_MAPPINGS[CATEGORY_MAPPINGS._deprecated[profileData.category]];
-            if (availableCategory) {
-              categories.push(availableCategory);
-            }
-          }
-        }
-        const smartContracts = profileData.plSmartContracts
-          ? Object.entries(JSON.parse(profileData.plSmartContracts)).reduce(
-              (accumulator: any, [chain, contracts]: any) => {
-                // Iterate over each contract address in the current chain
-                const contractsForChain = Object.keys(contracts).map((contractAddress) => {
-                  return [chain, contractAddress]; // Create an array with the chain and contract address
-                });
-
-                return accumulator.concat(contractsForChain); // Add the arrays for this chain to the accumulator
-              },
-              [],
-            )
-          : [];
-        const hasSmartContracts = smartContracts.length > 0;
-        smartContracts.push(["", ""]); // Add an empty string to the end of the array to allow for adding new contracts
-
-        const githubRepos = profileData.plGithubRepos
-          ? JSON.parse(profileData.plGithubRepos).map((repo: any) => [repo])
-          : [];
-        const originalGithubRepos = githubRepos;
-        githubRepos.push([""]); // Add an empty string to the end of the array to allow for adding new repos
-
-        const fundingSources = profileData.plFundingSources ? JSON.parse(profileData.plFundingSources) : [];
-        const hasReceivedFunding = fundingSources.length > 0;
-
-        const linktree = profileData.linktree || {};
-        const twitter = linktree.twitter || "";
-        const telegram = linktree.telegram || "";
-        const github = linktree.github || "";
-        const website = linktree.website || "";
-        const team = getTeamMembersFromSocialProfileData(profileData);
-        // update state
-        const stateUpdates: any = {
-          existingSocialData: socialData[accountId],
-          backgroundImage,
-          profileImage,
-          name: profileData?.name || "",
-          description,
-          publicGoodReason,
-          originalCategories: categories,
-          categories,
-          hasSmartContracts,
-          originalSmartContracts: smartContracts,
-          smartContracts,
-          originalGithubRepos,
-          githubRepos,
-          hasReceivedFunding,
-          originalFundingSources: fundingSources,
-          fundingSources,
-          twitter,
-          telegram,
-          github,
-          website,
-          socialDataFetched: true,
-        };
-        if (backgroundImage) {
-          stateUpdates.backgroundImage = backgroundImage;
-        }
-        if (shouldSetTeamMembers) {
-          stateUpdates.teamMembers = team;
-        }
-        State.update(stateUpdates);
-      })
-      .catch((e) => {
-        console.log("error getting social data: ", e);
-        State.update({ socialDataFetched: true });
-      });
-  };
-
   useEffect(() => {
     if (state.isDao && state.daoAddress) {
       setSocialData(state.daoAddress, true);
@@ -312,240 +79,7 @@ const CreateForm = (props: { edit: boolean }) => {
     }
   }, [state.socialDataFetched, state.isDao, state.daoAddress, context.accountId]);
 
-  const isCreateProjectDisabled =
-    !state.profileImage ||
-    !state.backgroundImage ||
-    state.daoAddressError ||
-    !state.name ||
-    state.nameError ||
-    !state.description ||
-    state.descriptionError ||
-    !state.publicGoodReason ||
-    state.publicGoodReasonError ||
-    (state.categories.includes(CATEGORY_MAPPINGS.OPEN_SOURCE) &&
-      !state.githubRepos.filter((val: any) => val[0]).length) ||
-    (state.hasSmartContracts && !state.smartContracts.filter((val: any) => val[0]).length) ||
-    (state.hasReceivedFunding && !state.fundingSources.length) ||
-    !state.categories.length ||
-    state.categoriesError;
-
-  const deepObjectDiff = (objOriginal: any, objUpdated: any) => {
-    if (!objUpdated) objUpdated = {};
-    let diff = {};
-
-    function findDiff(original: any, updated: any, diffObj: any) {
-      Object.keys(updated).forEach((key) => {
-        const updatedValue = updated[key];
-        const originalValue = original ? original[key] : undefined;
-
-        // If both values are objects, recurse.
-        if (
-          typeof updatedValue === "object" &&
-          updatedValue !== null &&
-          (originalValue === undefined || (typeof originalValue === "object" && originalValue !== null))
-        ) {
-          const nestedDiff = originalValue ? findDiff(originalValue, updatedValue, {}) : updatedValue;
-          if (Object.keys(nestedDiff).length > 0) {
-            diffObj[key] = nestedDiff;
-          }
-        } else if (updatedValue !== originalValue) {
-          // Direct comparison for string values.
-          diffObj[key] = updatedValue;
-        }
-      });
-
-      return diffObj;
-    }
-
-    return findDiff(objOriginal, objUpdated, diff);
-  };
-
-  const handleCreateOrUpdateProject = (e: any) => {
-    if (isCreateProjectDisabled) return;
-    const daoAddressValid = state.isDao ? validateNearAddress(state.daoAddress) : true;
-    if (!daoAddressValid) {
-      State.update({
-        daoAddressError: "Invalid NEAR account ID",
-      });
-      return;
-    }
-
-    // format smart contracts
-    const formattedSmartContracts = state.smartContracts.reduce((accumulator: any, [chain, contractAddress]: any) => {
-      if (!chain || !contractAddress) return accumulator; // Skip empty entries
-      // If the chain doesn't exist in the accumulator, initialize it with an empty object
-      if (!accumulator[chain]) {
-        accumulator[chain] = {};
-      }
-      // Add the contractAddress with an empty string as its value under the chain
-      accumulator[chain][contractAddress] = "";
-      return accumulator; // Return the updated accumulator for the next iteration
-    }, {});
-
-    const socialData: any = {
-      // basic profile details
-      profile: {
-        name: state.name,
-        plCategories: JSON.stringify(state.categories),
-        description: state.description,
-        plPublicGoodReason: state.publicGoodReason,
-        plSmartContracts: state.hasSmartContracts ? JSON.stringify(formattedSmartContracts) : null,
-        plGithubRepos: JSON.stringify(state.githubRepos.map((repo: any) => repo[0]).filter((val: any) => val)),
-        plFundingSources: JSON.stringify(state.fundingSources),
-        linktree: {
-          website: state.website,
-          twitter: state.twitter,
-          telegram: state.telegram,
-          github: state.github,
-        },
-        plTeam: JSON.stringify(state.teamMembers),
-      },
-      // follow & star Potlock
-      index: {
-        star: {
-          key: {
-            type: "social",
-            path: `${ownerId}/widget/Index`,
-          },
-          value: {
-            type: "star",
-          },
-        },
-        notify: {
-          key: ownerId,
-          value: {
-            type: "star",
-            item: {
-              type: "social",
-              path: `${ownerId}/widget/Index`,
-            },
-          },
-        },
-      },
-      graph: {
-        star: {
-          [ownerId]: {
-            widget: {
-              Index: "",
-            },
-          },
-        },
-        follow: {
-          [ownerId]: "",
-        },
-      },
-    };
-
-    if (state.backgroundImage) {
-      socialData.profile.backgroundImage = state.backgroundImage;
-    }
-    if (state.profileImage) {
-      socialData.profile.image = state.profileImage;
-    }
-
-    const diff = deepObjectDiff(state.existingSocialData, socialData);
-
-    const socialArgs = {
-      data: {
-        [accountId]: diff,
-      },
-    };
-
-    const potlockRegistryArgs = {
-      list_id: 1, // hardcoding to potlock registry list for now
-    };
-    const horizonArgs = { account_id: state.isDao ? state.daoAddress : context.accountId };
-
-    // first, we have to get the account from social.near to see if it exists. If it doesn't, we need to add 0.1N to the deposit
-    Near.asyncView(SOCIAL_CONTRACT_ID, "get_account", {
-      account_id: state.isDao ? state.daoAddress : context.accountId,
-    }).then((account) => {
-      const socialTransaction: any = {
-        contractName: SOCIAL_CONTRACT_ID,
-        methodName: "set",
-        args: socialArgs,
-      };
-      let depositFloat = JSON.stringify(socialArgs).length * 0.00015;
-      if (!account) {
-        depositFloat += 0.1;
-      }
-      socialTransaction.deposit = Big(depositFloat).mul(Big(10).pow(24));
-
-      // instantiate transactions array that we will be passing to Near.call()
-      let transactions = [socialTransaction];
-
-      // if this is a creation action, we need to add the registry and horizon transactions
-      if (!props.edit) {
-        transactions.push(
-          // register project on potlock
-          {
-            contractName: ListsSDK.getContractId(),
-            methodName: "register_batch",
-            deposit: Big(0.05).mul(Big(10).pow(24)),
-            args: potlockRegistryArgs,
-          },
-        );
-        if (!existingHorizonProject) {
-          transactions.push(
-            // register on NEAR Horizon
-            {
-              contractName: HORIZON_CONTRACT_ID,
-              methodName: "add_project",
-              args: horizonArgs,
-            },
-          );
-        }
-      }
-
-      // if it is a DAO, we need to convert transactions to DAO function call proposals
-      if (state.isDao) {
-        const clonedTransactions = JSON.parse(JSON.stringify(transactions));
-        transactions = clonedTransactions.map((tx: any) => {
-          const action = {
-            method_name: tx.methodName,
-            gas: FIFTY_TGAS,
-            deposit: tx.deposit ? tx.deposit.toString() : "0",
-            args: Buffer.from(JSON.stringify(tx.args), "utf-8").toString("base64"),
-          };
-          return {
-            ...tx,
-            contractName: state.daoAddress,
-            methodName: "add_proposal",
-            args: {
-              proposal: {
-                description: props.edit
-                  ? "Update project on Potlock (via NEAR Social)"
-                  : "Create project on Potlock (3 steps: Register information on NEAR Social, register on Potlock, and register on NEAR Horizon)",
-                kind: {
-                  FunctionCall: {
-                    receiver_id: tx.contractName,
-                    actions: [action],
-                  },
-                },
-              },
-            },
-            deposit: policy.proposal_bond || MIN_PROPOSAL_DEPOSIT_FALLBACK,
-            gas: THREE_HUNDRED_TGAS,
-          };
-        });
-      }
-      Near.call(transactions);
-      // NB: we won't get here if user used a web wallet, as it will redirect to the wallet
-      // <---- EXTENSION WALLET HANDLING ---->
-      // poll for updates
-      const pollIntervalMs = 1000;
-      // const totalPollTimeMs = 60000; // consider adding in to make sure interval doesn't run indefinitely
-      const pollId = setInterval(() => {
-        // This is an async request, not converting to SDK yet
-        ListsSDK.asyncGetRegistration(null, context.accountId).then((_project: any) => {
-          if (_project) {
-            clearInterval(pollId);
-            State.update({ registrationSuccess: true });
-          }
-        });
-      }, pollIntervalMs);
-    });
-  };
+  const isCreateProjectDisabled = projectDisabled();
 
   if (projectId) {
     Near.asyncView(projectId, "get_policy", {}).then((policy) => {
@@ -599,59 +133,9 @@ const CreateForm = (props: { edit: boolean }) => {
     }
   };
 
-  const FormSectionLeft = (title: any, description: any, isRequired: any) => {
-    return (
-      <FormSectionLeftDiv>
-        <FormSectionTitle>{title}</FormSectionTitle>
-        <FormSectionDescription>{description}</FormSectionDescription>
-        <FormSectionIsRequired
-          style={{
-            color: isRequired ? "#DD5633" : "#7B7B7B",
-          }}
-        >
-          {isRequired ? "Required" : "Optional"}
-          {isRequired && (
-            <SvgContainer style={{ top: -6, left: -26 }}>
-              <svg width="117" height="31" viewBox="0 0 117 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M81.8 3.40116C82.247 3.1908 83.0709 3.13488 82.6 2.60116C81.0461 0.840105 83.0819 0.798833 78.6667 1.22338C65.6302 2.47689 52.5192 4.47997 39.6667 6.95672C31.3106 8.56697 19.0395 10.1936 12.7333 17.09C3.95785 26.6869 29.2286 29.1656 32.9333 29.3567C53.953 30.4413 75.9765 28.9386 96.5111 24.1789C99.8286 23.41 122.546 18.5335 112.733 11.5345C107.621 7.88815 100.796 6.47335 94.7333 5.75672C77.7504 3.74928 60.1141 5.22649 43.2222 7.35671C28.8721 9.16641 14.4138 11.8506 1 17.4012"
-                  stroke="#2E2E2E"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </SvgContainer>
-          )}
-        </FormSectionIsRequired>
-      </FormSectionLeftDiv>
-    );
-  };
-
-  const DeleteIcon = (props: any) => (
-    <Icon {...props} viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M2.5 14C2.0875 14 1.73437 13.8531 1.44062 13.5594C1.14687 13.2656 1 12.9125 1 12.5V2.5H0V1H4V0H8V1H12V2.5H11V12.491C11 12.9137 10.8531 13.2708 10.5594 13.5625C10.2656 13.8542 9.9125 14 9.5 14H2.5ZM9.5 2.5H2.5V12.5H9.5V2.5ZM4 11H5.5V4H4V11ZM6.5 11H8V4H6.5V11Z"
-        fill="#7B7B7B"
-      />
-    </Icon>
-  );
-
-  // if (props.edit && (!registeredProject || !userHasPermissions)) { // TODO: ADD THIS BACK IN
   if (props.edit && !userHasPermissions) {
     return <h3 style={{ textAlign: "center", paddingTop: "32px" }}>Unauthorized</h3>;
   }
-
-  const uploadFileUpdateState = (body: any, callback: any) => {
-    asyncFetch("https://ipfs.near.social/add", {
-      method: "POST",
-      headers: { Accept: "application/json" },
-      body,
-    }).then(callback);
-  };
-
-  // console.log("state in create form: ", state);
-
-  console.log(state.fundingSources);
 
   return (
     <Container>
@@ -768,9 +252,9 @@ const CreateForm = (props: { edit: boolean }) => {
                   {...{
                     id: "masterSelector",
                     checked: state.isDao,
-                    onClick: (e: any) => {
-                      State.update({ isDao: e.target.checked });
-                      if (!e.target.checked && context.accountId) {
+                    onClick: () => {
+                      State.update({ isDao: !state.isDao });
+                      if (!state.isDao && context.accountId) {
                         setSocialData(context.accountId);
                       } else {
                         if (state.daoAddress) {
@@ -1033,6 +517,7 @@ const CreateForm = (props: { edit: boolean }) => {
                           {state.githubRepos.length > 1 && (
                             <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
                               <DeleteIcon
+                                className="delete-icon"
                                 onClick={() => {
                                   const updatedRepos = state.githubRepos.filter((r: any, i: number) => i != index);
                                   State.update({
@@ -1147,6 +632,7 @@ const CreateForm = (props: { edit: boolean }) => {
                           {state.smartContracts.length > 1 && (
                             <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
                               <DeleteIcon
+                                className="delete-icon"
                                 onClick={() => {
                                   const updatedSmartContracts = state.smartContracts.filter(
                                     (sc: [string, string], i: number) => i != index,

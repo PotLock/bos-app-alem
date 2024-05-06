@@ -7,16 +7,40 @@ export const Container = styled.div`
   align-items: center;
 `;
 
-export const CheckBoxContent = styled.input`
-  width: 18px;
-  height: 18px;
-  padding: 0px;
-  appearance: checkbox;
+export const CheckBoxContent = styled.div`
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d9d9d9;
+  display: flex;
+  border-radius: 50%;
   cursor: pointer;
-  /* TODO: update background color when selected */
+  div {
+    width: 10px;
+    height: 10px;
+    background: transparent;
+    border-radius: 50%;
+    margin: auto;
+  }
+  &.active {
+    border-color: #dd3345;
+    div {
+      background: #dd3345;
+    }
+  }
+  &.disabled {
+    border-color: #a6a6a6;
+    pointer-events: none;
+    div {
+      background: #a6a6a6;
+    }
+  }
 `;
 
-export const Label = styled.label``;
+export const Label = styled.label`
+  &.disabled {
+    color: #a6a6a6;
+  }
+`;
 
 export const Error = styled.span`
   display: inline-block;

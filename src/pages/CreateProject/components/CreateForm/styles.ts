@@ -84,19 +84,21 @@ export const FormSectionContainer = styled.div`
   flex-direction: row;
   gap: 160px;
   margin: 48px 0 48px 0;
-
+  .delete-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    path {
+      transition: 300ms;
+    }
+    :hover path {
+      fill: #dd3345;
+    }
+  }
   @media screen and (max-width: 768px) {
     flex-direction: column;
     gap: 32px;
   }
-`;
-
-export const FormSectionLeftDiv = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  /* background-color: yellow; */
-  gap: 16px;
 `;
 
 export const FormSectionRightDiv = styled.div`
@@ -104,33 +106,6 @@ export const FormSectionRightDiv = styled.div`
   display: flex;
   flex-direction: column;
   /* background-color: lightblue; */
-`;
-
-export const FormSectionTitle = styled.div`
-  color: #2e2e2e;
-  font-size: 16;
-  font-weight: 600;
-  word-wrap: break-word;
-`;
-
-export const FormSectionDescription = styled.div`
-  color: #2e2e2e;
-  font-size: 16;
-  font-weight: 400;
-  word-wrap: break-word;
-`;
-
-export const FormSectionIsRequired = styled.div`
-  font-size: 16px;
-  font-weight: 400;
-  word-wrap: break-word;
-  position: relative;
-`;
-
-export const SvgContainer = styled.div`
-  position: absolute;
-  top: -6;
-  left: -26;
 `;
 
 export const ButtonsContainer = styled.div`
@@ -164,18 +139,6 @@ export const Row = styled.div`
   gap: 16px;
   align-items: flex-start;
   justify-content: center;
-`;
-
-export const Icon = styled.svg`
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  path {
-    transition: 300ms;
-  }
-  :hover path {
-    fill: #dd3345;
-  }
 `;
 
 export const FundingHeader = styled.div`

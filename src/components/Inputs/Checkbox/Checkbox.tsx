@@ -10,15 +10,16 @@ const CheckBox = (props: any) => {
   return (
     <Container style={containerStyle}>
       <CheckBoxContent
-        type="checkbox"
-        style={checkBoxStyle}
         id={id}
-        disabled={disabled}
-        checked={checked}
         onClick={onClick}
-      />
+        className={`${checked ? "active" : ""} ${disabled ? "disabled" : ""}`}
+        style={checkBoxStyle}
+      >
+        <div></div>
+      </CheckBoxContent>
+
       {props.label && (
-        <Label htmlFor={id} style={labelStyle}>
+        <Label htmlFor={id} style={labelStyle} className={`${disabled ? "disabled" : ""}`}>
           {props.label}
         </Label>
       )}
