@@ -1,10 +1,10 @@
 import { State, state, useEffect } from "alem";
-import { CloseIcon, Icon, ModalBody, ModalHeader, ModalHeaderText, Row } from "./styles";
-import ModalOverlay from "@app/modals/ModalOverlay";
-import Text from "@app/components/Inputs/Text/Text";
-import DateInput from "@app/components/Inputs/Date/Date";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import Button from "@app/components/Button";
+import DateInput from "@app/components/Inputs/Date/Date";
+import Text from "@app/components/Inputs/Text/Text";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ModalOverlay from "@app/modals/ModalOverlay";
+import { CloseIcon, Icon, ModalBody, ModalHeader, ModalHeaderText, Row } from "./styles";
 
 type Props = {
   fundingSourceIndex: number;
@@ -182,7 +182,7 @@ const ModalAddFundingSource = (props: any) => {
         />
 
         <Row style={{ width: "100%", justifyContent: "flex-end" }}>
-          <Button disabled={isDisabled} onClick={handleAddingSrc}>
+          <Button isDisabled={isDisabled} onClick={handleAddingSrc}>
             Add Funding Source
           </Button>
         </Row>

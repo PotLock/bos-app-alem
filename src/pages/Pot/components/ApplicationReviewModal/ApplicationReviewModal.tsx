@@ -1,9 +1,9 @@
-import ModalOverlay from "@app/modals/ModalOverlay";
 import { Near, State, state, useParams } from "alem";
-import { ModalBody, ModalFooter, ModalHeader } from "./styles";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import Button from "@app/components/Button";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import constants from "@app/constants";
+import ModalOverlay from "@app/modals/ModalOverlay";
+import { ModalBody, ModalFooter, ModalHeader } from "./styles";
 
 const ApplicationReviewModal = ({
   projectId,
@@ -91,7 +91,7 @@ const ApplicationReviewModal = ({
         <Button onClick={handleCancel} varient="outline">
           Cancel
         </Button>
-        <Button disabled={!reviewMessage || !!reviewMessageError} onClick={handleSubmit}>
+        <Button isDisabled={!reviewMessage || !!reviewMessageError} onClick={handleSubmit}>
           Submit
         </Button>
       </ModalFooter>

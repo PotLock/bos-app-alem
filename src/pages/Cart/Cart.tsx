@@ -1,3 +1,10 @@
+import { Near, State, context, state, useEffect, useMemo, useParams, useState } from "alem";
+import Button from "@app/components/Button";
+import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import { useCart } from "@app/hooks/useCart";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import CheckoutBreakdown from "./components/CheckoutBreakdown/CheckoutBreakdown";
+import CheckoutItem from "./components/CheckoutItem/CheckoutItem";
 import {
   ActionsContainer,
   ColumnLeft,
@@ -9,13 +16,6 @@ import {
   SuccessContainer,
   Title,
 } from "./styles";
-import Button from "@app/components/Button";
-import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import { Near, State, context, state, useEffect, useMemo, useParams, useState } from "alem";
-import CheckoutItem from "./components/CheckoutItem/CheckoutItem";
-import CheckoutBreakdown from "./components/CheckoutBreakdown/CheckoutBreakdown";
-import { useCart } from "@app/hooks/useCart";
 
 const Cart = () => {
   const { cart, removeItemsFromCart } = useCart();
@@ -159,7 +159,7 @@ const Cart = () => {
             <Button
               href={twitterIntent}
               target="_blank"
-              disabled={!twitterIntent}
+              isDisabled={!twitterIntent}
               style={{
                 width: "300px",
               }}

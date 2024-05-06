@@ -1,17 +1,17 @@
-import { PotDetail } from "@app/types";
-import { FeeText, Label, ModalTitle, Row, TextBold, UserChipLink } from "./styles";
 import { State, state, useParams, Big, Social, Near, context } from "alem";
-import yoctosToNear from "@app/utils/yoctosToNear";
-import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
-import _address from "@app/utils/_address";
-import constants from "@app/constants";
-import ModalOverlay from "@app/modals/ModalOverlay";
+import Button from "@app/components/Button";
 import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import Text from "@app/components/Inputs/Text/Text";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
-import Button from "@app/components/Button";
+import constants from "@app/constants";
+import ModalOverlay from "@app/modals/ModalOverlay";
+import { PotDetail } from "@app/types";
+import _address from "@app/utils/_address";
+import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
 import hrefWithParams from "@app/utils/hrefWithParams";
+import yoctosToNear from "@app/utils/yoctosToNear";
+import { FeeText, Label, ModalTitle, Row, TextBold, UserChipLink } from "./styles";
 
 type Props = {
   potDetail: PotDetail;
@@ -315,7 +315,7 @@ const FundModal = ({ potDetail, onClose }: Props) => {
         </FeeText>
       </Row>
       <Row style={{ justifyContent: "flex-end", marginTop: "12px" }}>
-        <Button disabled={disabled} onClick={disabled ? () => {} : handleMatchingPoolDonation}>
+        <Button isDisabled={disabled} onClick={handleMatchingPoolDonation}>
           {`${fundAsDao ? "Create proposal to contribute " : "Contribute"}${
             matchingPoolDonationAmountNear ? ` ${matchingPoolDonationAmountNear} ${base_currency.toUpperCase()}` : ""
           } to matching pool`}
