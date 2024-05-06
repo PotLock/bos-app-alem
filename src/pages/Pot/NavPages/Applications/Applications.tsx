@@ -6,7 +6,6 @@ import ProfileImage from "@app/components/mob.near/ProfileImage";
 import { PotDetail } from "@app/types";
 import _address from "@app/utils/_address";
 import daysAgo from "@app/utils/daysAgo";
-import daysUntil from "@app/utils/daysUntil";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import ApplicationReviewModal from "../../components/ApplicationReviewModal/ApplicationReviewModal";
 import APPLICATIONS_FILTERS_TAGS from "./APPLICATIONS_FILTERS_TAGS";
@@ -251,20 +250,15 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
                       {status !== "Approved" && (
                         <Button
                           {...{
-                            type: "secondary",
-                            text: "Approve",
+                            varient: "tonal",
                             onClick: () => handleApproveApplication(project_id),
                           }}
-                        />
+                        >
+                          Approve
+                        </Button>
                       )}
                       {status !== "Rejected" && (
-                        <Button
-                          {...{
-                            type: "primary",
-                            text: "Reject",
-                            onClick: () => handleRejectApplication(project_id),
-                          }}
-                        />
+                        <Button onClick={() => handleRejectApplication(project_id)}>Reject</Button>
                       )}
                     </>
                   )}

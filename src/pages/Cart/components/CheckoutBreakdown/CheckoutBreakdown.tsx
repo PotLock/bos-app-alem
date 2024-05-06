@@ -171,15 +171,15 @@ const CheckoutBreakdown = (props: any) => {
 
       <Button
         {...{
-          type: "primary",
-          text: `Process Donation`,
-          disabled: !Object.keys(cart).length || donationTooSmall || !context.accountId,
+          isDisabled: !Object.keys(cart).length || donationTooSmall || !context.accountId,
           onClick: handleDonate,
           style: {
             width: "100%",
           },
         }}
-      />
+      >
+        Process Donation
+      </Button>
 
       {donationTooSmall && (
         <ErrorText>Minimum required donation per project is {MIN_REQUIRED_DONATION_AMOUNT_PER_PROJECT} N</ErrorText>

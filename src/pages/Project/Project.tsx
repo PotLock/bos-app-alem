@@ -102,9 +102,6 @@ const ProjectPage = () => {
   const profile = Social.getr(`${projectId}/profile`);
 
   if (project === null) return <BannerSkeleton />;
-  if (project == undefined) {
-    return <div style={{ marginTop: "1rem", fontSize: "1.5rem" }}>Project not found</div>;
-  }
 
   const { nav } = useParams();
 

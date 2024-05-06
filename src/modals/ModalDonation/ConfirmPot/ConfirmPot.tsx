@@ -1,13 +1,13 @@
 import { Big, Near, Social, props } from "alem";
 import PotSDK from "@app/SDK/pot";
 import NearIcon from "@app/assets/svgs/near-icon";
+import Button from "@app/components/Button";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import _address from "@app/utils/_address";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import nearToUsd from "@app/utils/nearToUsd";
-import { Button } from "../FormDirect/styles";
 import {
   Amout,
   ButtonWrapper,
@@ -267,7 +267,7 @@ const ConfirmPot = ({
         </FeesRemoval>
       </ContentScrollable>
       <ButtonWrapper>
-        <Button className="filled" onClick={handleDonate}>
+        <Button type="standard" varient="filled" onClick={handleDonate}>
           Confirm donation
         </Button>
       </ButtonWrapper>

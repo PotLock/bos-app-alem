@@ -9,13 +9,13 @@ import ipfsUrlFromCid from "@app/utils/ipfsUrlFromCid";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import CardSkeleton from "../../pages/Projects/components/CardSkeleton";
+import Button from "../Button";
 import Image from "../mob.near/Image";
 import {
   Amount,
   AmountDescriptor,
   BackgroundImageContainer,
   CardContainer,
-  DonationButton,
   DonationsInfoContainer,
   DonationsInfoItem,
   HeaderContainer,
@@ -182,17 +182,18 @@ const Card = (props: any) => {
               </DonationsInfoItem>
             )}
             {allowDonate && context.accountId && (
-              <DonationButton
+              <Button
+                varient="tonal"
                 onClick={(e) => {
                   e.preventDefault();
                   setDonationModalProps({
                     projectId,
                   });
                 }}
-                disabled={!context.accountId}
+                isDisabled={!context.accountId}
               >
                 Donate
-              </DonationButton>
+              </Button>
             )}
           </DonationsInfoContainer>
           {payoutDetails && (

@@ -1,3 +1,10 @@
+import { Near, State, context, state, useEffect, useMemo, useParams, useState } from "alem";
+import Button from "@app/components/Button";
+import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import { useCart } from "@app/hooks/useCart";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import CheckoutBreakdown from "./components/CheckoutBreakdown/CheckoutBreakdown";
+import CheckoutItem from "./components/CheckoutItem/CheckoutItem";
 import {
   ActionsContainer,
   ColumnLeft,
@@ -9,13 +16,6 @@ import {
   SuccessContainer,
   Title,
 } from "./styles";
-import Button from "@app/components/Button";
-import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import { Near, State, context, state, useEffect, useMemo, useParams, useState } from "alem";
-import CheckoutItem from "./components/CheckoutItem/CheckoutItem";
-import CheckoutBreakdown from "./components/CheckoutBreakdown/CheckoutBreakdown";
-import { useCart } from "@app/hooks/useCart";
 
 const Cart = () => {
   const { cart, removeItemsFromCart } = useCart();
@@ -157,28 +157,28 @@ const Cart = () => {
           <Title>Thanks for donating!</Title>
           {twitterIntent && (
             <Button
-              {...{
-                href: twitterIntent,
-                target: "_blank",
-                type: "primary",
-                text: "Share to Twitter",
-                disabled: !twitterIntent,
-                style: {
-                  width: "300px",
-                },
+              href={twitterIntent}
+              target="_blank"
+              isDisabled={!twitterIntent}
+              style={{
+                width: "300px",
               }}
-            />
+            >
+              {" "}
+              Share to Twitter
+            </Button>
           )}
           <Button
             {...{
               href: hrefWithParams(`?tab=projects`),
-              type: twitterIntent ? "secondary" : "primary",
-              text: "Explore projects",
+              varient: twitterIntent ? "tonal" : "filled",
               style: {
                 width: "300px",
               },
             }}
-          />
+          >
+            Explore projects
+          </Button>
         </SuccessContainer>
       ) : (
         <>

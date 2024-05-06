@@ -1,6 +1,7 @@
 import { context } from "alem";
 import PotFactorySDK from "@app/SDK/potfactory";
 import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
+import Button from "@app/components/Button";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import { Container } from "./styles";
 
@@ -19,10 +20,10 @@ const Banner = () => {
           Donate to Matching Rounds <br className="line-break" /> to Get Your Contributions Amplified.
         </h1>
         <div className="btns">
-          {canDeploy && <a href={hrefWithParams(`?tab=deploypot`)}>Deploy Pot</a>}
-          <a href="https://wtfisqf.com" target="_blank">
+          {canDeploy && <Button href={hrefWithParams(`?tab=deploypot`)}>Deploy Pot</Button>}
+          <Button varient={canDeploy ? "tonal" : "filled"} href="https://wtfisqf.com" target="_blank">
             Learn More
-          </a>
+          </Button>
         </div>
       </div>
     </Container>

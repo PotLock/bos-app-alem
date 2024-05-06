@@ -378,12 +378,13 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
           {(!isUpdate || userIsOwner) && (
             <Button
               {...{
-                type: "tertiary",
-                text: "Add admins",
+                varient: "outline",
                 style: { width: "fit-content" },
                 onClick: () => State.update({ isAdminsModalOpen: true }),
               }}
-            />
+            >
+              Add admins
+            </Button>
           )}
 
           <Text
@@ -721,25 +722,25 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
             {!isUpdate && isAdminOrGreater && (
               <Button
                 {...{
-                  type: "tertiary",
-                  text: "Cancel",
+                  varient: "outline",
                   style: style || {},
                   onClick: () => {
                     // TODO: handle click
                   },
                 }}
-              />
+              >
+                Cancel
+              </Button>
             )}
             {((isUpdate && isAdminOrGreater) || !isUpdate) && (
               <Button
                 {...{
-                  type: "primary",
-                  text: isUpdate ? "Save changes" : "Deploy",
                   style: style || {},
                   onClick: isUpdate ? handleUpdate : handleDeploy,
-                  // disabled: !canDeploy,
                 }}
-              />
+              >
+                {isUpdate ? "Save changes" : "Deploy"}{" "}
+              </Button>
             )}
           </Row>
         </FormSectionRightDiv>

@@ -117,7 +117,7 @@ const Body = (props: any) => {
               }}
             />
             <Row style={{ justifyContent: "flex-end", marginTop: "12px" }}>
-              <Button type="primary" text="Submit" onClick={handleUpdateStatus} />
+              <Button onClick={handleUpdateStatus}>Submit</Button>
             </Row>
           </>
         </ModalOverlay>

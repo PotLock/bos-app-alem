@@ -2,6 +2,7 @@ import { context, useMemo } from "alem";
 import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
 import { useDonationModal } from "@app/hooks/useDonationModal";
 import DonationStats from "@app/pages/Projects/components/DonationStats/DonationStats";
+import Button from "../Button";
 import { Container, HeroContainer, Line } from "./styles";
 
 const NewHero = ({ projectsData }: any) => {
@@ -42,13 +43,14 @@ const NewHero = ({ projectsData }: any) => {
             Discover impact projects, donate directly, & <br className="line-break" /> participate in funding rounds.
           </h1>
           <div className="btns">
-            <button onClick={openDonateRandomlyModal} className="donate-btn">
-              Donate Randomly
-            </button>
+            <Button onClick={openDonateRandomlyModal}>Donate Randomly</Button>
 
-            <a href={isRegisteredProject ? `?tab=project&projectId=${accountId}` : "?tab=createproject"}>
+            <Button
+              varient="tonal"
+              href={isRegisteredProject ? `?tab=project&projectId=${accountId}` : "?tab=createproject"}
+            >
               {isRegisteredProject ? "View Your Project" : "Register Your Project"}
-            </a>
+            </Button>
           </div>
         </div>
       </HeroContainer>

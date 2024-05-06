@@ -2,6 +2,7 @@ import { Big, Near, props } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import PotSDK from "@app/SDK/pot";
 import NearIcon from "@app/assets/svgs/near-icon";
+import Button from "@app/components/Button";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
@@ -9,7 +10,6 @@ import ProfileImage from "@app/components/mob.near/ProfileImage";
 import constants from "@app/constants";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import nearToUsd from "@app/utils/nearToUsd";
-import { Button } from "../FormDirect/styles";
 import { Amout, ButtonWrapper, Container, FeesRemoval, Label, NoteWrapper } from "./styles";
 
 const ConfirmDirect = ({
@@ -368,7 +368,7 @@ const ConfirmDirect = ({
         </NoteWrapper>
       )}
       <ButtonWrapper>
-        <Button className="filled" onClick={handleDonate}>
+        <Button type="standard" varient="filled" onClick={handleDonate}>
           Confirm donation
         </Button>
       </ButtonWrapper>
