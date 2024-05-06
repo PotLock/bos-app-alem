@@ -1,6 +1,6 @@
+import { createContext } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import yoctosToUsd from "@app/utils/yoctosToUsd";
-import { createContext } from "alem";
 
 export type DonationsInfoContextProps = {
   donated?: string;

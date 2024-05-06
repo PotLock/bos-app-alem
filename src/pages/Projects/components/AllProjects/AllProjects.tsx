@@ -1,19 +1,20 @@
-import { Project } from "@app/types";
-import ListSection from "../ListSection";
-import { ProjectsContainer, FilterWrapper, Title, Container, Header } from "./styles";
-import Card from "@app/components/Card/Card";
-import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
+import { Social, createDebounce, useEffect, useState } from "alem";
 import DonateSDK from "@app/SDK/donate";
-import yoctosToUsd from "@app/utils/yoctosToUsd";
-import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
-import { Social, context, createDebounce, useEffect, useState } from "alem";
-import SearchBar from "../SearchBar/SearchBar";
+import Card from "@app/components/Card/Card";
 import FilterDropdown from "@app/components/Inputs/FilterDropdown/FilterDropdown";
+import { Project } from "@app/types";
+import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
+import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
+import yoctosToUsd from "@app/utils/yoctosToUsd";
+import ListSection from "../ListSection";
+import SearchBar from "../SearchBar/SearchBar";
+import { ProjectsContainer, FilterWrapper, Title, Container, Header } from "./styles";
 import tagsList from "./tagsList";
-import ListsSDK from "@app/SDK/lists";
+
+// import ListsSDK from "@app/SDK/lists";
 
 const AllProjects = ({ projectsData }: { projectsData: any }) => {
-  const isRegistryAdmin = ListsSDK.isRegistryAdmin(context.accountId);
+  // const isRegistryAdmin = ListsSDK.isRegistryAdmin(context.accountId);
 
   const [totalDonation, setTotalDonation] = useState(0);
   const [totalDonated, setTotalDonated] = useState("0");

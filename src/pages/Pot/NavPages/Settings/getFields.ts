@@ -1,7 +1,7 @@
-import { PotDetail } from "@app/types";
 import PotFactorySDK from "@app/SDK/potfactory";
-import formatTimestampForDateTimeLocal from "@app/utils/formatTimestampForDateTimeLocal";
 import constants from "@app/constants";
+import { PotDetail } from "@app/types";
+import formatTimestampForDateTimeLocal from "@app/utils/formatTimestampForDateTimeLocal";
 
 const getFields = (potId: string, potDetail: PotDetail) => {
   const {

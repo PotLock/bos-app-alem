@@ -1,10 +1,10 @@
-import { Container, TableContainer } from "./styles";
+import { State, state, useParams } from "alem";
 import PotSDK from "@app/SDK/pot";
 import constants from "@app/constants";
 import { PotDetail } from "@app/types";
-import { State, state, useParams } from "alem";
 import SponsorsBoard from "../../components/SponsorsBoard/SponsorsBoard";
 import SponsorsTable from "../../components/SponsorsTable/SponsorsTable";
+import { Container, TableContainer } from "./styles";
 
 const Sponsors = ({ potDetail }: { potDetail: PotDetail }) => {
   const { potId } = useParams();

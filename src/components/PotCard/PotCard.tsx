@@ -1,13 +1,13 @@
-import { PotDetail } from "@app/types";
-import { Card, CardSection, Description, Subtitle, Title } from "./styles";
 import { Markdown } from "alem";
 import PotSDK from "@app/SDK/pot";
-import tagsList from "./tagsList";
+import { PotDetail } from "@app/types";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import yoctosToUsd from "@app/utils/yoctosToUsd";
-import Tag from "./Tag/Tag";
 import Indicator from "./Indicator/Indicator";
+import Tag from "./Tag/Tag";
+import { Card, CardSection, Description, Subtitle, Title } from "./styles";
+import tagsList from "./tagsList";
 
 const MAX_DESCRIPTION_LENGTH = 100;
 const MAX_TITLE_LENGTH = 36;

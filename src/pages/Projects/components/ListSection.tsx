@@ -66,8 +66,6 @@ const ListSection = ({ shouldShuffle, items, renderItem }: Props) => {
   `;
 
   return <Feed items={_items} Item={renderItem} Layout={Grid} perPage={PAGE_SIZE} />;
-
-  // return <Feed items={items} Item={renderItem} Layout={Grid} perPage={PAGE_SIZE} />;
 };
 
 export default ListSection;

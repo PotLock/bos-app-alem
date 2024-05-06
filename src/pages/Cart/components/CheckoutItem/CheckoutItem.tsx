@@ -1,4 +1,15 @@
 import { Social, State, state, useParams } from "alem";
+import { useState } from "react";
+import PotSDK from "@app/SDK/pot";
+import NearIcon from "@app/assets/svgs/near-icon";
+import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
+import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import Select from "@app/components/Inputs/Select/Select";
+import Text from "@app/components/Inputs/Text/Text";
+import Tag from "@app/components/PotCard/Tag/Tag";
+import ProfileImage from "@app/components/mob.near/ProfileImage";
+import { PotDetail } from "@app/types";
+import hrefWithParams from "@app/utils/hrefWithParams";
 import {
   Description,
   DetailsContainer,
@@ -11,17 +22,6 @@ import {
   Row,
   Title,
 } from "./styles";
-import NearIcon from "@app/assets/svgs/near-icon";
-import { useState } from "react";
-import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
-import ProfileImage from "@app/components/mob.near/ProfileImage";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import Tag from "@app/components/PotCard/Tag/Tag";
-import Text from "@app/components/Inputs/Text/Text";
-import Select from "@app/components/Inputs/Select/Select";
-import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
-import PotSDK from "@app/SDK/pot";
-import { PotDetail } from "@app/types";
 
 const CheckoutItem = (props: {
   cartItem: any;

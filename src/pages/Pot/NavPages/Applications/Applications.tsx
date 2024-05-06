@@ -1,7 +1,14 @@
 import { Social, State, context, state, useParams, Tooltip, OverlayTrigger } from "alem";
-import hrefWithParams from "@app/utils/hrefWithParams";
 import PotSDK from "@app/SDK/pot";
+import Button from "@app/components/Button";
+import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
+import ProfileImage from "@app/components/mob.near/ProfileImage";
+import { PotDetail } from "@app/types";
 import _address from "@app/utils/_address";
+import daysAgo from "@app/utils/daysAgo";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import ApplicationReviewModal from "../../components/ApplicationReviewModal/ApplicationReviewModal";
+import APPLICATIONS_FILTERS_TAGS from "./APPLICATIONS_FILTERS_TAGS";
 import {
   ApplicationRow,
   Container,
@@ -12,13 +19,6 @@ import {
   SearchBar,
   Status,
 } from "./styles";
-import { PotDetail } from "@app/types";
-import APPLICATIONS_FILTERS_TAGS from "./APPLICATIONS_FILTERS_TAGS";
-import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
-import ProfileImage from "@app/components/mob.near/ProfileImage";
-import Button from "@app/components/Button";
-import ApplicationReviewModal from "../../components/ApplicationReviewModal/ApplicationReviewModal";
-import daysAgo from "@app/utils/daysAgo";
 
 const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
   const { potId } = useParams();

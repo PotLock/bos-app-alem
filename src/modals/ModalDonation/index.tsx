@@ -14,17 +14,17 @@ import {
   useState,
 } from "alem";
 import PotSDK from "@app/SDK/pot";
-import ModalOverlay from "../ModalOverlay";
-import FormDirect from "./FormDirect/FormDirect";
 import PotFactorySDK from "@app/SDK/potfactory";
 import BannerBg from "@app/assets/svgs/banner-bg";
-import { Banner, Container, HeaderIcons } from "./styles";
-import FormPot from "./FormPot/FormPot";
+import { CartItem } from "@app/contexts/CartProvider";
+import { useCart } from "@app/hooks/useCart";
+import { useDonationModal } from "@app/hooks/useDonationModal";
+import ModalOverlay from "../ModalOverlay";
 import ConfirmDirect from "./ConfirmDirect/ConfirmDirect";
 import ConfirmPot from "./ConfirmPot/ConfirmPot";
-import { useDonationModal } from "@app/hooks/useDonationModal";
-import { useCart } from "@app/hooks/useCart";
-import { CartItem } from "@app/contexts/CartProvider";
+import FormDirect from "./FormDirect/FormDirect";
+import FormPot from "./FormPot/FormPot";
+import { Banner, Container, HeaderIcons } from "./styles";
 
 const ModalDonation = () => {
   const DENOMINATION_OPTIONS = [{ text: "NEAR", value: "NEAR", decimals: 24 }];

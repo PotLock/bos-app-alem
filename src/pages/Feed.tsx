@@ -1,5 +1,5 @@
-import ListsSDK from "@app/SDK/lists";
 import styled from "styled-components";
+import ListsSDK from "@app/SDK/lists";
 import Feed from "./Project/NavPages/Feed/Feed";
 
 const FeedPage = () => {

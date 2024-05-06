@@ -1,9 +1,9 @@
+import { getLocation, useEffect, useState } from "alem";
 import PotSDK from "@app/SDK/pot";
 import PotFactorySDK from "@app/SDK/potfactory";
-import { getLocation, useEffect, useState } from "alem";
-import { Container, Wrapper } from "./styles";
-import hrefWithParams from "@app/utils/hrefWithParams";
 import ReferrerIcon from "@app/assets/svgs/ReferrerIcon";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import { Container, Wrapper } from "./styles";
 
 const Banner = () => {
   const [activeRounds, setActiveRounds] = useState<any>([]);

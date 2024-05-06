@@ -1,9 +1,9 @@
 import { useParams, useState } from "alem";
-import { Container, Flag, Line, Table, Title } from "./styles";
 import PotSDK from "@app/SDK/pot";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import { PotDetail } from "@app/types";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import { PotDetail } from "@app/types";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import { Container, Flag, Line, Table, Title } from "./styles";
 
 const FlaggedAccounts = ({ potDetail }: { potDetail: PotDetail }) => {
   const { potId } = useParams();
