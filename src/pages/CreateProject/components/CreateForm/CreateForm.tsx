@@ -315,7 +315,7 @@ const CreateForm = (props: { edit: boolean }) => {
   const isCreateProjectDisabled =
     !state.profileImage ||
     !state.backgroundImage ||
-    state.daoAddressError ||
+    (state.isDao && state.daoAddressError) ||
     !state.name ||
     state.nameError ||
     !state.description ||
