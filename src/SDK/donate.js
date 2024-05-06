@@ -1,3 +1,5 @@
+import { Near } from "alem";
+
 const donateContractId = "donate.potlock.near";
 
 const DonateSDK = {
