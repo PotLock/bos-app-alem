@@ -5,7 +5,7 @@ type TargetValue = "_self" | "_blank" | "_parent" | "_top" | string;
 type Props = {
   type?: "brand" | "standard";
   varient?: "outline" | "tonal" | "filled" | "plain";
-  disabled?: boolean;
+  isDisabled?: boolean;
   href?: string;
   onClick?: (e: MouseEvent) => void;
   stopPropagation?: boolean;
@@ -18,7 +18,7 @@ type Props = {
 const Button = ({
   type,
   varient,
-  disabled,
+  isDisabled,
   href,
   onClick,
   stopPropagation,
@@ -29,21 +29,28 @@ const Button = ({
 }: Props) => {
   return (
     <Container
+      {...{
+        onClick: (e: any) => {
+          if (stopPropagation) e.stopPropagation();
+          if (onClick) {
+            onClick(e);
+          }
+        },
+        as: href ? "a" : "button",
+        className: `${isDisabled ? "disabled" : ""} ${varient || "filled"} ${type || "brand"}`,
+        style: style ?? {},
+        target: target,
+        ...(href ? { href } : {}),
+      }}
       onClick={(e: any) => {
-        if (!href) e.preventDefault();
         if (stopPropagation) e.stopPropagation();
         if (onClick) {
           onClick(e);
         }
       }}
-      href={href}
-      style={{ ...(style ?? {}) }}
-      target={target}
     >
-      <div className={`button ${disabled || ""} ${varient || "filled"} ${type || "brand"}`}>
-        {iconSrc && <Icon src={iconSrc} />}
-        {children}
-      </div>
+      {iconSrc && <Icon src={iconSrc} />}
+      {children}
     </Container>
   );
 };

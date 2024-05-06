@@ -1,14 +1,14 @@
 import { Near } from "alem";
-import { DirectButton, CurrentBalance, Form, Label, PotWrapper } from "./styles";
-import constants from "@app/constants";
 import PotSDK from "@app/SDK/pot";
+import Button from "@app/components/Button";
 import Loading from "@app/components/Loading";
-import Checks from "../Checks/Checks";
-import SelectPot from "../SelectPot";
+import constants from "@app/constants";
 import AmountInput from "../AmountInput/AmountInput";
 import Alert from "../Banners/Alert";
 import VerifyInfo from "../Banners/VerifyInfo";
-import Button from "@app/components/Button";
+import Checks from "../Checks/Checks";
+import SelectPot from "../SelectPot";
+import { DirectButton, CurrentBalance, Form, Label, PotWrapper } from "./styles";
 
 const FormDirect = (props: any) => {
   const {
@@ -129,7 +129,7 @@ const FormDirect = (props: any) => {
           <Button
             type="standard"
             varient="filled"
-            disabled={isDisabled}
+            isDisabled={isDisabled}
             onClick={() => updateState({ currentPage: "confirm" })}
           >
             {!accountId ? "Sign In to Proceed" : isLoading ? "Loading..." : "Proceed to donate"}{" "}
@@ -137,7 +137,7 @@ const FormDirect = (props: any) => {
           <Button
             type="standard"
             varient="outline"
-            disabled={isDisabled}
+            isDisabled={isDisabled}
             onClick={() =>
               handleAddToCart([
                 {

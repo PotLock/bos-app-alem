@@ -44,28 +44,9 @@ export const Container = styled.div`
     align-items: center;
     gap: 2rem;
     margin-top: 40px;
-    a {
-      padding: 12px 16px;
-      width: 180px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 500;
-      border-radius: 6px;
-      box-shadow: 0px -2px 0px 0px #464646 inset, 0px 0px 0px 1px #464646;
-      text-decoration: none;
-      color: #292929;
-      transition: all 300ms;
-      &:first-of-type {
-        color: white;
-        background: #dd3345;
-        &:hover {
-        }
-      }
-      &:hover {
-        background: #292929;
-        color: white;
-      }
+    a,
+    button {
+      width: 135px;
     }
   }
 
