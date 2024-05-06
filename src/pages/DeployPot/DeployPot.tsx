@@ -14,14 +14,9 @@ const DeployPot = (props: Props) => {
   return props.deploymentSuccess || state.deploymentSuccess ? (
     <SuccessContainer>
       <HeaderTitle>Deployment Successful!</HeaderTitle>
-      <Button
-        {...{
-          type: "primary",
-          text: "View all pots",
-          style: props.style || {},
-          href: hrefWithParams(`?tab=pots`),
-        }}
-      />
+      <Button style={props.style || {}} href={hrefWithParams(`?tab=pots`)}>
+        View all pots
+      </Button>
     </SuccessContainer>
   ) : (
     <Container>

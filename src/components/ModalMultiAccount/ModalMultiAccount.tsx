@@ -70,15 +70,9 @@ const ModalMultiAccount = (props: any) => {
           value: inputValue,
           onChange: onInputChange,
           postInputChildren: (
-            <Button
-              {...{
-                type: "primary",
-                text: "Add",
-                onClick: handleAddAccount,
-                style: { borderRadius: `0px 4px 4px 0px` },
-                submit: true,
-              }}
-            />
+            <Button type="brand" onClick={handleAddAccount} style={{ borderRadius: `0px 4px 4px 0px` }}>
+              Add
+            </Button>
           ),
           handleKeyPress: (e: any) => {
             if (e.key === "Enter") {

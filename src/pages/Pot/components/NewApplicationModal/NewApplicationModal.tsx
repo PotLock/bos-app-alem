@@ -1,13 +1,13 @@
-import ModalOverlay from "@app/modals/ModalOverlay";
-import { ModalTitle, Row } from "./styles";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
-import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
-import Button from "@app/components/Button";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import Text from "@app/components/Inputs/Text/Text";
 import { State, state, context, Near, useEffect, useParams } from "alem";
+import Button from "@app/components/Button";
+import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import Text from "@app/components/Inputs/Text/Text";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ModalOverlay from "@app/modals/ModalOverlay";
 import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
+import hrefWithParams from "@app/utils/hrefWithParams";
 import handleSendApplication from "../../utils/handleSendApplication";
+import { ModalTitle, Row } from "./styles";
 
 const NewApplicationModal = ({
   potDetail,
@@ -137,14 +137,6 @@ const NewApplicationModal = ({
       {isDao && <Text {...textProps} />}
       <Row style={{ justifyContent: "flex-end", marginTop: "12px" }}>
         <Button
-          type="primary"
-          text={
-            isDao
-              ? "Propose to Send Application"
-              : registrationApprovedOrNoRegistryProvider
-              ? "Send application"
-              : "Register to apply"
-          }
           onClick={
             (isDao || registrationApprovedOrNoRegistryProvider) && !isError
               ? () => {
@@ -152,10 +144,16 @@ const NewApplicationModal = ({
                 }
               : () => {}
           }
-          disabled={isError}
+          isDisabled={isError}
           href={isDao || registrationApprovedOrNoRegistryProvider ? "" : hrefWithParams(`?tab=createproject`)}
           target={isDao || registrationApprovedOrNoRegistryProvider ? "_self" : "_blank"}
-        />
+        >
+          {isDao
+            ? "Propose to Send Application"
+            : registrationApprovedOrNoRegistryProvider
+            ? "Send application"
+            : "Register to apply"}
+        </Button>
       </Row>
     </ModalOverlay>
   );
