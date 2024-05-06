@@ -1,12 +1,12 @@
-import { PotDetail } from "@app/types";
-import constants from "@app/constants";
-import _address from "@app/utils/_address";
-import PotSDK from "@app/SDK/pot";
 import { useState, useParams, Big } from "alem";
-import Table from "./Table/Table";
+import PotSDK from "@app/SDK/pot";
+import constants from "@app/constants";
+import { PotDetail } from "@app/types";
+import _address from "@app/utils/_address";
+import calculatePayouts from "@app/utils/calculatePayouts";
 import nearToUsdWithFallback from "@app/utils/nearToUsdWithFallback";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
-import calculatePayouts from "@app/utils/calculatePayouts";
+import Table from "./Table/Table";
 
 type Props = {
   potDetail: PotDetail;

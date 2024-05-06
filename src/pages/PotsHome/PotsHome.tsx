@@ -1,13 +1,13 @@
 import { useState, useEffect, Big } from "alem";
-import Banner from "./Components/Banner";
-import { Line, Container, Title } from "./styles";
-import { Pot, PotDetail } from "@app/types";
-import { sortOptions, filterBy, filters, potsSort } from "./FilterOptions";
-import PotFactorySDK from "@app/SDK/potfactory";
 import PotSDK from "@app/SDK/pot";
+import PotFactorySDK from "@app/SDK/potfactory";
 import FilterDropdown from "@app/components/Inputs/FilterDropdown/FilterDropdown";
-import ListSection from "../Projects/components/ListSection";
 import PotCard from "@app/components/PotCard/PotCard";
+import { Pot, PotDetail } from "@app/types";
+import ListSection from "../Projects/components/ListSection";
+import Banner from "./Components/Banner";
+import { sortOptions, filterBy, filters, potsSort } from "./FilterOptions";
+import { Line, Container, Title } from "./styles";
 
 const PotsHome = () => {
   const [pots, setPots] = useState(null);

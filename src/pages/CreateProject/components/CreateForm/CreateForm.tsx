@@ -1,6 +1,22 @@
-import ListsSDK from "@app/SDK/lists";
-import InfoSegment from "@app/components/InfoSegment/InfoSegment";
 import { Big, Near, State, asyncFetch, context, state, useEffect, useMemo, useParams } from "alem";
+import ListsSDK from "@app/SDK/lists";
+import Button from "@app/components/Button";
+import InfoSegment from "@app/components/InfoSegment/InfoSegment";
+import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import Select from "@app/components/Inputs/Select/Select";
+import SelectMultiple from "@app/components/Inputs/SelectMultiple/SelectMultiple";
+import Text from "@app/components/Inputs/Text/Text";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
+import BannerHeader from "@app/pages/Profile/components/BannerHeader/BannerHeader";
+import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
+import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import validateEVMAddress from "@app/utils/validateEVMAddress";
+import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
+import validateNearAddress from "@app/utils/validateNearAddress";
+import AccountsStack from "../AccountsStack/AccountsStack";
+import ModalAddFundingSource from "../ModalAddFundingSource/ModalAddFundingSource";
 import {
   AddTeamMembers,
   ButtonsContainer,
@@ -23,22 +39,6 @@ import {
   SvgContainer,
   Table,
 } from "./styles";
-import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
-import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import validateNearAddress from "@app/utils/validateNearAddress";
-import Button from "@app/components/Button";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import BannerHeader from "@app/pages/Profile/components/BannerHeader/BannerHeader";
-import AccountsStack from "../AccountsStack/AccountsStack";
-import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
-import Text from "@app/components/Inputs/Text/Text";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
-import SelectMultiple from "@app/components/Inputs/SelectMultiple/SelectMultiple";
-import Select from "@app/components/Inputs/Select/Select";
-import validateEVMAddress from "@app/utils/validateEVMAddress";
-import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
-import ModalAddFundingSource from "../ModalAddFundingSource/ModalAddFundingSource";
-import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
 
 const CreateForm = (props: { edit: boolean }) => {
   const { projectId } = useParams();
@@ -315,7 +315,7 @@ const CreateForm = (props: { edit: boolean }) => {
   const isCreateProjectDisabled =
     !state.profileImage ||
     !state.backgroundImage ||
-    state.daoAddressError ||
+    (state.isDao && state.daoAddressError) ||
     !state.name ||
     state.nameError ||
     !state.description ||
@@ -695,20 +695,21 @@ const CreateForm = (props: { edit: boolean }) => {
           <ButtonsContainer>
             <Button
               {...{
-                type: "primary",
-                text: "View your project",
-                disabled: false,
+                isDisabled: false,
                 href: hrefWithParams(`?tab=project&projectId=${registeredProject?.id || context.accountId}`),
               }}
-            />
+            >
+              View your project
+            </Button>
             <Button
               {...{
-                type: "secondary",
-                text: "View all projects",
-                disabled: false,
+                varient: "tonal",
+                isDisabled: false,
                 href: hrefWithParams(`?tab=projects`),
               }}
-            />
+            >
+              View all projects
+            </Button>
           </ButtonsContainer>
         </>
       ) : (
@@ -1047,16 +1048,17 @@ const CreateForm = (props: { edit: boolean }) => {
                     })}
                     <Button
                       {...{
-                        type: "tertiary",
-                        text: "Add another repository",
-                        disabled: !state.githubRepos[state.githubRepos.length - 1][0],
+                        varient: "outline",
+                        isDisabled: !state.githubRepos[state.githubRepos.length - 1][0],
                         onClick: () => {
                           State.update({
                             githubRepos: [...state.githubRepos, [""]],
                           });
                         },
                       }}
-                    />
+                    >
+                      Add another repository
+                    </Button>
                   </FormSectionRightDiv>
                 </FormSectionContainer>
               </>
@@ -1164,9 +1166,8 @@ const CreateForm = (props: { edit: boolean }) => {
 
                     <Button
                       {...{
-                        type: "tertiary",
-                        text: "Add another contract",
-                        disabled:
+                        varient: "outline",
+                        isDisabled:
                           !state.smartContracts[state.smartContracts.length - 1][0] &&
                           !state.smartContracts[state.smartContracts.length - 1][1],
                         onClick: () => {
@@ -1175,7 +1176,9 @@ const CreateForm = (props: { edit: boolean }) => {
                           });
                         },
                       }}
-                    />
+                    >
+                      Add another contract
+                    </Button>
                   </FormSectionRightDiv>
                 </FormSectionContainer>
               </>
@@ -1274,14 +1277,13 @@ const CreateForm = (props: { edit: boolean }) => {
                 )}
                 <Button
                   {...{
-                    type: "tertiary",
-                    text: "Add funding source",
+                    varient: "outline",
                     style: {
                       width: "fit-content",
                       marginTop: "1rem",
                       marginBottom: "3rem",
                     },
-                    disabled: state.fundingSources.some(
+                    isDisabled: state.fundingSources.some(
                       (fs: any) => !fs.investorName || !fs.amountReceived || !fs.denomination || !fs.description,
                     ),
                     onClick: () => {
@@ -1301,7 +1303,9 @@ const CreateForm = (props: { edit: boolean }) => {
                       });
                     },
                   }}
-                />
+                >
+                  Add funding source
+                </Button>
               </>
             )}
             <FormDivider />
@@ -1398,19 +1402,19 @@ const CreateForm = (props: { edit: boolean }) => {
 
                 <Button
                   {...{
-                    type: "primary",
                     prefix: "https://",
-                    text: props.edit
-                      ? state.isDao
-                        ? "Add proposal to update project"
-                        : "Update your project"
-                      : state.isDao
-                      ? "Add proposal to create project"
-                      : "Create new project",
-                    disabled: isCreateProjectDisabled,
+                    isDisabled: isCreateProjectDisabled,
                     onClick: handleCreateOrUpdateProject,
                   }}
-                />
+                >
+                  {props.edit
+                    ? state.isDao
+                      ? "Add proposal to update project"
+                      : "Update your project"
+                    : state.isDao
+                    ? "Add proposal to create project"
+                    : "Create new project"}
+                </Button>
 
                 <Space
                   style={{

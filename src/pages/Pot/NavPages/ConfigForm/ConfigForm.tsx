@@ -1,7 +1,16 @@
+import { Big, Near, State, context, state, useMemo, useParams } from "alem";
 import ListsSDK from "@app/SDK/lists";
 import PotFactorySDK from "@app/SDK/potfactory";
+import AccountsList from "@app/components/AccountsList/AccountsList";
+import Button from "@app/components/Button";
+import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import DateInput from "@app/components/Inputs/Date/Date";
+import Text from "@app/components/Inputs/Text/Text";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
 import constants from "@app/constants";
-import { Big, Near, State, context, state, useMemo, useParams } from "alem";
+import { PotDetail } from "@app/types";
+import validateNearAddress from "@app/utils/validateNearAddress";
 import {
   CheckboxWrapper,
   FormBody,
@@ -13,15 +22,6 @@ import {
   Label,
   Row,
 } from "./styles";
-import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
-import { PotDetail } from "@app/types";
-import validateNearAddress from "@app/utils/validateNearAddress";
-import Text from "@app/components/Inputs/Text/Text";
-import AccountsList from "@app/components/AccountsList/AccountsList";
-import Button from "@app/components/Button";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
-import DateInput from "@app/components/Inputs/Date/Date";
-import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
 
 const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }) => {
   const { potId } = useParams();
@@ -378,12 +378,13 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
           {(!isUpdate || userIsOwner) && (
             <Button
               {...{
-                type: "tertiary",
-                text: "Add admins",
+                varient: "outline",
                 style: { width: "fit-content" },
                 onClick: () => State.update({ isAdminsModalOpen: true }),
               }}
-            />
+            >
+              Add admins
+            </Button>
           )}
 
           <Text
@@ -721,25 +722,25 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
             {!isUpdate && isAdminOrGreater && (
               <Button
                 {...{
-                  type: "tertiary",
-                  text: "Cancel",
+                  varient: "outline",
                   style: style || {},
                   onClick: () => {
                     // TODO: handle click
                   },
                 }}
-              />
+              >
+                Cancel
+              </Button>
             )}
             {((isUpdate && isAdminOrGreater) || !isUpdate) && (
               <Button
                 {...{
-                  type: "primary",
-                  text: isUpdate ? "Save changes" : "Deploy",
                   style: style || {},
                   onClick: isUpdate ? handleUpdate : handleDeploy,
-                  // disabled: !canDeploy,
                 }}
-              />
+              >
+                {isUpdate ? "Save changes" : "Deploy"}{" "}
+              </Button>
             )}
           </Row>
         </FormSectionRightDiv>

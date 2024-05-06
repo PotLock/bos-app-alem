@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 1rem;
 `;
 
 export const HeroContainer = styled.div`
@@ -52,27 +53,7 @@ export const HeroContainer = styled.div`
     font-size: 14px;
     a,
     button {
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 500;
-      border-radius: 6px;
-      box-shadow: 0px 0px 0px 1px #292929, 0px -2px 0px 0px #292929 inset;
-      border: none;
-      text-decoration: none;
-      color: #292929;
-      transition: all 300ms;
-      &:hover {
-        background: #292929;
-        color: white;
-      }
-    }
-    button {
-      color: white;
-      background: #dd3345;
-      &:hover {
-      }
+      width: 180px;
     }
   }
   @media only screen and (max-width: 768px) {
@@ -93,7 +74,7 @@ export const HeroContainer = styled.div`
   }
   @media only screen and (max-width: 480px) {
     .btns a,
-    button {
+    .btns button {
       width: 100%;
       padding: 12px 0;
     }

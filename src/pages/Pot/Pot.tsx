@@ -1,11 +1,11 @@
-import PotSDK from "@app/SDK/pot";
 import { Big, useState, Near, useParams, context, useCache, useMemo } from "alem";
+import PotSDK from "@app/SDK/pot";
+import { PotDetail } from "@app/types";
+import Tabs from "../Profile/components/Tabs";
+import Header from "./components/Header/Header";
+import HeaderStatus from "./components/HeaderStatus/HeaderStatus";
 import { BodyContainer, Wrapper } from "./styles";
 import navOptions from "./utils/potOptions";
-import Tabs from "../Profile/components/Tabs";
-import HeaderStatus from "./components/HeaderStatus/HeaderStatus";
-import Header from "./components/Header/Header";
-import { PotDetail } from "@app/types";
 
 const Pot = () => {
   const { potId, nav: _nav } = useParams();

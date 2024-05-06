@@ -1,9 +1,9 @@
 import { Big, Near, context, useState } from "alem";
-import { Banner, ButtonsWrapper, Container, HeaderIcons, InfoCard, Limit, Content } from "./styles";
-import ModalOverlay from "@app/modals/ModalOverlay";
 import BannerBg from "@app/assets/svgs/banner-bg";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import Button from "@app/components/Button";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ModalOverlay from "@app/modals/ModalOverlay";
+import { Banner, ButtonsWrapper, Container, HeaderIcons, InfoCard, Limit, Content } from "./styles";
 
 const FlagModal = (props: any) => {
   const MAX_REASON_LENGTH = 250;
@@ -159,14 +159,9 @@ const FlagModal = (props: any) => {
             <button className="cancel" onClick={onCancel}>
               Cancel
             </button>
-            <Button
-              {...{
-                type: "primary",
-                text: "Confirm",
-                disabled: !reason || !!reasonErr,
-                onClick: handleFlag,
-              }}
-            />
+            <Button isDisabled={!reason || !!reasonErr} onClick={handleFlag}>
+              Confirm
+            </Button>
           </ButtonsWrapper>
         </Content>
       </Container>

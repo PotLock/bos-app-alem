@@ -1,20 +1,15 @@
-import Hero from "@app/components/Hero/Hero";
-import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
-import AllProjects from "./components/AllProjects/AllProjects";
-import { useState } from "alem";
+import { Storage, useEffect, useState } from "alem";
 import ListsSDK from "@app/SDK/lists";
 import NewHero from "@app/components/NewHero/NewHero";
+import AllProjects from "./components/AllProjects/AllProjects";
+import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
 
 const ProjectsPage = () => {
-  // NOTE: Usar o getProjects() service é mais performatico do ponto de vista de renderização pois
-  // cada componente carrega para sí o dado necessário ao contrário de preencher uma camada acima com
-  // dados de estado que causam um re-render em todos os componentes irmãos.
-  //
-  // O Uso de um Provider deve ser usado só quando realmente necessário. Prefira criar services!
-  // ProjectsProvider();
-  const [projectsData, setProjectsDate] = useState<any>(null);
+  // Use storage to improve project data availability.
+  const PROJECTS_STORAGE_KEY = "previous-projects";
+  const [projectsData, setProjectsData] = useState<any>(Storage.get(PROJECTS_STORAGE_KEY));
 
-  if (!projectsData) {
+  useEffect(() => {
     ListsSDK.asyncGetRegistrations().then((allProjects: any) => {
       if (!allProjects) {
         return { allProjects: [], featuredProjects: [] };
@@ -28,14 +23,15 @@ const ProjectsPage = () => {
 
       const approvedProjects = allProjects.filter((project: any) => project.status === "Approved");
 
-      setProjectsDate({ allProjects, approvedProjects, featuredProjects });
+      setProjectsData({ allProjects, approvedProjects, featuredProjects });
+      Storage.set(PROJECTS_STORAGE_KEY, { allProjects, approvedProjects, featuredProjects });
     });
-  }
+  }, []);
 
   return (
     <>
       <NewHero projectsData={projectsData} />
-      <FeaturedProjects projectsData={projectsData} />
+      <FeaturedProjects projectsData={projectsData} isLoading={!projectsData} />
       <AllProjects projectsData={projectsData} />
     </>
   );

@@ -1,13 +1,14 @@
 import { Near } from "alem";
-import { DirectButton, CurrentBalance, Form, Label, PotWrapper, Button } from "./styles";
-import constants from "@app/constants";
 import PotSDK from "@app/SDK/pot";
+import Button from "@app/components/Button";
 import Loading from "@app/components/Loading";
-import Checks from "../Checks/Checks";
-import SelectPot from "../SelectPot";
+import constants from "@app/constants";
 import AmountInput from "../AmountInput/AmountInput";
 import Alert from "../Banners/Alert";
 import VerifyInfo from "../Banners/VerifyInfo";
+import Checks from "../Checks/Checks";
+import SelectPot from "../SelectPot";
+import { DirectButton, CurrentBalance, Form, Label, PotWrapper } from "./styles";
 
 const FormDirect = (props: any) => {
   const {
@@ -126,27 +127,27 @@ const FormDirect = (props: any) => {
         {needsToVerify && !isLoading && <VerifyInfo />}
         <DirectButton>
           <Button
-            {...{
-              className: `filled ${isDisabled ? "disabled" : ""}`,
-              onClick: () => updateState({ currentPage: "confirm" }),
-            }}
+            type="standard"
+            varient="filled"
+            isDisabled={isDisabled}
+            onClick={() => updateState({ currentPage: "confirm" })}
           >
-            {" "}
             {!accountId ? "Sign In to Proceed" : isLoading ? "Loading..." : "Proceed to donate"}{" "}
           </Button>
           <Button
-            {...{
-              className: `outline ${isDisabled ? "disabled" : ""}`,
-              onClick: () =>
-                handleAddToCart([
-                  {
-                    id: projectId,
-                    amount,
-                    token: selectedDenomination,
-                    potId: donationType === "pot" ? selectedRound : null,
-                  },
-                ]),
-            }}
+            type="standard"
+            varient="outline"
+            isDisabled={isDisabled}
+            onClick={() =>
+              handleAddToCart([
+                {
+                  id: projectId,
+                  amount,
+                  token: selectedDenomination,
+                  potId: donationType === "pot" ? selectedRound : null,
+                },
+              ])
+            }
           >
             Add to cart
           </Button>

@@ -1,15 +1,15 @@
 import { Near, Social, context } from "alem";
-import Alert from "../Banners/Alert";
-import Checks from "../Checks/Checks";
-import AmountInput from "../AmountInput/AmountInput";
-import nearToUsd from "@app/utils/nearToUsd";
-import { CustomButton, Content, CurrentBalance, Form, Label, ProjectAmount, Projects, TotalAmount } from "./styles";
-import { Button } from "../FormDirect/styles";
+import Button from "@app/components/Button";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import constants from "@app/constants";
 import _address from "@app/utils/_address";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import constants from "@app/constants";
+import nearToUsd from "@app/utils/nearToUsd";
+import AmountInput from "../AmountInput/AmountInput";
+import Alert from "../Banners/Alert";
 import VerifyInfo from "../Banners/VerifyInfo";
+import Checks from "../Checks/Checks";
+import { CustomButton, Content, CurrentBalance, Form, Label, ProjectAmount, Projects, TotalAmount } from "./styles";
 
 const FormPot = ({
   amount,
@@ -239,7 +239,9 @@ const FormPot = ({
       </Projects>
       <CustomButton>
         <Button
-          className={`filled ${isDisabled ? "disabled" : ""}`}
+          type="standard"
+          varient="filled"
+          isDisabled={isDisabled}
           onClick={() => {
             if (donationType === "auto") updateState({ currentPage: "confirmPot" });
             else {
@@ -250,7 +252,9 @@ const FormPot = ({
           Proceed to donate
         </Button>
         <Button
-          className={`outline ${isDisabled ? "disabled" : ""}`}
+          type="standard"
+          varient="outline"
+          isDisabled={isDisabled}
           onClick={() => {
             const cartItems = Object.entries(selectedProjects).map(([project_id, project_amount]: [string, any]) => ({
               id: project_id,

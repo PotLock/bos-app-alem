@@ -1,10 +1,10 @@
-import ModalOverlay from "@app/modals/ModalOverlay";
-import { ModalBody, ModalFooter, ModalHeader, HeaderItemText } from "./styles";
 import { State, state, useParams } from "alem";
 import PotSDK from "@app/SDK/pot";
-import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import Button from "@app/components/Button";
 import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ModalOverlay from "@app/modals/ModalOverlay";
+import { ModalBody, ModalFooter, ModalHeader, HeaderItemText } from "./styles";
 
 const ChallangeResolveModal = ({
   adminModalChallengerId,
@@ -91,21 +91,12 @@ const ChallangeResolveModal = ({
         />
       </ModalBody>
       <ModalFooter>
-        <Button
-          {...{
-            type: "tertiary",
-            text: "Cancel",
-            onClick: handleCancelAdminUpdateChallenge,
-          }}
-        />
-        <Button
-          {...{
-            type: "primary",
-            text: "Submit",
-            disabled: !challengeAdminNotes || !!challengeAdminNotesError,
-            onClick: handleAdminUpdateChallenge,
-          }}
-        />
+        <Button varient="outline" onClick={handleCancelAdminUpdateChallenge}>
+          Cancel
+        </Button>
+        <Button isDisabled={!challengeAdminNotes || !!challengeAdminNotesError} onClick={handleAdminUpdateChallenge}>
+          Submit
+        </Button>
       </ModalFooter>
     </ModalOverlay>
   );
