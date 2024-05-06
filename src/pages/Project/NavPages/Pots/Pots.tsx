@@ -1,8 +1,8 @@
-import PotFactorySDK from "@app/SDK/potfactory";
-import { Container, NoResults } from "./styles";
 import { useParams, useState } from "alem";
 import PotSDK from "@app/SDK/pot";
+import PotFactorySDK from "@app/SDK/potfactory";
 import PotCard from "@app/components/PotCard/PotCard";
+import { Container, NoResults } from "./styles";
 
 const Pots = () => {
   const pots = PotFactorySDK.getPots();

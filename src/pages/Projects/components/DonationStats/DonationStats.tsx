@@ -1,7 +1,8 @@
 import { useEffect, useState } from "alem";
 import DonateSDK from "@app/SDK/donate";
-import { Stats, StatsSubTitle, StatsTitle } from "./styles";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
+import { Stats, StatsSubTitle, StatsTitle } from "./styles";
+
 // import { useDonationsInfo } from "@app/hooks/useDonationsInfo";
 
 const DonationStats = () => {

@@ -1,7 +1,7 @@
 import { Big, state, Near, context } from "alem";
+import PotSDK from "@app/SDK/pot";
 import constants from "@app/constants";
 import { PotDetail } from "@app/types";
-import PotSDK from "@app/SDK/pot";
 
 const handleSendApplication = (potId: string, potDetail: PotDetail, setApplicationSuccess: any, isDao: boolean) => {
   // Constents

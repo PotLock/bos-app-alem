@@ -31,17 +31,11 @@ import {
 } from "./styles";
 
 const Card = (props: any) => {
+  const [ready, isReady] = useState(false);
   const { payoutDetails, allowDonate: _allowDonate } = props;
   const { potId } = useParams();
 
   const { setDonationModalProps } = useDonationModal();
-
-  // TODO: Bug -> não esta importando o utils
-  // Só importa funcóes que retornam algo, um objeto direto está falhando.
-  // const { ipfsUrlFromCid, yoctosToNear, yoctosToUsdWithFallback } = utils;
-  // console.log(utils);
-
-  const [ready, isReady] = useState(false);
 
   const projectId = props.project.registrant_id || props.projectId;
   const profile = Social.getr(`${projectId}/profile`) as any;
@@ -58,12 +52,6 @@ const Card = (props: any) => {
       : !potId
       ? DonateSDK.getDonationsForRecipient(projectId)
       : [];
-
-  useEffect(() => {
-    if (profile !== null && !ready) {
-      isReady(true);
-    }
-  }, [profile, donationsForProject]);
 
   const totalAmountNear = useMemo(() => {
     if (payoutDetails) return payoutDetails.totalAmount;
@@ -108,6 +96,12 @@ const Card = (props: any) => {
   };
 
   const tags = getTagsFromSocialProfileData(profile);
+
+  useEffect(() => {
+    if (profile !== null && !ready) {
+      isReady(true);
+    }
+  }, [profile, donationsForProject, tags]);
 
   if (!ready) return <CardSkeleton />;
 

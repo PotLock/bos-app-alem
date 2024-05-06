@@ -1,13 +1,13 @@
 import { useCache, useMemo, useState } from "alem";
+import DonateSDK from "@app/SDK/donate";
+import PotSDK from "@app/SDK/pot";
+import PotFactorySDK from "@app/SDK/potfactory";
+import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
 import calcNetDonationAmount from "@app/utils/calcNetDonationAmount";
 import filterByDate from "@app/utils/filterByDate";
-import PotFactorySDK from "@app/SDK/potfactory";
-import PotSDK from "@app/SDK/pot";
-import DonateSDK from "@app/SDK/donate";
 import DonorsCards from "./components/DonorsCards/DonorsCards";
-import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
-import DonorsTrx from "./components/DonorsTrx/DonorsTrx";
 import DonorsLeaderboard from "./components/DonorsLeaderboard/DonorsLeaderboard";
+import DonorsTrx from "./components/DonorsTrx/DonorsTrx";
 import { Container, Filter, LoadingWrapper, Tabs } from "./styles";
 
 const Leaderboard = () => {

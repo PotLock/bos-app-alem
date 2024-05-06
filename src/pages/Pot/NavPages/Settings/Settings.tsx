@@ -1,12 +1,12 @@
-import PotSDK from "@app/SDK/pot";
 import { OverlayTrigger, Tooltip, context, useParams, useState } from "alem";
-import getFields from "./getFields";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import { PotDetail } from "@app/types";
-import { Admins, AdminsWrapper, Container, Detail, PrviewContainer, Title } from "./styles";
+import PotSDK from "@app/SDK/pot";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import { PotDetail } from "@app/types";
 import _address from "@app/utils/_address";
+import hrefWithParams from "@app/utils/hrefWithParams";
 import ConfigForm from "../ConfigForm/ConfigForm";
+import getFields from "./getFields";
+import { Admins, AdminsWrapper, Container, Detail, PrviewContainer, Title } from "./styles";
 
 const Settings = ({ potDetail }: { potDetail: PotDetail }) => {
   const { owner, admins } = potDetail;

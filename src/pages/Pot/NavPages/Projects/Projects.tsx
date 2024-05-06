@@ -1,11 +1,11 @@
 import { useState, useMemo, Social, context, useParams } from "alem";
-import { Container, SearchBar, Title } from "./styles";
+import PotSDK from "@app/SDK/pot";
+import Card from "@app/components/Card/Card";
+import ListSection from "@app/pages/Projects/components/ListSection";
 import calculatePayouts from "@app/utils/calculatePayouts";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import PotSDK from "@app/SDK/pot";
-import ListSection from "@app/pages/Projects/components/ListSection";
-import Card from "@app/components/Card/Card";
+import { Container, SearchBar, Title } from "./styles";
 
 type Props = {
   potDetail: any;

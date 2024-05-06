@@ -1,4 +1,4 @@
-import { context, useContext, useMemo, useState } from "alem";
+import { context, useMemo } from "alem";
 import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
 import { useDonationModal } from "@app/hooks/useDonationModal";
 import DonationStats from "@app/pages/Projects/components/DonationStats/DonationStats";
