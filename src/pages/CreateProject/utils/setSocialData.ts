@@ -1,6 +1,6 @@
 import { Near, State } from "alem";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import { CATEGORY_MAPPINGS } from "./categories";
+import { CATEGORY_MAPPINGS } from "./fields";
 
 const setSocialData = (accountId: string, shouldSetTeamMembers?: any) => {
   Near.asyncView("social.near", "get", { keys: [`${accountId}/**`] })

@@ -1,8 +1,7 @@
 import { state } from "alem";
 import constants from "@app/constants";
-import { CATEGORY_MAPPINGS } from "./categories";
 
-export const getSocialData = () => {
+const getSocialData = () => {
   const { ownerId } = constants;
 
   // format smart contracts
@@ -76,19 +75,4 @@ export const getSocialData = () => {
   };
 };
 
-export const projectDisabled = () =>
-  !state.profileImage ||
-  !state.backgroundImage ||
-  state.daoAddressError ||
-  !state.name ||
-  state.nameError ||
-  !state.description ||
-  state.descriptionError ||
-  !state.publicGoodReason ||
-  state.publicGoodReasonError ||
-  (state.categories.includes(CATEGORY_MAPPINGS.OPEN_SOURCE) &&
-    !state.githubRepos.filter((val: any) => val[0]).length) ||
-  (state.hasSmartContracts && !state.smartContracts.filter((val: any) => val[0]).length) ||
-  (state.hasReceivedFunding && !state.fundingSources.length) ||
-  !state.categories.length ||
-  state.categoriesError;
+export default getSocialData;

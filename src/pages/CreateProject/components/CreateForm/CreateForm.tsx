@@ -15,13 +15,10 @@ import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserH
 import validateEVMAddress from "@app/utils/validateEVMAddress";
 import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
 import validateNearAddress from "@app/utils/validateNearAddress";
-import { CATEGORY_MAPPINGS } from "../../utils/categories";
-import { CHAIN_OPTIONS } from "../../utils/chainOptions";
-import DEFAULT_STATE from "../../utils/defaultState";
-import { socialFields } from "../../utils/fields";
+import { socialFields, CATEGORY_MAPPINGS, CHAIN_OPTIONS, DEFAULT_STATE } from "../../utils/fields";
 import handleCreateOrUpdateProject from "../../utils/handleCreateOrUpdateProject";
+import { projectDisabled } from "../../utils/helpers";
 import setSocialData from "../../utils/setSocialData";
-import { projectDisabled } from "../../utils/socialData";
 import AccountsStack from "../AccountsStack/AccountsStack";
 import DAOInProgress from "../DAOInProgress/DAOInProgress";
 import ModalAddFundingSource from "../ModalAddFundingSource/ModalAddFundingSource";

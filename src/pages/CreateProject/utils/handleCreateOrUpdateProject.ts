@@ -1,8 +1,8 @@
 import { Big, Near, State, context, state, useParams } from "alem";
 import ListsSDK from "@app/SDK/lists";
 import validateNearAddress from "@app/utils/validateNearAddress";
-import deepObjectDiff from "./deepObjectDiff";
-import { getSocialData, projectDisabled } from "./socialData";
+import getSocialData from "./getSocialData";
+import { deepObjectDiff, projectDisabled } from "./helpers";
 
 const handleCreateOrUpdateProject = (e: any) => {
   const { projectId, tab } = useParams();
