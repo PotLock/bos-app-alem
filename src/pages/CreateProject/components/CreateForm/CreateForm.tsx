@@ -59,12 +59,15 @@ const CreateForm = (props: { edit: boolean }) => {
     );
   }
 
-  const registrations = ListsSDK.getRegistrations() || [];
-
   State.init(DEFAULT_STATE);
 
+  const checkDao = state.isDao && state.daoAddress && !state.daoAddressError;
+
   const accountId = projectId ? projectId : state.isDao ? state.daoAddress : context.accountId;
-  const policy: any = Near.view(accountId, "get_policy", {});
+  const policy: any = useMemo(() => {
+    return checkDao ? Near.view(accountId, "get_policy", {}) : false;
+  }, [accountId, checkDao]);
+
   const userHasPermissions =
     policy == null
       ? false
@@ -82,26 +85,26 @@ const CreateForm = (props: { edit: boolean }) => {
 
   const isCreateProjectDisabled = projectDisabled();
 
-  if (projectId) {
-    Near.asyncView(projectId, "get_policy", {}).then((policy) => {
-      if (policy) {
-        State.update({
-          isDao: true,
-          daoAddress: projectId,
-          daoAddressTemp: projectId,
-        });
-      }
-    });
-  }
+  useEffect(() => {
+    if (policy) {
+      State.update({
+        isDao: true,
+        daoAddress: projectId,
+        daoAddressTemp: projectId,
+      });
+    }
+  }, [policy]);
 
   const registeredProject = useMemo(() => {
     return ListsSDK.getRegistration(null, state.isDao ? state.daoAddress : context.accountId);
   }, [state.isDao, state.daoAddress]);
 
-  const proposals: any = Near.view(state.daoAddress, "get_proposals", {
-    from_index: 0,
-    limit: 1000,
-  });
+  const proposals: any = checkDao
+    ? Near.view(state.daoAddress, "get_proposals", {
+        from_index: 0,
+        limit: 1000,
+      })
+    : null;
 
   const proposalInProgress = useMemo(() => {
     if (!state.isDao || !state.daoAddress || !proposals) return false;
@@ -145,8 +148,14 @@ const CreateForm = (props: { edit: boolean }) => {
 
   return (
     <Container>
-      {!state.socialDataFetched || !registrations ? (
-        <div className="spinner-border text-secondary" role="status" />
+      {!state.socialDataFetched ? (
+        <div
+          className="spinner-border text-secondary"
+          style={{
+            margin: "auto",
+          }}
+          role="status"
+        />
       ) : proposalInProgress ? (
         <DAOInProgress proposalInProgress={proposalInProgress} />
       ) : !props.edit && (registeredProject || state.registrationSuccess) ? (
