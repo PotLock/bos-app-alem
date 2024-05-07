@@ -23,7 +23,8 @@ const ProjectsPage = () => {
 
       const approvedProjects = allProjects.filter((project: any) => project.status === "Approved");
 
-      setProjectsData({ allProjects, approvedProjects, featuredProjects });
+      if (projectsData?.allProjects.length !== allProjects.length)
+        setProjectsData({ allProjects, approvedProjects, featuredProjects });
       Storage.set(PROJECTS_STORAGE_KEY, { allProjects, approvedProjects, featuredProjects });
     });
   }, []);

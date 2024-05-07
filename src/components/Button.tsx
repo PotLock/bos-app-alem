@@ -5,6 +5,7 @@ type TargetValue = "_self" | "_blank" | "_parent" | "_top" | string;
 type Props = {
   type?: "brand" | "standard";
   varient?: "outline" | "tonal" | "filled" | "plain";
+  customClassName?: string;
   isDisabled?: boolean;
   href?: string;
   onClick?: (e: MouseEvent) => void;
@@ -18,6 +19,7 @@ type Props = {
 const Button = ({
   type,
   varient,
+  customClassName,
   isDisabled,
   href,
   onClick,
@@ -37,7 +39,7 @@ const Button = ({
           }
         },
         as: href ? "a" : "button",
-        className: `${isDisabled ? "disabled" : ""} ${varient || "filled"} ${type || "brand"}`,
+        className: `${isDisabled ? "disabled" : ""} ${varient || "filled"} ${type || "brand"} ${customClassName || ""}`,
         style: style ?? {},
         target: target,
         ...(href ? { href } : {}),

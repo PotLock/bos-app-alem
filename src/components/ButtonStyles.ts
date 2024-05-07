@@ -1,12 +1,6 @@
 import styled from "styled-components";
 
 export const Container = styled.a`
-  --Primary-50: #fef3f2;
-  --primary-400: #f6767a;
-  --Primary-600: #dd3345;
-  --Peach-50: #fef6ee;
-  --Neutral-700: #525252;
-  --Neutral-800: #464646;
   /* General */
   display: flex;
   font-size: 14px;
@@ -23,6 +17,14 @@ export const Container = styled.a`
   transition: all 200ms ease-in-out;
   border: none;
   outline: 0;
+  width: fit-content;
+  background: transparent;
+  svg {
+    width: 12px;
+    path {
+      transition: all 200ms ease-in-out;
+    }
+  }
   &:hover {
     text-decoration: none;
   }
@@ -41,6 +43,9 @@ export const Container = styled.a`
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(246, 118, 122, 0.5) inset,
       0px 0px 0px 2px rgba(246, 118, 122, 0.5) inset, 0px 1.5px 0px 0px rgba(0, 0, 0, 0.84);
     transform: translateY(-1.5px);
+    svg path {
+      fill: white;
+    }
     &:hover {
       box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(246, 118, 122, 0.5) inset,
         0px 0px 0px 2px rgba(246, 118, 122, 0.5) inset;
@@ -52,6 +57,9 @@ export const Container = styled.a`
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px #fff inset, 0px 0px 0px 2px #fff inset,
       0px 1.5px 0px 0px rgba(0, 0, 0, 0.84);
     transform: translateY(-1.5px);
+    svg path {
+      fill: var(--Neutral-600);
+    }
     &:hover {
       box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px #fff inset,
         0px 0px 0px 2px rgba(255, 255, 255, 0.8) inset;
@@ -59,10 +67,17 @@ export const Container = styled.a`
     }
   }
 
-  &.brand.Plain {
+  &.brand.plain {
     color: var(--Primary-600);
+    padding: 0;
+    svg path {
+      fill: var(--Primary-600);
+    }
     &:hover {
       color: var(--Primary-400);
+      svg path {
+        fill: var(--Primary-400);
+      }
     }
   }
 
@@ -71,6 +86,9 @@ export const Container = styled.a`
     background: rgba(255, 255, 255, 0.01);
     box-shadow: 0px 0px 0px 1px rgba(243, 78, 95, 0.78) inset, 0px -1px 0px 0px rgba(73, 8, 19, 0.5) inset,
       0px 1px 2px -0.5px rgba(73, 8, 19, 0.2);
+    svg path {
+      fill: var(--Primary-600);
+    }
     &:hover {
       background: #fef3f2;
     }
@@ -82,6 +100,9 @@ export const Container = styled.a`
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.84) inset, 0px 1px 1px 1px rgba(166, 166, 166, 0.4) inset,
       0px 0px 0px 2px rgba(166, 166, 166, 0.4) inset, 0px 1px 2px 0px rgba(15, 15, 15, 0.15),
       0px 1px 3px -1px rgba(5, 5, 5, 0.08);
+    svg path {
+      fill: var(--Neutral-200);
+    }
     &:hover {
       background: var(--Neutral-700);
     }
@@ -91,12 +112,22 @@ export const Container = styled.a`
     background: #fff;
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.22) inset, 0px -1px 0px 0px rgba(15, 15, 15, 0.15) inset,
       0px 1px 2px -0.5px rgba(5, 5, 5, 0.08);
+    svg path {
+      fill: var(--Neutral-500);
+    }
     &:hover {
       background: var(--Neutral-50);
     }
   }
 
   &.standard.plain {
+    padding: 0;
+    svg path {
+      fill: var(--Neutral-500);
+    }
+    &:hover {
+      color: var(--Neutral-500);
+    }
   }
 
   /* Disabled Button */
@@ -104,11 +135,23 @@ export const Container = styled.a`
     color: #a6a6a6;
     background: var(--Neutral-100, #ebebeb);
     box-shadow: 0px 0px 0px 1px rgba(15, 15, 15, 0.15) inset;
+    svg path {
+      fill: var(--Neutral-400);
+    }
+  }
+  &.plain.disabled {
+    color: var(--Neutral-400);
+    svg path {
+      fill: var(--Neutral-400);
+    }
   }
   &.outline.disabled {
     color: #c7c7c7;
     background: var(--Neutral-White, #fff);
     box-shadow: 0px 0px 0px 1px rgba(15, 15, 15, 0.15) inset;
+    svg path {
+      fill: var(--Neutral-300);
+    }
   }
 `;
 

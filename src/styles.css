@@ -1,5 +1,19 @@
 .app-container {
   margin-top: calc(-1 * var(--body-top-padding, 0));
+
+  --Primary-50: #fef3f2;
+  --Primary-400: #f6767a;
+  --Primary-600: #dd3345;
+  --Peach-50: #fef6ee;
+  --Neutral-50: #f7f7f7;
+  --Neutral-100: #ebebeb;
+  --Neutral-200: #dbdbdb;
+  --Neutral-300: #c7c7c7;
+  --Neutral-400: #a6a6a6;
+  --Neutral-500: #7b7b7b;
+  --Neutral-600: #656565;
+  --Neutral-700: #525252;
+  --Neutral-800: #464646;
 }
 .app-content {
   width: 100%;
@@ -24,27 +38,23 @@
   font-family: mona-sans;
   font-style: normal;
   font-weight: 400;
-  src: local("Mona-Sans"),
-    url(https://fonts.cdnfonts.com/s/91271/Mona-Sans-Regular.woff) format("woff");
+  src: local("Mona-Sans"), url(https://fonts.cdnfonts.com/s/91271/Mona-Sans-Regular.woff) format("woff");
 }
 @font-face {
   font-family: mona-sans;
   font-style: normal;
   font-weight: 500;
-  src: local("Mona-Sans"),
-    url(https://fonts.cdnfonts.com/s/91271/Mona-Sans-Medium.woff) format("woff");
+  src: local("Mona-Sans"), url(https://fonts.cdnfonts.com/s/91271/Mona-Sans-Medium.woff) format("woff");
 }
 @font-face {
   font-family: mona-sans;
   font-style: normal;
   font-weight: 600;
-  src: local("Mona-Sans"),
-    url(https://fonts.cdnfonts.com/s/91271/Mona-Sans-SemiBold.woff) format("woff");
+  src: local("Mona-Sans"), url(https://fonts.cdnfonts.com/s/91271/Mona-Sans-SemiBold.woff) format("woff");
 }
 @font-face {
   font-family: mona-sans;
   font-style: normal;
   font-weight: 700;
-  src: local("Mona-Sans"),
-    url(https://fonts.cdnfonts.com/s/91271/Mona-Sans-Bold.woff) format("woff");
+  src: local("Mona-Sans"), url(https://fonts.cdnfonts.com/s/91271/Mona-Sans-Bold.woff) format("woff");
 }

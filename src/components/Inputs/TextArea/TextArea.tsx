@@ -1,4 +1,4 @@
-import { Container, Error, Input, Label } from "./styles";
+import { Container, Error, Input, Label, Hint } from "./styles";
 
 const TextArea = (props: any) => {
   const label = props.label ?? "Label";
@@ -20,6 +20,14 @@ const TextArea = (props: any) => {
         style={props.inputStyle ?? {}}
         disabled={!!props.disabled}
       />
+      {props.maxCharacters && (
+        <Hint>
+          <div className="label">Hint text</div>
+          <div className="value">
+            {value.length}/{props.maxCharacters}
+          </div>
+        </Hint>
+      )}
       <Error style={props.errorStyle ?? {}} className={error ? "show" : ""}>
         {error}
       </Error>

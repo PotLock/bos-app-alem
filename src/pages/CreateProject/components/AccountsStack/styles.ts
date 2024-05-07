@@ -1,14 +1,11 @@
 import styled from "styled-components";
 
 export const StackContainer = styled.div`
-  width: 200px;
+  width: 100%;
+  justify-content: center;
   height: 30px;
-  margin-bottom: 16px;
+  margin-bottom: 3rem;
   display: flex;
-  flex-direction: row;
-  @media screen and (max-width: 768px) {
-    margin-left: 36px;
-  }
 `;
 
 export const MoreAccountsContainer = styled.div`

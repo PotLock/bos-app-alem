@@ -8,6 +8,11 @@ export const Container = styled.div`
   padding: 0px;
   gap: 0.45em;
   width: 100%;
+  .switch-trigger {
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.22) inset;
+    font-size: 14px;
+    border: none;
+  }
 `;
 
 export const Label = styled.label`
