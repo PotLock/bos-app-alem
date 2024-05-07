@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import { Container, SelectContent, Input, Item, Label, Placeholder, Viewport } from "./styles";
 
 type Props = {
@@ -25,14 +26,16 @@ const Select = (componentProps: Props) => {
   const validate = componentProps.validate ?? (() => {});
   const error = componentProps.error ?? "";
 
+  const SelectRoot = styled("Select.Root")``;
+
   return (
     <Container style={componentProps.containerStyles || {}}>
       {noLabel ? <></> : <Label>{label}</Label>}
-      <Select.Root
+      <SelectRoot
         value={value?.value}
         onValueChange={(value: any) => onChange(options.find((option: any) => option.value === value))}
       >
-        <Select.Trigger asChild={true}>
+        <Select.Trigger className="switch-trigger" asChild={true}>
           <Input style={componentProps.inputStyles || {}}>
             {componentProps.iconLeft && componentProps.iconLeft}
             <Select.Value aria-label={value.value} placeholder={<Placeholder>{placeholder}</Placeholder>} />
@@ -79,7 +82,7 @@ const Select = (componentProps: Props) => {
             </Select.Viewport>
           </SelectContent>
         </Select.Content>
-      </Select.Root>
+      </SelectRoot>
     </Container>
   );
 };

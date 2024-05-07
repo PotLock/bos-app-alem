@@ -1,15 +1,16 @@
-import { Big, Near, State, context, state, useEffect, useMemo, useParams } from "alem";
+import { Big, Near, State, context, navigate, state, useEffect, useMemo, useParams } from "alem";
 import ListsSDK from "@app/SDK/lists";
 import DeleteIcon from "@app/assets/svgs/DeleteIcon";
+import PlusIcon from "@app/assets/svgs/PlusIcon";
 import Button from "@app/components/Button";
 import InfoSegment from "@app/components/InfoSegment/InfoSegment";
-import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
+import Radio from "@app/components/Inputs/Radio/Radio";
 import Select from "@app/components/Inputs/Select/Select";
 import SelectMultiple from "@app/components/Inputs/SelectMultiple/SelectMultiple";
 import Text from "@app/components/Inputs/Text/Text";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
-import BannerHeader from "@app/pages/Profile/components/BannerHeader/BannerHeader";
+import routesPath from "@app/routes/routesPath";
 import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
 import validateEVMAddress from "@app/utils/validateEVMAddress";
 import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
@@ -17,33 +18,36 @@ import validateNearAddress from "@app/utils/validateNearAddress";
 import { CATEGORY_MAPPINGS } from "../../utils/categories";
 import { CHAIN_OPTIONS } from "../../utils/chainOptions";
 import DEFAULT_STATE from "../../utils/defaultState";
+import { socialFields } from "../../utils/fields";
 import handleCreateOrUpdateProject from "../../utils/handleCreateOrUpdateProject";
 import setSocialData from "../../utils/setSocialData";
 import { projectDisabled } from "../../utils/socialData";
-import uploadFileUpdateState from "../../utils/uploadFileUpdateState";
 import AccountsStack from "../AccountsStack/AccountsStack";
 import DAOInProgress from "../DAOInProgress/DAOInProgress";
-import FormSectionLeft from "../FormSectionLeft/FormSectionLeft";
 import ModalAddFundingSource from "../ModalAddFundingSource/ModalAddFundingSource";
+import Profile from "../Profile/Profile";
 import SuccessfullRegister from "../SuccessfullRegister/SuccessfullRegister";
 import {
   AddTeamMembers,
   Container,
   FormBody,
-  FormDivider,
-  FormSectionContainer,
-  FormSectionRightDiv,
+  SubTitle,
   InputPrefix,
   LowerBannerContainer,
   LowerBannerContainerLeft,
   LowerBannerContainerRight,
   Row,
-  Space,
   Table,
+  Section,
+  DAOselect,
+  ContractRow,
+  BtnWrapper,
 } from "./styles";
 
 const CreateForm = (props: { edit: boolean }) => {
-  const { projectId } = useParams();
+  const { projectId: _projectId } = useParams();
+
+  const projectId = _projectId ?? context.accountId;
 
   Big.PE = 100;
 
@@ -135,6 +139,13 @@ const CreateForm = (props: { edit: boolean }) => {
     return <h3 style={{ textAlign: "center", paddingTop: "32px" }}>Unauthorized</h3>;
   }
 
+  const SubHeader = ({ title, requierd }: { title: string; requierd?: boolean }) => (
+    <SubTitle>
+      {title}
+      {requierd ? <span className="required">Required</span> : <span className="optional">Optional</span>}
+    </SubTitle>
+  );
+
   return (
     <Container>
       {!state.socialDataFetched || !registrations ? (
@@ -145,78 +156,50 @@ const CreateForm = (props: { edit: boolean }) => {
         <SuccessfullRegister registeredProject={registeredProject} />
       ) : (
         <>
-          <BannerHeader
-            {...{
-              projectId: state.isDao && state.daoAddress ? state.daoAddress : context.accountId, // TODO: consider updating to use dao address if available, but will look weird bc no DAOs prob have a banner image on near social
-              // allowEdit: true,
-              backgroundImage: state.backgroundImage,
-              profileImage: state.profileImage,
-              bgImageOnChange: (files: any) => {
-                if (files) {
-                  uploadFileUpdateState(files[0], (res: any) => {
-                    const ipfs_cid = res.body.cid;
-                    State.update({ backgroundImage: { ipfs_cid } });
-                  });
-                }
-              },
-              profileImageOnChange: (files: any) => {
-                if (files) {
-                  uploadFileUpdateState(files[0], (res: any) => {
-                    const ipfs_cid = res.body.cid;
-                    State.update({ profileImage: { ipfs_cid } });
-                  });
-                }
-              },
-              children: (
-                <LowerBannerContainer>
-                  <LowerBannerContainerLeft>
-                    <AddTeamMembers onClick={() => State.update({ isMultiAccountModalOpen: true })}>
-                      {state.teamMembers.length > 0 ? "Add or remove team members" : "Add team members"}
-                    </AddTeamMembers>
-                  </LowerBannerContainerLeft>
-                  <LowerBannerContainerRight>
-                    <AccountsStack
-                      {...{
-                        accountIds: state.teamMembers,
-                        sendToBack: state.isMultiAccountModalOpen,
-                      }}
-                    />
-                  </LowerBannerContainerRight>
-                </LowerBannerContainer>
-              ),
-            }}
-          />
-
+          <SubHeader title="Upload banner and profile Image" requierd />
+          <Profile />
+          <LowerBannerContainer>
+            <LowerBannerContainerLeft>
+              <AddTeamMembers onClick={() => State.update({ isMultiAccountModalOpen: true })}>
+                {state.teamMembers.length > 0 ? "Add or remove team members" : "Add team members"}
+              </AddTeamMembers>
+            </LowerBannerContainerLeft>
+            <LowerBannerContainerRight>
+              <AccountsStack
+                {...{
+                  accountIds: state.teamMembers,
+                  sendToBack: state.isMultiAccountModalOpen,
+                }}
+              />
+            </LowerBannerContainerRight>
+          </LowerBannerContainer>
           <FormBody>
-            <FormDivider />
-            <FormSectionContainer>
-              {FormSectionLeft(
-                "Project details",
-                "Give an overview of your project including background details and your mission.",
-                true,
-              )}
-              <FormSectionRightDiv>
-                <CheckBox
-                  {...{
-                    id: "masterSelector",
-                    checked: state.isDao,
-                    onClick: (e) => {
-                      State.update({ isDao: !e.target.checked });
-                      if (!e.target.checked && context.accountId) {
-                        setSocialData(context.accountId);
-                      } else {
-                        if (state.daoAddress) {
-                          setSocialData(state.daoAddress);
-                        }
+            <Section>
+              <SubHeader title="Project details" requierd />
+              <DAOselect>
+                <div>Would you like to register project as DAO?</div>
+                <Radio
+                  name="is-dao"
+                  value={state.isDao ? "yes" : "no"}
+                  onChange={(e) => {
+                    const isDao = e.target.value === "yes";
+
+                    State.update({ isDao });
+                    if (!isDao && context.accountId) {
+                      setSocialData(context.accountId);
+                    } else {
+                      if (state.daoAddress) {
+                        setSocialData(state.daoAddress);
                       }
-                    },
-                    label: "Register as DAO",
-                    disabled: props.edit,
-                    containerStyle: {
-                      marginBottom: "24px",
-                    },
+                    }
                   }}
+                  options={[
+                    { label: "yes", value: "yes" },
+                    { label: "no", value: "no" },
+                  ]}
                 />
+              </DAOselect>
+              <Row>
                 <Text
                   {...{
                     label: state.isDao ? "DAO address *" : "Project ID *",
@@ -237,9 +220,6 @@ const CreateForm = (props: { edit: boolean }) => {
                         const NO_PERMISSIONS_ERROR = "You do not have required roles for this DAO";
                         Near.asyncView(state.daoAddressTemp, "get_policy", {})
                           .then((policy) => {
-                            // console.log("policy: ", policy);
-                            // State.update({ registeredProjects: projects });
-                            // Filter the user roles
                             // TODO: break this out (duplicated in Project.Body)
                             const userRoles = policy.roles.filter((role: any) => {
                               if (role.kind === "Everyone") return true;
@@ -283,12 +263,8 @@ const CreateForm = (props: { edit: boolean }) => {
                     error: state.isDao ? state.daoAddressError : "",
                   }}
                 />
-
-                <Space
-                  style={{
-                    height: "24px",
-                  }}
-                />
+              </Row>
+              <Row>
                 <Text
                   {...{
                     label: "Project name *",
@@ -313,18 +289,28 @@ const CreateForm = (props: { edit: boolean }) => {
                     error: state.nameError,
                   }}
                 />
-
-                <Space
-                  style={{
-                    height: "24px",
+                <SelectMultiple
+                  {...{
+                    label: "Select category (select multiple) *",
+                    placeholder: "Choose category",
+                    options: Object.values(CATEGORY_MAPPINGS).filter((el) => typeof el === "string"),
+                    onChange: (categories) => {
+                      State.update({
+                        categories,
+                      });
+                    },
+                    selected: state.categories,
                   }}
                 />
-
+              </Row>
+              <Row>
                 <TextArea
                   {...{
-                    label: "Overview *",
-                    placeholder: "Give a short description of your project",
+                    label: "Describe your project *",
+                    placeholder: "Type description",
                     value: state.description,
+                    maxCharacters: 500,
+
                     onChange: (description: string) => State.update({ description }),
                     validate: () => {
                       if (state.description.length > 500) {
@@ -340,18 +326,13 @@ const CreateForm = (props: { edit: boolean }) => {
                   }}
                 />
 
-                <Space
-                  style={{
-                    height: "24px",
-                  }}
-                />
-
                 <TextArea
                   {...{
-                    label: "Reason for considering yourself a public good *",
-                    placeholder: "Type response",
+                    label: "Why do you consider yourself a public good? *",
+                    placeholder: "Type description",
                     value: state.publicGoodReason,
                     onChange: (publicGoodReason: any) => State.update({ publicGoodReason }),
+                    maxCharacters: 500,
                     validate: () => {
                       if (state.publicGoodReason.length > 500) {
                         State.update({
@@ -365,477 +346,337 @@ const CreateForm = (props: { edit: boolean }) => {
                     error: state.publicGoodReasonError,
                   }}
                 />
-
-                <Space
-                  style={{
-                    height: "24px",
-                  }}
-                />
-
-                <SelectMultiple
-                  {...{
-                    label: "Select category (select multiple) *",
-                    placeholder: "Choose category",
-                    options: Object.values(CATEGORY_MAPPINGS).filter((el) => typeof el === "string"),
-                    onChange: (categories) => {
-                      State.update({
-                        categories,
-                      });
-                    },
-                    selected: state.categories,
-                  }}
-                />
-
-                <Space
-                  style={{
-                    height: "24px",
-                  }}
-                />
-
-                <CheckBox
-                  {...{
-                    id: "hasSmartContractsSelector",
-                    checked: state.hasSmartContracts,
-                    onClick: (e: any) => {
-                      State.update({ hasSmartContracts: e.target.checked });
-                    },
-                    label: "Yes, my project has smart contracts",
-                    containerStyle: {
-                      marginBottom: "16px",
-                    },
-                  }}
-                />
-                <CheckBox
-                  {...{
-                    id: "hasReceivedFundingSelector",
-                    checked: state.hasReceivedFunding,
-                    onClick: (e: any) => {
-                      State.update({ hasReceivedFunding: e.target.checked });
-                    },
-                    label: "Yes, my project has received funding",
-                    // containerStyle: {
-                    //   marginBottom: "24px",
-                    // },
-                  }}
-                />
-              </FormSectionRightDiv>
-            </FormSectionContainer>
-            {state.categories.includes(CATEGORY_MAPPINGS.OPEN_SOURCE) && (
-              <>
-                <FormDivider />
-                <FormSectionContainer>
-                  {FormSectionLeft(
-                    "Add Your Repositories",
-                    "Add full URLs for specific github repositories so we can track their popularity.",
-                    true,
-                  )}
-                  <FormSectionRightDiv>
-                    {state.githubRepos.map((repo: any, index: any) => {
-                      return (
-                        <Row style={{ marginBottom: "12px" }} key={index}>
-                          <Text
-                            {...{
-                              label: "GitHub Repo URL #" + (index + 1),
-                              // preInputChildren: <InputPrefix>github.com/</InputPrefix>,
-                              inputStyles: { borderRadius: "0px 4px 4px 0px" },
-                              value: state.githubRepos[index][0],
-                              onChange: (repo) =>
-                                State.update({
-                                  githubRepos: state.githubRepos.map((r: any, i: number) =>
-                                    i == index ? [repo] : [r[0]],
-                                  ),
-                                }),
-                              validate: () => {
-                                // validate link
-                                const isValid = validateGithubRepoUrl(repo);
-                                // if invalid, set the error as the 2nd element of the array
-                                if (!isValid) {
-                                  State.update({
-                                    githubRepos: state.githubRepos.map((r: any, i: number) =>
-                                      i == index ? [r[0], "Invalid GitHub Repo URL"] : [r[0]],
-                                    ),
-                                  });
-                                  return;
-                                }
-                              },
-                              error: state.githubRepos[index][1] || "",
-                            }}
-                          />
-
-                          {state.githubRepos.length > 1 && (
-                            <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
-                              <DeleteIcon
-                                className="delete-icon"
-                                onClick={() => {
-                                  const updatedRepos = state.githubRepos.filter((r: any, i: number) => i != index);
-                                  State.update({
-                                    githubRepos: updatedRepos,
-                                  });
-                                }}
-                              />
-                            </div>
-                          )}
-                        </Row>
-                      );
-                    })}
-                    <Button
+              </Row>
+            </Section>
+            <Section>
+              <SubHeader title="Smart contracts" />
+              {state.smartContracts.map(([chain, contractAddress]: [string, string], index: number) => {
+                return (
+                  <ContractRow key={index}>
+                    <Select
                       {...{
-                        varient: "outline",
-                        isDisabled: !state.githubRepos[state.githubRepos.length - 1][0],
-                        onClick: () => {
-                          State.update({
-                            githubRepos: [...state.githubRepos, [""]],
-                          });
+                        label: "Add chain",
+                        noLabel: false,
+                        placeholder: "Select chain",
+                        containerStyles: {
+                          maxWidth: "180px",
                         },
-                      }}
-                    >
-                      Add another repository
-                    </Button>
-                  </FormSectionRightDiv>
-                </FormSectionContainer>
-              </>
-            )}
-            {state.hasSmartContracts && (
-              <>
-                <FormDivider />
-                <FormSectionContainer>
-                  {FormSectionLeft(
-                    "Smart contracts",
-                    "Add smart contracts from different chains that belong to your application.",
-                    true,
-                  )}
-                  <FormSectionRightDiv>
-                    {state.smartContracts.map(([chain, contractAddress]: [string, string], index: number) => {
-                      return (
-                        <Row style={{ marginBottom: "12px" }} key={index}>
-                          <Select
-                            {...{
-                              label: "Add chain",
-                              noLabel: false,
-                              placeholder: "Select chain",
-                              options: Object.keys(CHAIN_OPTIONS).map((chain) => ({
-                                text: chain,
-                                value: chain,
-                              })),
-                              value: {
-                                text: chain,
-                                value: chain,
-                              },
-                              onChange: (chain) => {
-                                const updatedSmartContracts = state.smartContracts.map((sc: any, i: number) => {
-                                  if (i == index) {
-                                    return [chain.value, sc[1]];
-                                  }
-                                  return sc;
-                                });
-                                State.update({
-                                  smartContracts: updatedSmartContracts,
-                                });
-                              },
-                            }}
-                          />
-
-                          <Text
-                            {...{
-                              label: "Contract address",
-                              placeholder: "Enter address",
-                              value: contractAddress,
-                              onChange: (contractAddress) => {
-                                const updatedSmartContracts = state.smartContracts.map((sc: any, i: number) => {
-                                  if (i == index) {
-                                    return [sc[0], contractAddress];
-                                  }
-                                  return sc;
-                                });
-                                State.update({
-                                  smartContracts: updatedSmartContracts,
-                                });
-                              },
-                              validate: () => {
-                                // if NEAR, use validateNearAddress, otherwise if EVM, use validateEvmAddress
-                                const chain = state.smartContracts[index][0];
-                                const isEvm = CHAIN_OPTIONS[chain].isEVM;
-                                const isValid =
-                                  chain == "NEAR"
-                                    ? validateNearAddress(contractAddress)
-                                    : isEvm
-                                    ? validateEVMAddress(contractAddress)
-                                    : true; // TODO: validate non-EVM, non-NEAR addresses
-                                // if invalid, set the error as the 3rd element of the array
-                                if (!isValid) {
-                                  State.update({
-                                    smartContracts: state.smartContracts.map((sc: [string, string], i: number) => {
-                                      if (i == index) {
-                                        return [sc[0], sc[1], "Invalid address"];
-                                      }
-                                      return sc;
-                                    }),
-                                  });
-                                  return;
-                                }
-                              },
-                              error: state.smartContracts[index][2] || "",
-                            }}
-                          />
-
-                          {state.smartContracts.length > 1 && (
-                            <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
-                              <DeleteIcon
-                                className="delete-icon"
-                                onClick={() => {
-                                  const updatedSmartContracts = state.smartContracts.filter(
-                                    (sc: [string, string], i: number) => i != index,
-                                  );
-                                  State.update({
-                                    smartContracts: updatedSmartContracts,
-                                  });
-                                }}
-                              />
-                            </div>
-                          )}
-                        </Row>
-                      );
-                    })}
-
-                    <Button
-                      {...{
-                        varient: "outline",
-                        isDisabled:
-                          !state.smartContracts[state.smartContracts.length - 1][0] &&
-                          !state.smartContracts[state.smartContracts.length - 1][1],
-                        onClick: () => {
-                          State.update({
-                            smartContracts: [...state.smartContracts, ["", ""]],
-                          });
+                        options: Object.keys(CHAIN_OPTIONS).map((chain) => ({
+                          text: chain,
+                          value: chain,
+                        })),
+                        value: {
+                          text: chain,
+                          value: chain,
                         },
-                      }}
-                    >
-                      Add another contract
-                    </Button>
-                  </FormSectionRightDiv>
-                </FormSectionContainer>
-              </>
-            )}
-            {state.hasReceivedFunding && (
-              <>
-                <FormDivider />
-                <FormSectionContainer>
-                  {FormSectionLeft("Funding sources", "Add any previous funding you have received.", true)}
-                  {/* <FormSectionRightDiv>
-                        
-                      </FormSectionRightDiv> */}
-                </FormSectionContainer>
-                {state.fundingSources.length > 0 && (
-                  <Table>
-                    <div className="header">
-                      <div className="item">Funding source</div>
-                      <div className="item">Description</div>
-                      <div className="item amount">Amount</div>
-                      <div className="btns" />
-                    </div>
-                    {state.fundingSources.map((funding: any, idx: number) => (
-                      <div className="fudning-row" key={funding.investorName}>
-                        <div className="item source">
-                          <div>{funding.investorName}</div>
-                          {funding.date && (
-                            <div>
-                              {new Date(funding.date).toLocaleDateString("en-US", {
-                                month: "numeric",
-                                day: "numeric",
-                                year: "numeric",
-                              })}
-                            </div>
-                          )}
-                        </div>
-                        <div className="item">{funding.description}</div>
-                        <div className="item amount">
-                          <div>{funding.denomination}</div>
-                          <div>{funding.amountReceived}</div>
-                        </div>
-                        <div className="btns item">
-                          {/* Edit Button */}
-                          <svg
-                            onClick={() =>
-                              State.update({
-                                fundingSourceIndex: idx,
-                              })
+                        onChange: (chain) => {
+                          const updatedSmartContracts = state.smartContracts.map((sc: any, i: number) => {
+                            if (i == index) {
+                              return [chain.value, sc[1]];
                             }
-                            width="18"
-                            height="18"
-                            viewBox="0 0 18 18"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <g clip-path="url(#clip0_446_76)">
-                              <path
-                                d="M15.369 0.290547C14.979 -0.0994531 14.349 -0.0994531 13.959 0.290547L12.129 2.12055L15.879 5.87055L17.709 4.04055C18.099 3.65055 18.099 3.02055 17.709 2.63055L15.369 0.290547Z"
-                                fill="#7B7B7B"
-                              />
-                              <path
-                                d="M-0.000976562 18.0005H3.74902L14.809 6.94055L11.059 3.19055L-0.000976562 14.2505V18.0005ZM1.99902 15.0805L11.059 6.02055L11.979 6.94055L2.91902 16.0005H1.99902V15.0805Z"
-                                fill="#7B7B7B"
-                              />
-                            </g>
-                            <defs>
-                              <clipPath id="clip0_446_76">
-                                <rect width="18" height="18" fill="white" />
-                              </clipPath>
-                            </defs>
-                          </svg>
-                          {/* Delete Button */}
-                          <svg
-                            onClick={() => {
-                              const updatedFundingSources = state.fundingSources.filter(
-                                (fudning: any, i: number) => i !== idx,
-                              );
-                              State.update({
-                                fundingSources: updatedFundingSources,
-                              });
-                            }}
-                            width="14"
-                            height="18"
-                            viewBox="0 0 14 18"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
+                            return sc;
+                          });
+                          State.update({
+                            smartContracts: updatedSmartContracts,
+                          });
+                        },
+                      }}
+                    />
+
+                    <Text
+                      {...{
+                        label: "Contract address",
+                        placeholder: "Enter address",
+                        containerStyles: {
+                          flex: "1",
+                          maxWidth: "400px",
+                        },
+                        value: contractAddress,
+                        onChange: (contractAddress) => {
+                          const updatedSmartContracts = state.smartContracts.map((sc: any, i: number) => {
+                            if (i == index) {
+                              return [sc[0], contractAddress];
+                            }
+                            return sc;
+                          });
+                          State.update({
+                            smartContracts: updatedSmartContracts,
+                          });
+                        },
+                        validate: () => {
+                          // if NEAR, use validateNearAddress, otherwise if EVM, use validateEvmAddress
+                          const chain = state.smartContracts[index][0];
+                          const isEvm = CHAIN_OPTIONS[chain].isEVM;
+                          const isValid =
+                            chain == "NEAR"
+                              ? validateNearAddress(contractAddress)
+                              : isEvm
+                              ? validateEVMAddress(contractAddress)
+                              : true; // TODO: validate non-EVM, non-NEAR addresses
+                          // if invalid, set the error as the 3rd element of the array
+                          if (!isValid) {
+                            State.update({
+                              smartContracts: state.smartContracts.map((sc: [string, string], i: number) => {
+                                if (i == index) {
+                                  return [sc[0], sc[1], "Invalid address"];
+                                }
+                                return sc;
+                              }),
+                            });
+                            return;
+                          }
+                        },
+                        error: state.smartContracts[index][2] || "",
+                      }}
+                    />
+
+                    {state.smartContracts.length > 1 && (
+                      <Button
+                        style={{
+                          margin: "auto 0 9px auto",
+                        }}
+                        type="standard"
+                        varient="plain"
+                        onClick={() => {
+                          const updatedSmartContracts = state.smartContracts.filter(
+                            (sc: [string, string], i: number) => i != index,
+                          );
+                          State.update({
+                            smartContracts: updatedSmartContracts,
+                          });
+                        }}
+                      >
+                        <DeleteIcon />
+                        Remove contract
+                      </Button>
+                    )}
+                  </ContractRow>
+                );
+              })}
+
+              <Button
+                {...{
+                  varient: "plain",
+                  isDisabled:
+                    !state.smartContracts[state.smartContracts.length - 1][0] ||
+                    !state.smartContracts[state.smartContracts.length - 1][1] ||
+                    state.smartContracts[state.smartContracts.length - 1][2],
+                  onClick: () => {
+                    State.update({
+                      smartContracts: [...state.smartContracts, ["", ""]],
+                    });
+                  },
+                }}
+              >
+                Add more contract
+              </Button>
+            </Section>
+            <Section>
+              <SubHeader title="Funding sources" />
+              {state.fundingSources.length > 0 && (
+                <Table>
+                  <div className="header">
+                    <div className="item">Funding source</div>
+                    <div className="item">Description</div>
+                    <div className="item amount">Amount</div>
+                    <div className="btns" />
+                  </div>
+                  {state.fundingSources.map((funding: any, idx: number) => (
+                    <div className="fudning-row" key={funding.investorName}>
+                      <div className="item source">
+                        <div>{funding.investorName}</div>
+                        {funding.date && (
+                          <div>
+                            {new Date(funding.date).toLocaleDateString("en-US", {
+                              month: "numeric",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </div>
+                        )}
+                      </div>
+                      <div className="item">{funding.description}</div>
+                      <div className="item amount">
+                        <div>{funding.denomination}</div>
+                        <div>{funding.amountReceived}</div>
+                      </div>
+                      <div className="btns item">
+                        {/* Edit Button */}
+                        <svg
+                          onClick={() =>
+                            State.update({
+                              fundingSourceIndex: idx,
+                            })
+                          }
+                          width="18"
+                          height="18"
+                          viewBox="0 0 18 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g clip-path="url(#clip0_446_76)">
                             <path
-                              d="M11 6V16H3V6H11ZM9.5 0H4.5L3.5 1H0V3H14V1H10.5L9.5 0ZM13 4H1V16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4Z"
+                              d="M15.369 0.290547C14.979 -0.0994531 14.349 -0.0994531 13.959 0.290547L12.129 2.12055L15.879 5.87055L17.709 4.04055C18.099 3.65055 18.099 3.02055 17.709 2.63055L15.369 0.290547Z"
                               fill="#7B7B7B"
                             />
-                          </svg>
-                        </div>
+                            <path
+                              d="M-0.000976562 18.0005H3.74902L14.809 6.94055L11.059 3.19055L-0.000976562 14.2505V18.0005ZM1.99902 15.0805L11.059 6.02055L11.979 6.94055L2.91902 16.0005H1.99902V15.0805Z"
+                              fill="#7B7B7B"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_446_76">
+                              <rect width="18" height="18" fill="white" />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                        {/* Delete Button */}
+                        <svg
+                          onClick={() => {
+                            const updatedFundingSources = state.fundingSources.filter(
+                              (fudning: any, i: number) => i !== idx,
+                            );
+                            State.update({
+                              fundingSources: updatedFundingSources,
+                            });
+                          }}
+                          width="14"
+                          height="18"
+                          viewBox="0 0 14 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M11 6V16H3V6H11ZM9.5 0H4.5L3.5 1H0V3H14V1H10.5L9.5 0ZM13 4H1V16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4Z"
+                            fill="#7B7B7B"
+                          />
+                        </svg>
                       </div>
-                    ))}
-                  </Table>
-                )}
-                <Button
-                  {...{
-                    varient: "outline",
-                    style: {
-                      width: "fit-content",
-                      marginTop: "1rem",
-                      marginBottom: "3rem",
-                    },
-                    isDisabled: state.fundingSources.some(
-                      (fs: any) => !fs.investorName || !fs.amountReceived || !fs.denomination || !fs.description,
-                    ),
-                    onClick: () => {
-                      // add new funding source obj & set index
-                      const updatedFundingSources = [
-                        ...state.fundingSources,
-                        {
-                          investorName: "",
-                          description: "",
-                          amountReceived: "",
-                          denomination: "",
-                        },
-                      ];
-                      State.update({
-                        fundingSources: updatedFundingSources,
-                        fundingSourceIndex: updatedFundingSources.length - 1,
-                      });
-                    },
-                  }}
-                >
-                  Add funding source
-                </Button>
-              </>
-            )}
-            <FormDivider />
-            <FormSectionContainer>
-              {FormSectionLeft(
-                "Social links",
-                "Add your project social links to so supporters can connect with you directly.",
-                false,
+                    </div>
+                  ))}
+                </Table>
               )}
-              <FormSectionRightDiv>
-                <Text
-                  {...{
-                    label: "Twitter",
-                    preInputChildren: <InputPrefix>twitter.com/</InputPrefix>,
-                    inputStyles: { borderRadius: "0px 4px 4px 0px" },
-                    value: state.twitter,
-                    onChange: (twitter) => State.update({ twitter: twitter.trim() }),
-                    validate: () => {
-                      if (state.twitter.length > 15) {
-                        State.update({
-                          twitterError: "Invalid Twitter handle",
-                        });
-                        return;
-                      }
-                      State.update({ twitterError: "" });
-                    },
-                    error: state.twitterError,
-                  }}
-                />
+              <Button
+                {...{
+                  varient: "plain",
+                  // style: {
+                  //   marginTop: "1.5rem",
+                  // },
 
-                <Space
-                  style={{
-                    height: "24px",
-                  }}
-                />
-                <Text
-                  {...{
-                    label: "Telegram",
-                    preInputChildren: <InputPrefix>t.me/</InputPrefix>,
-                    inputStyles: { borderRadius: "0px 4px 4px 0px" },
-                    value: state.telegram,
-                    onChange: (telegram) => State.update({ telegram: telegram.trim() }),
-                    validate: () => {
-                      // TODO: add validation?
-                    },
-                    error: state.telegramError,
-                  }}
-                />
+                  onClick: () => {
+                    // add new funding source obj & set index
+                    const updatedFundingSources = [
+                      ...state.fundingSources,
+                      {
+                        investorName: "",
+                        description: "",
+                        amountReceived: "",
+                        denomination: "",
+                      },
+                    ];
+                    State.update({
+                      fundingSources: updatedFundingSources,
+                      fundingSourceIndex: updatedFundingSources.length - 1,
+                    });
+                  },
+                }}
+              >
+                <PlusIcon /> Add funding source
+              </Button>
+            </Section>
+            <Section>
+              <SubHeader title="Repositories" />
+              <Row>
+                {Array(4)
+                  .fill("")
+                  .map((_, index: number) => (
+                    <Text
+                      {...{
+                        preInputChildren: <InputPrefix>github.com/</InputPrefix>,
+                        inputContainerStyles: { border: "none" },
+                        inputStyles: {
+                          borderRadius: "0px 4px 4px 0px",
+                          transform: "translateX(-1px)",
+                        },
+                        value: state.githubRepos[index].value,
+                        onChange: (value) =>
+                          State.update({
+                            githubRepos: {
+                              ...state.githubRepos,
+                              [index]: {
+                                value,
+                              },
+                            },
+                          }),
+                        validate: () => {
+                          // validate link
+                          const repo = state.githubRepos[index];
 
-                <Space
-                  style={{
-                    height: "24px",
-                  }}
-                />
-                <Text
-                  {...{
-                    label: "GitHub",
-                    preInputChildren: <InputPrefix>github.com/</InputPrefix>,
-                    inputStyles: { borderRadius: "0px 4px 4px 0px" },
-                    value: state.github,
-                    onChange: (github) => State.update({ github: github.trim() }),
-                    validate: () => {
-                      // TODO: add validation
-                    },
-                    error: state.githubError,
-                  }}
-                />
-
-                <Space
-                  style={{
-                    height: "24px",
-                  }}
-                />
-
-                <Text
-                  {...{
-                    label: "Website",
-                    preInputChildren: <InputPrefix>https://</InputPrefix>,
-                    inputStyles: { borderRadius: "0px 4px 4px 0px" },
-                    value: state.website,
-                    onChange: (website) => State.update({ website: website.trim() }),
-                    validate: () => {
-                      // TODO: add validation
-                    },
-                    error: state.websiteError,
-                  }}
-                />
-
-                <Space
-                  style={{
-                    height: "24px",
-                  }}
-                />
-
+                          const isValid =
+                            validateGithubRepoUrl(repo.value) || repo.value === "" || repo.value === undefined;
+                          // if invalid, set the error as the 2nd element of the array
+                          if (!isValid) {
+                            State.update({
+                              githubRepos: {
+                                ...state.githubRepos,
+                                [index]: {
+                                  value: repo.value,
+                                  err: "Invalid GitHub Repo URL",
+                                },
+                              },
+                            });
+                          } else {
+                            State.update({
+                              githubRepos: {
+                                ...state.githubRepos,
+                                [index]: {
+                                  value: repo.value,
+                                  err: "",
+                                },
+                              },
+                            });
+                          }
+                        },
+                        error: state.githubRepos[index].err || "",
+                      }}
+                    />
+                  ))}
+              </Row>
+            </Section>
+            <Section>
+              <SubHeader title="Social links" />
+              <Row>
+                {socialFields.map(({ label, error, placeholder }) => (
+                  <Text
+                    {...{
+                      label: label.charAt(0).toUpperCase() + label.slice(1),
+                      preInputChildren: <InputPrefix>{placeholder}</InputPrefix>,
+                      inputContainerStyles: { border: "none" },
+                      inputStyles: {
+                        borderRadius: "0px 4px 4px 0px",
+                        transform: "translateX(-1px)",
+                      },
+                      value: state[label],
+                      onChange: (value) => State.update({ [label]: value.trim() }),
+                      validate: () => {
+                        // TODO: add validation
+                      },
+                      error: state[error],
+                    }}
+                  />
+                ))}
+              </Row>
+            </Section>
+            <Section>
+              <BtnWrapper>
+                <Button type="standard" varient="outline" onClick={() => navigate.to(routesPath.PROJECTS_LIST_TAB)}>
+                  Cancel
+                </Button>
                 <Button
                   {...{
                     prefix: "https://",
+                    type: "standard",
+                    varient: "filled",
                     isDisabled: isCreateProjectDisabled,
                     onClick: handleCreateOrUpdateProject,
                   }}
@@ -848,14 +689,8 @@ const CreateForm = (props: { edit: boolean }) => {
                     ? "Add proposal to create project"
                     : "Create new project"}
                 </Button>
-
-                <Space
-                  style={{
-                    height: "24px",
-                  }}
-                />
-              </FormSectionRightDiv>
-            </FormSectionContainer>
+              </BtnWrapper>
+            </Section>
           </FormBody>
           {state.isMultiAccountModalOpen && (
             <ModalMultiAccount

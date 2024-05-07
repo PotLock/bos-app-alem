@@ -4,39 +4,23 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 72px 64px 72px 64px;
-
+  padding: 4rem 0px;
+  max-width: 816px;
+  margin: auto;
   @media screen and (max-width: 768px) {
-    padding: 0px;
+    padding: 3rem 0px;
   }
 `;
 
 export const LowerBannerContainer = styled.div`
-  position: absolute;
-  top: 340px;
-  left: 0px;
   display: flex;
-  align-items: stretch; /* Ensuring child elements stretch to full height */
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  z-index: 10;
-  @media screen and (max-width: 768px) {
-    top: 310px;
-    position: initial;
-    align-items: flex-start;
-    gap: 10px;
-    flex-direction: column;
-  }
 `;
 
 export const LowerBannerContainerLeft = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  margin-left: 190px;
-  @media screen and (max-width: 768px) {
-    margin-left: 0px;
-  }
 `;
 
 export const LowerBannerContainerRight = styled.div`
@@ -48,12 +32,10 @@ export const LowerBannerContainerRight = styled.div`
 `;
 
 export const AddTeamMembers = styled.a`
-  margin: 0px 0px 16px 36px;
   cursor: pointer;
   color: #dd3345;
   font-size: 14px;
   font-weight: 600;
-
   &:hover {
     text-decoration: none;
   }
@@ -65,11 +47,45 @@ export const AddTeamMembers = styled.a`
 export const FormBody = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0px 68px 32px 68px;
-  width: 100%;
+  align-items: flex-start;
+  gap: 4rem;
+`;
 
-  @media screen and (max-width: 768px) {
-    padding: 0px 32px 32px 32px;
+export const SubTitle = styled.div`
+  font-size: 20px;
+  font-weight: 600;
+  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  span {
+    font-size: 14px;
+    line-height: 140%;
+  }
+  .optional {
+    color: #656565;
+  }
+  .required {
+    color: #db521b;
+    font-weight: 500;
+  }
+  @media only screen and (max-width: 768px) {
+    font-size: 18px;
+  }
+`;
+
+export const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+`;
+
+export const DAOselect = styled.div`
+  display: flex;
+  justify-content: space-between;
+  div {
+    font-weight: 500;
   }
 `;
 
@@ -79,22 +95,17 @@ export const FormDivider = styled.div`
   background-color: #ebebeb;
 `;
 
+export const BtnWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+`;
+
 export const FormSectionContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 160px;
   margin: 48px 0 48px 0;
-  .delete-icon {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    path {
-      transition: 300ms;
-    }
-    :hover path {
-      fill: #dd3345;
-    }
-  }
   @media screen and (max-width: 768px) {
     flex-direction: column;
     gap: 32px;
@@ -120,25 +131,61 @@ export const ButtonsContainer = styled.div`
 export const Space = styled.div``;
 
 export const InputPrefix = styled.div`
+  color: var(--Neutral-600);
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.22) inset;
+  border-radius: 4px 0px 0px 4px;
+  font-size: 14px;
+  background: var(--Neutral-50);
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100%;
-  text-align: center;
-  padding: 14px 16px;
-  border-right: 1px #f0f0f0 solid;
-  color: #7b7b7b;
-  font-size: 16px;
-  font-weight: 400;
-  box-shadow: 0px -2px 0px rgba(93, 93, 93, 0.24) inset;
+  justify-content: center;
+  padding: 0 1rem;
 `;
 
 export const Row = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  .rbt {
+    width: 100%;
+    > div {
+      border: 1px solid rgb(208, 213, 221);
+      padding: 0.5em 0.75em;
+      box-shadow: rgba(16, 24, 40, 0.05) 0px 1px 2px;
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    grid-template-columns: 100%;
+  }
+`;
+
+export const ContractRow = styled.div`
   display: flex;
-  flex-direction: row;
-  gap: 16px;
+  align-items: center;
+  gap: 2rem;
   align-items: flex-start;
-  justify-content: center;
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+    > div {
+      max-width: 100% !important;
+    }
+  }
+`;
+
+export const RepoLink = styled.div`
+  display: flex;
+  .github-url {
+    color: var(--Neutral-600);
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.22) inset;
+    font-size: 14px;
+    background: var(--Neutral-50);
+    border-radius: 6px 0px 0px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+  }
 `;
 
 export const FundingHeader = styled.div`
@@ -170,15 +217,16 @@ export const Table = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 6px;
-  border: 1px solid #7b7b7b;
-  background: #fff;
+  border: 1px solid var(--Neutral-100);
+  font-size: 14px;
   .header,
   .fudning-row {
     display: flex;
     justify-content: space-between;
   }
   .header {
-    border-bottom: 0.5px solid #7b7b7b;
+    background: var(--Neutral-50);
+    color: var(--Neutral-600);
   }
   .fudning-row:not(:last-of-type) {
     border-bottom: 0.5px solid #7b7b7b;
@@ -233,8 +281,8 @@ export const Table = styled.div`
   }
   .header .item {
     padding: 10px 1rem;
-    color: #7b7b7b;
-    font-weight: 600;
+    color: var(--Neutral-600);
+    font-weight: 500;
   }
   .fudning-row .item {
     padding: 1rem 1rem;

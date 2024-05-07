@@ -24,8 +24,12 @@ export const getSocialData = () => {
       plCategories: JSON.stringify(state.categories),
       description: state.description,
       plPublicGoodReason: state.publicGoodReason,
-      plSmartContracts: state.hasSmartContracts ? JSON.stringify(formattedSmartContracts) : null,
-      plGithubRepos: JSON.stringify(state.githubRepos.map((repo: any) => repo[0]).filter((val: any) => val)),
+      plSmartContracts: formattedSmartContracts ? JSON.stringify(formattedSmartContracts) : null,
+      plGithubRepos: JSON.stringify(
+        Object.values(state.githubRepos)
+          .map(({ value, err }: any) => (err ? false : value))
+          .filter((val: any) => val),
+      ),
       plFundingSources: JSON.stringify(state.fundingSources),
       linktree: {
         website: state.website,

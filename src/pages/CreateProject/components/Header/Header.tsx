@@ -1,12 +1,7 @@
-import { useParams } from "alem";
 import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
 import { HeaderContainer, HeaderDescription, HeaderTitle } from "./stlyes";
 
-const Header = () => {
-  const { tab } = useParams();
-
-  const edit = tab === "editproject";
-
+const Header = ({ edit }: { edit: boolean }) => {
   return (
     <HeaderContainer
       style={{

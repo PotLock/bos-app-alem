@@ -1,14 +1,10 @@
-const DEFAULT_BANNER_IMAGE_CID = "bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";
-
 const DEFAULT_STATE = {
   isDao: false,
   daoAddressTemp: "", // used while input is focused
   daoAddress: "", // set on input blur
   daoAddressError: "",
   existingSocialData: {},
-  backgroundImage: {
-    ipfs_cid: DEFAULT_BANNER_IMAGE_CID,
-  },
+  backgroundImage: "",
   profileImage: "",
   name: "",
   nameError: "",
@@ -23,7 +19,7 @@ const DEFAULT_STATE = {
   originalSmartContracts: [], // to keep track of removals
   smartContracts: [["", ""]], // [chain, contractAddress]
   originalGithubRepos: [], // to keep track of removals
-  githubRepos: [[""]],
+  githubRepos: {},
   hasReceivedFunding: false,
   fundingSourceIndex: null,
   originalFundingSources: [], // to keep track of removals

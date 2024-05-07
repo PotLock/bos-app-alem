@@ -14,7 +14,9 @@ type Props = {
   postInputChildren?: any;
   disabled?: boolean;
   percent?: boolean;
-  inputStyles?: any;
+  inputStyles?: React.CSSProperties;
+  containerStyles?: React.CSSProperties;
+  inputContainerStyles?: React.CSSProperties;
 };
 
 const Text = (props: Props) => {
@@ -27,9 +29,9 @@ const Text = (props: Props) => {
   const error = props.error ?? "";
 
   return (
-    <Container>
+    <Container style={props.containerStyles || {}}>
       {label && <Label>{label}</Label>}
-      <InputContainer>
+      <InputContainer style={props.inputContainerStyles || {}}>
         {props.preInputChildren && props.preInputChildren}
         <Input
           type="text"
@@ -48,7 +50,7 @@ const Text = (props: Props) => {
         {props.percent && <PercentageSign>%</PercentageSign>}
         {props.postInputChildren && props.postInputChildren}
       </InputContainer>
-      <Error className={error ? "show" : ""}>{error}</Error>
+      {error && <Error>{error}</Error>}
     </Container>
   );
 };

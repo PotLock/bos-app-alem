@@ -1,17 +1,16 @@
 import { Router, createRoute } from "alem";
-import routesPath from "./routesPath";
-import ProjectsPage from "@app/pages/Projects/Projects";
-import ProjectPage from "@app/pages/Project/Project";
-import DonorPage from "@app/pages/Donor/Donor";
-import EditProfile from "@app/pages/Profile/Edit";
-import PotsHome from "@app/pages/PotsHome/PotsHome";
-import Pot from "@app/pages/Pot/Pot";
-import FeedPage from "@app/pages/Feed";
-import DeployPot from "@app/pages/DeployPot/DeployPot";
-import ConfigForm from "@app/pages/Pot/NavPages/ConfigForm/ConfigForm";
-import Leaderboard from "@app/pages/Leaderboard/Leaderboard";
 import Cart from "@app/pages/Cart/Cart";
 import CreateProject from "@app/pages/CreateProject/CreateProject";
+import DeployPot from "@app/pages/DeployPot/DeployPot";
+import DonorPage from "@app/pages/Donor/Donor";
+import FeedPage from "@app/pages/Feed";
+import Leaderboard from "@app/pages/Leaderboard/Leaderboard";
+import Pot from "@app/pages/Pot/Pot";
+import PotsHome from "@app/pages/PotsHome/PotsHome";
+import EditProfile from "@app/pages/Profile/Edit";
+import ProjectPage from "@app/pages/Project/Project";
+import ProjectsPage from "@app/pages/Projects/Projects";
+import routesPath from "./routesPath";
 
 const Routes = () => {
   const ProjectsRoute = createRoute(routesPath.PROJECTS_LIST_TAB, () => <ProjectsPage />);

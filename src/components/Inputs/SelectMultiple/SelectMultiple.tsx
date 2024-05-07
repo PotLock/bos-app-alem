@@ -1,4 +1,4 @@
-import { TypeAhead } from "alem";
+import { Typeahead } from "alem";
 import { Container, Label } from "./styles";
 
 type Props = {

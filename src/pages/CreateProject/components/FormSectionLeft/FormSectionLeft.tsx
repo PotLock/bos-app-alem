@@ -6,7 +6,13 @@ import {
   SvgContainer,
 } from "./styles";
 
-const FormSectionLeft = (title: any, description: any, isRequired: any) => {
+type Props = {
+  title: string;
+  description?: string;
+  isRequired?: boolean;
+};
+
+const FormSectionLeft = ({ title, description, isRequired }: Props) => {
   return (
     <FormSectionLeftDiv>
       <FormSectionTitle>{title}</FormSectionTitle>
