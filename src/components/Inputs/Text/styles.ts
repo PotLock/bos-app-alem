@@ -8,6 +8,7 @@ export const Container = styled.div`
   padding: 0px;
   gap: 0.45em;
   width: 100%;
+  font-size: 14px;
 `;
 
 export const Label = styled.label`
@@ -25,13 +26,8 @@ export const Error = styled.span`
   font-size: 0.75em;
   line-height: 1.25em;
   color: #ff4d4f;
-  height: 0;
   overflow: hidden;
   transition: height 0.3s ease-in-out;
-
-  &.show {
-    height: 1.25em;
-  }
 `;
 
 export const InputContainer = styled.div`
@@ -39,8 +35,7 @@ export const InputContainer = styled.div`
   flex-direction: row;
   width: 100%;
   background: #ffffff;
-  border: 1px solid #d0d5dd;
-  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.22) inset;
   border-radius: 4px;
 `;
 
@@ -59,6 +54,7 @@ export const InputPrefix = styled.div`
 
 export const Input = styled.input`
   border: none;
+  background: transparent;
   display: flex;
   flex-direction: row;
   align-items: center;

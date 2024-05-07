@@ -75,18 +75,6 @@ const ConfirmDirect = ({
     }, pollIntervalMs);
   };
 
-  const ProfileImg = ({ accountId }: any) => <ProfileImage accountId={accountId} style={{}} />;
-
-  const CheckBoxWrapper = ({ id, checked, onClick }: any) => (
-    <CheckBox
-      {...{
-        id,
-        checked,
-        onClick,
-      }}
-    />
-  );
-
   // Get protcol, referral & chef Fee
   const potDetail = PotSDK.getConfig(selectedRound);
 
@@ -289,11 +277,11 @@ const ConfirmDirect = ({
       </div>
       <FeesRemoval>
         <div className="check">
-          <CheckBoxWrapper
+          <CheckBox
             id="bypassProtocolFeeSelector"
             checked={bypassProtocolFee}
             onClick={(e: any) => {
-              updateState({ bypassProtocolFee: e.target.checked });
+              updateState({ bypassProtocolFee: !bypassProtocolFee });
             }}
           />
 
@@ -303,24 +291,24 @@ const ConfirmDirect = ({
             className="address"
             target="_blank"
           >
-            <ProfileImg accountId={protocolFeeRecipientAccount} />
+            <ProfileImage accountId={protocolFeeRecipientAccount} style={{}} />
 
             {protocolFeeRecipientAccount}
           </a>
         </div>
         {potDetail?.chef && chefFeeBasisPoints > 0 && (
           <div className="check">
-            <CheckBoxWrapper
+            <CheckBox
               id="bypassChefFeeSelector"
               checked={bypassChefFee}
               onClick={(e: any) => {
-                updateState({ bypassChefFee: e.target.checked });
+                updateState({ bypassChefFee: !bypassChefFee });
               }}
             />
 
             <div className="label"> Remove {chefFeeBasisPoints / 100 || "-"}% chef fee</div>
             <a href={hrefWithParams(`?tab=profile&accountId=${potDetail?.chef}`)} className="address" target="_blank">
-              <ProfileImg accountId={potDetail?.chef} />
+              <ProfileImage accountId={potDetail?.chef} style={{}} />
 
               {potDetail?.chef}
             </a>

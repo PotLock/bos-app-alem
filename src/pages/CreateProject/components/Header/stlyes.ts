@@ -1,66 +1,38 @@
 import styled from "styled-components";
 
 export const HeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 64px 40px;
   width: 100%;
-
-  padding: 80px 64px;
-
+  gap: 1.5rem;
+  justify-content: center;
+  border: 1px solid #f8d3b0;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
   @media (max-width: 768px) {
-    padding: 36px 24px;
+    padding: 48px 20px;
+    text-align: left;
   }
 `;
 
-export const HeaderContent = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 export const HeaderTitle = styled.div`
-  color: #2e2e2e;
-  font-size: 88px;
-  font-weight: 500;
-  word-wrap: break-word;
-  position: relative;
-  text-align: center;
-  z-index: 1;
-  position: relative;
+  font-size: 40px;
   font-family: "Lora";
+  line-height: 120%;
+  letter-spacing: -0.8px;
   @media (max-width: 768px) {
-    font-size: 48px;
+    font-size: 32px;
   }
 `;
 
 export const HeaderDescription = styled.div`
-  color: #2e2e2e;
-  font-size: 32px;
-  font-weight: 400;
-  word-wrap: break-word;
-  max-width: 866px;
-  margin-top: 32px;
-
+  font-size: 18px;
+  line-height: 155%;
+  max-width: 600px;
   @media (max-width: 768px) {
-    font-size: 24px;
-    text-align: center;
-  }
-`;
-
-export const ButtonsContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  margin-top: 32px;
-`;
-
-export const Underline = styled.div`
-  position: absolute;
-  top: 44px;
-  left: -40px;
-  z-index: -1;
-
-  @media (max-width: 768px) {
-    top: 30px;
-    left: -30px;
+    font-size: 16px;
   }
 `;

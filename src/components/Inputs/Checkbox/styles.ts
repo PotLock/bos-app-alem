@@ -7,16 +7,58 @@ export const Container = styled.div`
   align-items: center;
 `;
 
-export const CheckBoxContent = styled.input`
+export const CheckBoxContent = styled.div`
+  position: relative;
   width: 18px;
   height: 18px;
-  padding: 0px;
-  appearance: checkbox;
-  cursor: pointer;
-  /* TODO: update background color when selected */
+  border: 1px solid #c7c7c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 300ms ease-in-out;
+  svg {
+    width: 10px;
+    opacity: 0;
+    transition: all 300ms ease-in-out;
+    path {
+      fill: #ebebeb;
+    }
+  }
+  input {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    cursor: pointer;
+  }
+  &:hover svg,
+  &.active svg,
+  &.disabled svg {
+    opacity: 1;
+  }
+  &.active {
+    border-color: #dd3345;
+    background: #dd3345;
+    svg path {
+      fill: #fff;
+    }
+  }
+  &.disabled {
+    border-color: #c7c7c7;
+    pointer-events: none;
+    svg path {
+      fill: #c7c7c7;
+    }
+  }
 `;
 
-export const Label = styled.label``;
+export const Label = styled.label`
+  font-size: 14px;
+  &.disabled {
+    color: #a6a6a6;
+  }
+`;
 
 export const Error = styled.span`
   display: inline-block;
