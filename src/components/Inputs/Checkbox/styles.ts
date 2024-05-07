@@ -8,6 +8,7 @@ export const Container = styled.div`
 `;
 
 export const CheckBoxContent = styled.div`
+  position: relative;
   width: 18px;
   height: 18px;
   border: 1px solid #c7c7c7;
@@ -15,7 +16,6 @@ export const CheckBoxContent = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  cursor: pointer;
   transition: all 300ms ease-in-out;
   svg {
     width: 10px;
@@ -24,6 +24,13 @@ export const CheckBoxContent = styled.div`
     path {
       fill: #ebebeb;
     }
+  }
+  input {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    cursor: pointer;
   }
   &:hover svg,
   &.active svg,

@@ -1,3 +1,4 @@
+import { MouseEventHandler } from "react";
 import CheckIcon from "@app/assets/svgs/CheckIcon";
 import { CheckBoxContent, Container, Error, Label } from "./styles";
 
@@ -6,7 +7,7 @@ type Props = {
   label?: string;
   disabled?: boolean;
   checked: boolean;
-  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+  onClick: MouseEventHandler<HTMLInputElement>;
   containerStyle?: React.CSSProperties;
   checkBoxStyle?: React.CSSProperties;
   labelStyle?: React.CSSProperties;
@@ -22,12 +23,8 @@ const CheckBox = (props: Props) => {
 
   return (
     <Container style={containerStyle}>
-      <CheckBoxContent
-        id={id}
-        onClick={onClick}
-        className={`${checked ? "active" : ""} ${disabled ? "disabled" : ""}`}
-        style={checkBoxStyle}
-      >
+      <CheckBoxContent className={`${checked ? "active" : ""} ${disabled ? "disabled" : ""}`} style={checkBoxStyle}>
+        <input type="checkbox" id={id} onClick={onClick} />
         <CheckIcon />
       </CheckBoxContent>
 

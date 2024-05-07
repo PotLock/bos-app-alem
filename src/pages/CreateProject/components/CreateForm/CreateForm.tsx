@@ -11,7 +11,6 @@ import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
 import BannerHeader from "@app/pages/Profile/components/BannerHeader/BannerHeader";
 import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
-import hrefWithParams from "@app/utils/hrefWithParams";
 import validateEVMAddress from "@app/utils/validateEVMAddress";
 import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
 import validateNearAddress from "@app/utils/validateNearAddress";
@@ -26,9 +25,9 @@ import AccountsStack from "../AccountsStack/AccountsStack";
 import DAOInProgress from "../DAOInProgress/DAOInProgress";
 import FormSectionLeft from "../FormSectionLeft/FormSectionLeft";
 import ModalAddFundingSource from "../ModalAddFundingSource/ModalAddFundingSource";
+import SuccessfullRegister from "../SuccessfullRegister/SuccessfullRegister";
 import {
   AddTeamMembers,
-  ButtonsContainer,
   Container,
   FormBody,
   FormDivider,
@@ -143,28 +142,7 @@ const CreateForm = (props: { edit: boolean }) => {
       ) : proposalInProgress ? (
         <DAOInProgress proposalInProgress={proposalInProgress} />
       ) : !props.edit && (registeredProject || state.registrationSuccess) ? (
-        <>
-          <h1 style={{ textAlign: "center" }}>You've successfully registered!</h1>
-          <ButtonsContainer>
-            <Button
-              {...{
-                isDisabled: false,
-                href: hrefWithParams(`?tab=project&projectId=${registeredProject?.id || context.accountId}`),
-              }}
-            >
-              View your project
-            </Button>
-            <Button
-              {...{
-                varient: "tonal",
-                isDisabled: false,
-                href: hrefWithParams(`?tab=projects`),
-              }}
-            >
-              View all projects
-            </Button>
-          </ButtonsContainer>
-        </>
+        <SuccessfullRegister registeredProject={registeredProject} />
       ) : (
         <>
           <BannerHeader
@@ -222,9 +200,9 @@ const CreateForm = (props: { edit: boolean }) => {
                   {...{
                     id: "masterSelector",
                     checked: state.isDao,
-                    onClick: () => {
-                      State.update({ isDao: !state.isDao });
-                      if (!state.isDao && context.accountId) {
+                    onClick: (e) => {
+                      State.update({ isDao: !e.target.checked });
+                      if (!e.target.checked && context.accountId) {
                         setSocialData(context.accountId);
                       } else {
                         if (state.daoAddress) {
