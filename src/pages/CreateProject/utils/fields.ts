@@ -16,7 +16,7 @@ export const socialFields = [
     error: "githubError",
   },
   {
-    label: "Website",
+    label: "website",
     placeholder: "https://",
     error: "websiteError",
   },
