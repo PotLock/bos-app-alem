@@ -215,7 +215,7 @@ const CreateForm = (props: { edit: boolean }) => {
                       State.update({ daoAddressTemp: daoAddress.toLowerCase(), daoAddressError: "" }),
                     validate: () => {
                       // **CALLED ON BLUR**
-                      if (state.isDao) {
+                      if (state.isDao && state.daoAddress) {
                         const isValid = validateNearAddress(state.daoAddressTemp);
                         if (!isValid) {
                           State.update({
@@ -227,33 +227,35 @@ const CreateForm = (props: { edit: boolean }) => {
                         Near.asyncView(state.daoAddressTemp, "get_policy", {})
                           .then((policy) => {
                             // TODO: break this out (duplicated in Project.Body)
-                            const userRoles = policy.roles.filter((role: any) => {
-                              if (role.kind === "Everyone") return true;
-                              return role.kind.Group && role.kind.Group.includes(context.accountId);
-                            });
-                            const kind = "call";
-                            const action = "AddProposal";
-                            // Check if the user is allowed to perform the action
-                            const allowed = userRoles.some(({ permissions }: any) => {
-                              return (
-                                permissions.includes(`${kind}:${action}`) ||
-                                permissions.includes(`${kind}:*`) ||
-                                permissions.includes(`*:${action}`) ||
-                                permissions.includes("*:*")
-                              );
-                            });
-                            if (!allowed) {
-                              State.update({
-                                daoAddressError: NO_PERMISSIONS_ERROR,
+                            if (policy) {
+                              const userRoles = policy.roles.filter((role: any) => {
+                                if (role.kind === "Everyone") return true;
+                                return role.kind.Group && role.kind.Group.includes(context.accountId);
                               });
-                            } else {
-                              // add all council roles to team (but not current user)
-                              const councilRole = policy.roles.find((role: any) => role.name === "council");
-                              const councilTeamMembers = councilRole?.kind?.Group || [];
-                              State.update({
-                                daoAddress: state.daoAddressTemp,
-                                teamMembers: councilTeamMembers,
+                              const kind = "call";
+                              const action = "AddProposal";
+                              // Check if the user is allowed to perform the action
+                              const allowed = userRoles.some(({ permissions }: any) => {
+                                return (
+                                  permissions.includes(`${kind}:${action}`) ||
+                                  permissions.includes(`${kind}:*`) ||
+                                  permissions.includes(`*:${action}`) ||
+                                  permissions.includes("*:*")
+                                );
                               });
+                              if (!allowed) {
+                                State.update({
+                                  daoAddressError: NO_PERMISSIONS_ERROR,
+                                });
+                              } else {
+                                // add all council roles to team (but not current user)
+                                const councilRole = policy.roles.find((role: any) => role.name === "council");
+                                const councilTeamMembers = councilRole?.kind?.Group || [];
+                                State.update({
+                                  daoAddress: state.daoAddressTemp,
+                                  teamMembers: councilTeamMembers,
+                                });
+                              }
                             }
                           })
                           .catch((e) => {
