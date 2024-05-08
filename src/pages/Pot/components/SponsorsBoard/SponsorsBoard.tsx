@@ -1,11 +1,15 @@
 import { Social } from "alem";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import constants from "@app/constants";
 import _address from "@app/utils/_address";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import { Container } from "./styles";
 
 const Sponsor = ({ donation: { amount, donor_id, percentage_share }, colIdx }: any) => {
   const profile: any = Social.getr(`${donor_id}/profile`);
+  const {
+    SUPPORTED_FTS: { NEAR },
+  } = constants;
 
   return (
     <div className={`item ${colIdx === 2 && "first"}`}>
@@ -15,7 +19,7 @@ const Sponsor = ({ donation: { amount, donor_id, percentage_share }, colIdx }: a
       </a>
       <div>{_address(profile.description, colIdx === 2 ? 120 : 35)}</div>
       <div className="footer">
-        <div className="amount">{amount} NEAR</div>
+        <div className="amount">{NEAR.fromIndivisible(amount)} NEAR</div>
         <div className="percentage">{percentage_share}%</div>
       </div>
     </div>
