@@ -44,10 +44,8 @@ export const NavRightMobile = styled.div`
   display: none;
   @media screen and (max-width: 768px) {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: flex-end;
-    gap: 4rem;
+    justify-content: space-between;
     flex: 1;
   }
 `;
