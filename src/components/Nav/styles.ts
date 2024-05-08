@@ -47,8 +47,8 @@ export const NavRightMobile = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    gap: 16px;
-    padding-right: 16px;
+    gap: 4rem;
+    flex: 1;
   }
 `;
 
