@@ -7,7 +7,6 @@ import {
   getLocation,
   navigate,
   state,
-  useContext,
   useEffect,
   useMemo,
   useParams,
@@ -32,10 +31,6 @@ import {
   TextBold,
   TwitterShare,
 } from "./styles";
-
-type Props = {
-  successfulDonation: any;
-};
 
 const ModalSuccess = () => {
   const DEFAULT_GATEWAY = "https://bos.potlock.org/";
@@ -170,9 +165,14 @@ const ModalSuccess = () => {
                 })
                 .catch((err) => console.log(err));
             }
+          } else {
+            onClose();
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          onClose();
+        });
     }
   }
 
