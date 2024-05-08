@@ -1,6 +1,5 @@
 import { State, state, useParams } from "alem";
 import PotSDK from "@app/SDK/pot";
-import constants from "@app/constants";
 import { PotDetail } from "@app/types";
 import SponsorsBoard from "../../components/SponsorsBoard/SponsorsBoard";
 import SponsorsTable from "../../components/SponsorsTable/SponsorsTable";
@@ -11,8 +10,6 @@ const Sponsors = ({ potDetail }: { potDetail: PotDetail }) => {
 
   let sponsorshipDonations = PotSDK.getMatchingPoolDonations(potId);
 
-  const { SUPPORTED_FTS } = constants;
-
   State.init({
     sponsorshipDonations: null,
   });
@@ -21,16 +18,14 @@ const Sponsors = ({ potDetail }: { potDetail: PotDetail }) => {
     // accumulate donations for each address
     sponsorshipDonations = sponsorshipDonations.reduce((accumulator: any, currentDonation: any) => {
       accumulator[currentDonation.donor_id] = {
-        amount:
-          parseFloat(accumulator[currentDonation.donor_id].amount || 0) +
-          parseFloat(SUPPORTED_FTS.NEAR.fromIndivisible(currentDonation.net_amount)),
+        amount: accumulator[currentDonation.donor_id].amount || 0 + currentDonation.net_amount,
         ...currentDonation,
       };
       return accumulator;
     }, {});
 
     // add % share of total to each donation
-    const total = parseFloat(SUPPORTED_FTS.NEAR.fromIndivisible(potDetail.matching_pool_balance));
+    const total = parseFloat(potDetail.matching_pool_balance);
 
     sponsorshipDonations = Object.values(sponsorshipDonations).sort((a: any, b: any) => b.amount - a.amount);
     sponsorshipDonations = sponsorshipDonations.map((donation: any) => {
