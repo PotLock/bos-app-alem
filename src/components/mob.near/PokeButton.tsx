@@ -1,7 +1,6 @@
 /**
  * https://near.org/near/widget/ComponentDetailsPage?src=mob.near/widget/PokeButton
  */
-
 import { CommitButton, context } from "alem";
 import ProfileImage from "./ProfileImage";
 

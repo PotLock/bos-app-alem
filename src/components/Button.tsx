@@ -6,6 +6,7 @@ type Props = {
   type?: "brand" | "standard";
   varient?: "outline" | "tonal" | "filled" | "plain";
   customClassName?: string;
+  name?: string;
   isDisabled?: boolean;
   href?: string;
   onClick?: (e: MouseEvent) => void;
@@ -19,6 +20,7 @@ type Props = {
 const Button = ({
   type,
   varient,
+  name,
   customClassName,
   isDisabled,
   href,
@@ -43,12 +45,7 @@ const Button = ({
         style: style ?? {},
         target: target,
         ...(href ? { href } : {}),
-      }}
-      onClick={(e: any) => {
-        if (stopPropagation) e.stopPropagation();
-        if (onClick) {
-          onClick(e);
-        }
+        ...(name ? { name } : {}),
       }}
     >
       {iconSrc && <Icon src={iconSrc} />}

@@ -1,5 +1,5 @@
-import { Container, Description, Heading, Text } from "./styles";
 import InfoIcon from "@app/assets/svgs/InfoIcon";
+import { Container, Description, Heading, Text } from "./styles";
 
 const InfoSegment = ({ title, description }: { title: string; description: string }) => {
   const icon = (

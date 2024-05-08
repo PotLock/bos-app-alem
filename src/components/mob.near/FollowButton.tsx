@@ -1,7 +1,6 @@
 /**
  * https://near.org/near/widget/ComponentDetailsPage?src=mob.near/widget/FollowButton
  */
-
 import { CommitButton, Social, context } from "alem";
 
 const FollowButton = (props: any) => {

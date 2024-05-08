@@ -1,6 +1,6 @@
 import { useMemo } from "alem";
-import { MoreAccountsContainer, MoreAccountsText, StackContainer } from "./styles";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import { MoreAccountsContainer, MoreAccountsText, StackContainer } from "./styles";
 
 const AccountsStack = ({
   accountIds,

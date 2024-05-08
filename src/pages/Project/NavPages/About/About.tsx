@@ -1,9 +1,9 @@
 import { Markdown, Social, useMemo } from "alem";
-import CopyIcon from "../../components/CopyIcon";
-import { Container, GithubWrapper, Header, HeaderContainer, SmartContractWrapper } from "./styles";
-import AboutItem from "../../components/AboutItem";
-import Team from "../../components/Team/Team";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
+import AboutItem from "../../components/AboutItem";
+import CopyIcon from "../../components/CopyIcon";
+import Team from "../../components/Team/Team";
+import { Container, GithubWrapper, Header, HeaderContainer, SmartContractWrapper } from "./styles";
 
 type Props = {
   projectId: string;

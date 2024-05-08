@@ -1,13 +1,12 @@
-import { Container, NoResult, TrRow } from "./styles";
-import nearToUsd from "@app/utils/nearToUsd";
-import hrefWithParams from "@app/utils/hrefWithParams";
-
-type Props = { sponsors: any; sortedDonations: any; filter: string; currentTab: string };
-
 import { useEffect, useParams, useState } from "alem";
+import Pagination from "@app/components/Pagination/Pagination";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import _address from "@app/utils/_address";
-import Pagination from "@app/components/Pagination/Pagination";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import nearToUsd from "@app/utils/nearToUsd";
+import { Container, NoResult, TrRow } from "./styles";
+
+type Props = { sponsors: any; sortedDonations: any; filter: string; currentTab: string };
 
 const DonorsLeaderboard = (propsLeaderboard: Props) => {
   const { sponsors, sortedDonations, filter, currentTab } = propsLeaderboard;

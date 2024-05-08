@@ -1,4 +1,13 @@
 import { Near, clipboard, context, useMemo, useState } from "alem";
+import CheckIcon from "@app/assets/svgs/CheckIcon";
+import ReferrerIcon from "@app/assets/svgs/ReferrerIcon";
+import Button from "@app/components/Button";
+import CopyIcon from "@app/pages/Project/components/CopyIcon";
+import DonationsInfo from "@app/pages/Project/components/DonationsInfo/DonationsInfo";
+import FollowButton from "@app/pages/Project/components/FollowButton/FollowButton";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import Linktree from "../Linktree/Linktree";
+import ProfileTags from "../ProfileTags";
 import {
   AccountId,
   AccountInfoContainer,
@@ -10,15 +19,6 @@ import {
   LinksWrapper,
   ReferralButton,
 } from "./styles";
-import CopyIcon from "@app/pages/Project/components/CopyIcon";
-import Button from "@app/components/Button";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import ProfileTags from "../ProfileTags";
-import Linktree from "../Linktree/Linktree";
-import DonationsInfo from "@app/pages/Project/components/DonationsInfo/DonationsInfo";
-import FollowButton from "@app/pages/Project/components/FollowButton/FollowButton";
-import ReferrerIcon from "@app/assets/svgs/ReferrerIcon";
-import CheckIcon from "@app/assets/svgs/CheckIcon";
 
 type Props = {
   profile: any;

@@ -1,4 +1,7 @@
 import ModalOverlay from "@app/modals/ModalOverlay";
+import AccountsList from "../AccountsList/AccountsList";
+import Button from "../Button";
+import Text from "../Inputs/Text/Text";
 import {
   Icon,
   IconContainer,
@@ -10,9 +13,6 @@ import {
   ModalTitle,
   Space,
 } from "./styles";
-import Text from "../Inputs/Text/Text";
-import AccountsList from "../AccountsList/AccountsList";
-import Button from "../Button";
 
 const ModalMultiAccount = (props: any) => {
   const {

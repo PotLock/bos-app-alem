@@ -1,7 +1,6 @@
 /**
  * https://near.org/near/widget/ComponentDetailsPage?src=mob.near/widget/FollowStats
  */
-
 import { Social } from "alem";
 
 const FollowStats = (props: any) => {

@@ -1,8 +1,8 @@
 import { Widget } from "alem";
 import styled from "styled-components";
-import Post from "./Post";
 import Compose from "../../../Profile/components/Compose";
 import MergedIndexFeed from "../../../Profile/components/MergedIndexFeed/MergedIndexFeed";
+import Post from "./Post";
 
 type Props = {
   groupId?: string;

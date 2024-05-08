@@ -1,6 +1,6 @@
 import { Social, context, useParams } from "alem";
-import { Wrapper } from "./styles";
 import Body from "../Profile/components/Body/Body";
+import { Wrapper } from "./styles";
 import donorOptions from "./utils/donorOptions";
 
 const DonorPage = () => {

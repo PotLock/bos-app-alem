@@ -1,6 +1,6 @@
+import { Social, context } from "alem";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import { Social, context } from "alem";
 
 const Preview = (props: any) => {
   const accountId = props.accountId ?? context.accountId;

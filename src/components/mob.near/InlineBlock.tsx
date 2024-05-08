@@ -1,10 +1,9 @@
 /**
  * https://near.org/near/widget/ComponentDetailsPage?src=mob.near/widget/Profile.InlineBlock
  */
-
 import { Social, context } from "alem";
-import ProfileImage from "./ProfileImage";
 import Checkmark from "./Checkmark";
+import ProfileImage from "./ProfileImage";
 
 const InlineBlock = (props: any) => {
   const accountId = props.accountId ?? context.accountId;

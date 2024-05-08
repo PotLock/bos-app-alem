@@ -1,7 +1,7 @@
 import { Social, props, useEffect, useMemo, useState } from "alem";
-import { Container } from "./styles";
-import Preview from "../Preview";
 import FollowButton from "@app/components/mob.near/FollowButton";
+import Preview from "../Preview";
+import { Container } from "./styles";
 
 type Props = { accountId: string; nav: any };
 

@@ -1,10 +1,10 @@
 import { OverlayTrigger, useEffect, useState, Tooltip, useParams } from "alem";
-import { Container, NoResult, Percentage, TrRow } from "./styles";
-import nearToUsd from "@app/utils/nearToUsd";
+import Pagination from "@app/components/Pagination/Pagination";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import _address from "@app/utils/_address";
-import Pagination from "@app/components/Pagination/Pagination";
 import hrefWithParams from "@app/utils/hrefWithParams";
+import nearToUsd from "@app/utils/nearToUsd";
+import { Container, NoResult, Percentage, TrRow } from "./styles";
 
 const SponsorsTable = ({ sponsors }: { sponsors: any }) => {
   const { tab } = useParams();

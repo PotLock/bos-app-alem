@@ -1,8 +1,9 @@
 import { RouterContext, loadExternalStyles } from "alem";
 import Main from "./Main";
-import CartProvider from "./contexts/CartProvider";
 import Spinner from "./components/Spinner";
+import CartProvider from "./contexts/CartProvider";
 import DonationModalProvider from "./contexts/DonationModalProvider";
+
 // import ProjectsProvider from "./contexts/ProjectsProvider";
 
 const App = () => {

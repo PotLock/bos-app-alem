@@ -1,6 +1,6 @@
 import { Social, State, Widget, context, props, state } from "alem";
-import OverlayTrigger from "./OverlayTrigger";
 import Image from "./Image";
+import OverlayTrigger from "./OverlayTrigger";
 
 type Props = {
   profile?: any;

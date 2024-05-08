@@ -1,7 +1,6 @@
 /**
  * https://near.org/near/widget/ComponentDetailsPage?src=mob.near/widget/NftImage
  */
-
 import { Near, State, fetch, state } from "alem";
 
 const NftImage = (props: any) => {

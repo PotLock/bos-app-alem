@@ -1,7 +1,6 @@
 /**
  * https://near.org/near/widget/ComponentDetailsPage?src=mob.near/widget/FollowsYouBadge
  */
-
 import { Social, context } from "alem";
 
 const FollowsYouBadge = (props: any) => {

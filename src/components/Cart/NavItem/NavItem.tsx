@@ -1,7 +1,7 @@
-import { useCart } from "@app/hooks/useCart";
-import { CartButton, CartCountContainer, CartText } from "./styles";
 import { RouteLink, navigate } from "alem";
+import { useCart } from "@app/hooks/useCart";
 import routesPath from "@app/routes/routesPath";
+import { CartButton, CartCountContainer, CartText } from "./styles";
 
 const NavItem = () => {
   const { cart } = useCart();

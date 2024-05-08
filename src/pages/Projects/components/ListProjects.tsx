@@ -1,6 +1,6 @@
+import { InfiniteScroll, useState } from "alem";
 import Card from "@app/components/Card/Card";
 import { Project } from "@app/types";
-import { InfiniteScroll, useState } from "alem";
 
 const ListProjects = ({ projects }: { projects: any }) => {
   const [lastNumber, setLastNumber] = useState(0);

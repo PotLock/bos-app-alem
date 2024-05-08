@@ -1,6 +1,6 @@
 import { Social, promisify } from "alem";
-import hrefWithParams from "../../../utils/hrefWithParams";
 import styled from "styled-components";
+import hrefWithParams from "../../../utils/hrefWithParams";
 
 type Props = {
   projectId?: string;

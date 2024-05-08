@@ -1,11 +1,11 @@
-import { PotDetail } from "@app/types";
+import { State, state, useEffect, useParams } from "alem";
+import Arrow from "@app/assets/svgs/Arrow";
 import constants from "@app/constants";
+import { PotDetail } from "@app/types";
 import _address from "@app/utils/_address";
 import getTimePassed from "@app/utils/getTimePassed";
-import { State, state, useEffect, useParams } from "alem";
-import { Container, DonationsCount, OuterText, OuterTextContainer, Sort, TableContainer } from "./styes";
-import Arrow from "@app/assets/svgs/Arrow";
 import DonationsTable from "../../components/DonationsTable/DonationsTable";
+import { Container, DonationsCount, OuterText, OuterTextContainer, Sort, TableContainer } from "./styes";
 
 type Props = {
   allDonations: any[];
