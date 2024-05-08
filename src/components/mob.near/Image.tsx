@@ -1,7 +1,6 @@
 /**
  * https://near.org/near/widget/ComponentDetailsPage?src=mob.near/widget/Image
  */
-
 import { State, state } from "alem";
 import NftImage from "./NftImage";
 

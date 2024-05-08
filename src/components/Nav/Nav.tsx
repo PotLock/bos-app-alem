@@ -1,4 +1,7 @@
 import { RouteLink, props, useParams, useState } from "alem";
+import routesPath from "@app/routes/routesPath";
+import hrefWithParams from "../../utils/hrefWithParams";
+import NavItem from "../Cart/NavItem/NavItem";
 import {
   Banner,
   BannerAlertSvg,
@@ -15,9 +18,6 @@ import {
   NavTab,
   NavTabs,
 } from "./styles";
-import NavItem from "../Cart/NavItem/NavItem";
-import hrefWithParams from "../../utils/hrefWithParams";
-import routesPath from "@app/routes/routesPath";
 
 const Nav = () => {
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);

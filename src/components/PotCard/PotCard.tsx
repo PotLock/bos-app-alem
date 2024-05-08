@@ -49,8 +49,15 @@ const PotCard = ({ potId }: Props) => {
 
   const tags = tagsList(potConfig);
 
+  const now = Date.now();
+
+  const applicationOpen = now >= potConfig.application_start_ms && now < potConfig.application_end_ms;
+
   return (
-    <Card href={hrefWithParams(`?tab=pot&potId=${potId}`)}>
+    <Card
+      href={hrefWithParams(`?tab=pot&potId=${potId}`)}
+      data-testid={applicationOpen ? "active-pot" : "inactive-pot"}
+    >
       <CardSection>
         <Title>{title}</Title>
         <Description>

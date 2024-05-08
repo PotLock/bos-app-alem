@@ -1,7 +1,6 @@
 /**
  * https://near.org/near/widget/ComponentDetailsPage?src=mob.near/widget/Checkmark
  */
-
 import { Social } from "alem";
 import OverlayTrigger from "./OverlayTrigger";
 

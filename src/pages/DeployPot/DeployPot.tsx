@@ -1,9 +1,9 @@
 import { state } from "alem";
-import { Container, HeaderContainer, HeaderTitle, SuccessContainer } from "./styles";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import Button from "@app/components/Button";
-import ConfigForm from "../Pot/NavPages/ConfigForm/ConfigForm";
 import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
+import Button from "@app/components/Button";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import ConfigForm from "../Pot/NavPages/ConfigForm/ConfigForm";
+import { Container, HeaderContainer, HeaderTitle, SuccessContainer } from "./styles";
 
 type Props = {
   deploymentSuccess?: boolean;

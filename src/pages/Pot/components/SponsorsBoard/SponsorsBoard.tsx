@@ -1,8 +1,8 @@
+import { Social } from "alem";
+import ProfileImage from "@app/components/mob.near/ProfileImage";
 import _address from "@app/utils/_address";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import { Social } from "alem";
 import { Container } from "./styles";
-import ProfileImage from "@app/components/mob.near/ProfileImage";
 
 const Sponsor = ({ donation: { amount, donor_id, percentage_share }, colIdx }: any) => {
   const profile: any = Social.getr(`${donor_id}/profile`);

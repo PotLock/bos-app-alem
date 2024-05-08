@@ -1,5 +1,5 @@
-import hrefWithParams from "@app/utils/hrefWithParams";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import hrefWithParams from "@app/utils/hrefWithParams";
 import { Col1, Col2, Container, TeamMemberAccountId, TeamMemberItem, TeamMembersContainer, Title } from "./styles";
 
 type Props = {

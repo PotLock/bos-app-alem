@@ -1,4 +1,6 @@
 import { context, useMemo } from "alem";
+import { useDonationModal } from "@app/hooks/useDonationModal";
+import DonationStats from "../../pages/Projects/components/DonationStats/DonationStats";
 import {
   Button,
   ButtonRegisterProject,
@@ -10,8 +12,6 @@ import {
   HeroContainer,
   Underline,
 } from "./styles";
-import DonationStats from "../../pages/Projects/components/DonationStats/DonationStats";
-import { useDonationModal } from "@app/hooks/useDonationModal";
 
 const Hero = ({ projectsData }: { projectsData: any }) => {
   const { setDonationModalProps } = useDonationModal();

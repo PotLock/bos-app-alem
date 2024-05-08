@@ -1,10 +1,10 @@
 import { Files, Near, Social, context, useParams } from "alem";
-import { Project } from "@app/types";
 import CameraSvg from "@app/assets/svgs/camera";
+import Image from "@app/components/mob.near/Image";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import { Project } from "@app/types";
 import FollowStats from "../FollowStats";
 import statuses from "./statuses";
-import Image from "@app/components/mob.near/Image";
 import {
   BackgroundImageContainer,
   Container,

@@ -1,7 +1,7 @@
-import DropdownCenter from "@app/assets/svgs/DropdownCenter";
-import { Container, Count, Label, Menu, Screen } from "./styles";
 import { useState } from "alem";
+import DropdownCenter from "@app/assets/svgs/DropdownCenter";
 import DropdownRight from "@app/assets/svgs/DropdownRight";
+import { Container, Count, Label, Menu, Screen } from "./styles";
 
 type Props = {
   onClick: (option: any) => void;

@@ -1,4 +1,3 @@
-import constants from "@app/constants";
 import {
   Big,
   Near,
@@ -14,6 +13,12 @@ import {
   useParams,
   useState,
 } from "alem";
+import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
+import constants from "@app/constants";
+import { useDonationModal } from "@app/hooks/useDonationModal";
+import hrefWithParams from "@app/utils/hrefWithParams";
+import yoctosToUsd from "@app/utils/yoctosToUsd";
+import VerifyInfo from "../ModalDonation/Banners/VerifyInfo";
 import ModalOverlay from "../ModalOverlay";
 import {
   Amount,
@@ -27,11 +32,6 @@ import {
   TextBold,
   TwitterShare,
 } from "./styles";
-import yoctosToUsd from "@app/utils/yoctosToUsd";
-import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
-import VerifyInfo from "../ModalDonation/Banners/VerifyInfo";
-import hrefWithParams from "@app/utils/hrefWithParams";
-import { useDonationModal } from "@app/hooks/useDonationModal";
 
 type Props = {
   successfulDonation: any;
