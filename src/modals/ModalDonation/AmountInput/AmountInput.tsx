@@ -1,6 +1,6 @@
 import NearIcon from "@app/assets/svgs/near-icon";
-import nearToUsd from "@app/utils/nearToUsd";
 import Select from "@app/components/Inputs/Select/Select";
+import nearToUsd from "@app/utils/nearToUsd";
 import { Container, DropdownWrapper, PotDenomination } from "./styles";
 
 const AmountInput = (props: any) => {

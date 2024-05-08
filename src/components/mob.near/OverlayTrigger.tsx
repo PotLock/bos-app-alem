@@ -1,7 +1,6 @@
 /**
  * https://near.org/near/widget/ComponentDetailsPage?src=mob.near/widget/N.Common.OverlayTrigger
  */
-
 import { State, state } from "alem";
 
 const OverlayTrigger = (props: any) => {

@@ -1,6 +1,6 @@
+import { Social } from "alem";
 import styled from "styled-components";
 import getTagsFromSocialProfileData from "../../../utils/getTagsFromSocialProfileData";
-import { Social } from "alem";
 
 type Props = {
   projectId?: string;

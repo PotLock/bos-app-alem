@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, Social } from "alem";
+import { Project } from "../../../../types";
 import getTagsFromSocialProfileData from "../../../../utils/getTagsFromSocialProfileData";
 import { Tag, TagsWrapper } from "./styles";
-import { Project } from "../../../../types";
 
 type Props = {
   tagsList: {

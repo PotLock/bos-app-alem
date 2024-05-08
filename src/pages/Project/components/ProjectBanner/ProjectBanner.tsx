@@ -1,6 +1,6 @@
-import { Banner, BannerText, Row, Notes, Toggle } from "./styles";
-import statuses from "./statuses";
 import { useState } from "alem";
+import statuses from "./statuses";
+import { Banner, BannerText, Row, Notes, Toggle } from "./styles";
 
 type Props = {
   registration: any;

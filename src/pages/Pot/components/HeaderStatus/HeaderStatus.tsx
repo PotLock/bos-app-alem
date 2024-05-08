@@ -1,10 +1,11 @@
-import { PotDetail } from "@app/types";
 import { useState } from "alem";
-import statsList from "./statsList";
-import ProgressBar from "./ProgressBar";
-import { Loader, State, Wrapper } from "./styles";
 import styled from "styled-components";
+import { PotDetail } from "@app/types";
 import TimeLeft from "../TimeLeft";
+import ProgressBar from "./ProgressBar";
+import statsList from "./statsList";
+import { Loader, State, Wrapper } from "./styles";
+
 const HeaderStatus = ({ potDetail }: { potDetail: PotDetail }) => {
   const [mobileMenuActive, setMobileMenuActive] = useState(false);
 

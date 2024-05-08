@@ -1,13 +1,12 @@
 /**
  * https://near.org/near/widget/ComponentDetailsPage?src=mob.near/widget/Profile.Popover
  */
-
 import { Markdown, Social } from "alem";
 import styled from "styled-components";
-import InlineBlock from "./InlineBlock";
+import FollowButton from "./FollowButton";
 import FollowStats from "./FollowStats";
 import FollowsYouBadge from "./FollowsYouBadge";
-import FollowButton from "./FollowButton";
+import InlineBlock from "./InlineBlock";
 import PokeButton from "./PokeButton";
 
 const Popover = (props: any) => {
