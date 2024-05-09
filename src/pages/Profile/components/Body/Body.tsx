@@ -19,7 +19,7 @@ import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
 // };
 
 const Body = (props: any) => {
-  const { projectId } = props;
+  const { projectId, registration } = props;
   const { accountId: _accountId } = useParams();
   const accountId = _accountId ?? context.accountId;
   const {
@@ -31,7 +31,6 @@ const Body = (props: any) => {
 
   const listsContractId = ListsSDK.getContractId();
   const userIsRegistryAdmin = ListsSDK.isRegistryAdmin(context.accountId);
-  const registration = ListsSDK.getRegistration(null, projectId);
 
   const handleUpdateStatus = () => {
     Near.call([

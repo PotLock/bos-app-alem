@@ -27,7 +27,7 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
     public_round_start_ms,
     application_start_ms,
     application_end_ms,
-    cooldown_end_ms,
+    cooldown_end_ms: _cooldown_end_ms,
     all_paid_out,
   } = potDetail;
 
@@ -85,6 +85,9 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
   const applicationExists = existingApplication || applicationSuccess;
 
   const now = Date.now();
+
+  const cooldown_end_ms = _cooldown_end_ms ?? now + 1;
+
   const publicRoundOpen = now >= public_round_start_ms && now < public_round_end_ms;
   const publicRoundEnded = now > public_round_end_ms;
 
