@@ -16,7 +16,6 @@ const FormDirect = (props: any) => {
     profile,
     amount,
     amountError,
-    denominationOptions,
     updateState,
     selectedDenomination,
     donationType,
@@ -104,14 +103,7 @@ const FormDirect = (props: any) => {
         >
           Amount
         </Label>
-        <AmountInput
-          value={amount}
-          donationType={donationType}
-          HandleAmoutChange={HandleAmoutChange}
-          updateState={updateState}
-          denominationOptions={denominationOptions}
-          selectedDenomination={selectedDenomination}
-        />
+        <AmountInput {...props} HandleAmoutChange={HandleAmoutChange} />
 
         {ftBalance && (
           <CurrentBalance>

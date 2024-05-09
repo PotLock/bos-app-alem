@@ -199,17 +199,21 @@ const ModalDonation = () => {
     },
   });
 
-  const ftBalance = useMemo(() => {
-    if (selectedDenomination.text === "NEAR") {
+  const getTokenBalance = (token: string) => {
+    if (token === "NEAR") {
       const nearBalance = nearBalanceRes?.body?.balance;
 
       return nearBalance ? parseFloat(Big(nearBalance.amount).div(Big(10).pow(24)).toFixed(2)) : null;
     }
     const balance = denominationOptions.find(
       // this is where we need the details
-      (option: any) => option.text === selectedDenomination.text,
+      (option: any) => option.text === token,
     );
     return balance ? parseFloat(Big(balance.amount).div(Big(10).pow(balance.decimals)).toFixed(2)) : null;
+  };
+
+  const ftBalance = useMemo(() => {
+    return getTokenBalance(selectedDenomination.text);
   }, [selectedDenomination, ftBalances, nearBalanceRes]);
 
   return (
@@ -275,6 +279,7 @@ const ModalDonation = () => {
           DENOMINATION_OPTION={DENOMINATION_OPTIONS}
           onClose={onClose}
           potDetail={potDetail}
+          getTokenBalance={getTokenBalance}
           handleAddToCart={(items: CartItem[]) => {
             addItemstoCart(items);
             onClose();
