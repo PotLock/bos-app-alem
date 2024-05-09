@@ -25,8 +25,12 @@ const ProjectPage = () => {
 
   const addressExist = account?.body?.account[0];
 
-  if (!isObjectNotEmpty(addressExist || {}) && !registration)
-    return <div style={{ marginTop: "1rem", fontSize: "1.5rem" }}>Account does not exist.</div>;
+  if (!isObjectNotEmpty(addressExist || {}) && !registration) {
+    if (account) {
+      return <div style={{ marginTop: "1rem", fontSize: "1.5rem" }}>Account does not exist.</div>;
+    }
+    return "";
+  }
 
   const [directDonations, setDirectDonations] = useState(null);
   // mapping of pot IDs to array of Round Matching Donations for the project
