@@ -2,6 +2,7 @@ import { Big, RouteLink, Social, context, useEffect, useMemo, useParams, useStat
 import DonateSDK from "@app/SDK/donate";
 import PotSDK from "@app/SDK/pot";
 import { useDonationModal } from "@app/hooks/useDonationModal";
+import useModals from "@app/hooks/useModals";
 import routesPath from "@app/routes/routesPath";
 import _address from "@app/utils/_address";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
@@ -35,6 +36,8 @@ const Card = (props: any) => {
   const { payoutDetails, allowDonate: _allowDonate } = props;
   const { potId } = useParams();
 
+  // Start Modals provider
+  const Modals = useModals();
   const { setDonationModalProps } = useDonationModal();
 
   const projectId = props.project.registrant_id || props.projectId;
@@ -107,6 +110,7 @@ const Card = (props: any) => {
 
   return (
     <>
+      <Modals />
       <RouteLink to={routesPath.PROJECT_DETAIL_TAB} params={{ projectId, ...(potId ? { potId } : {}) }}>
         <CardContainer>
           <HeaderContainer className="pt-0 position-relative">
