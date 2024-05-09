@@ -2,6 +2,7 @@ import { Social, createDebounce, useEffect, useState } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import Card from "@app/components/Card/Card";
 import FilterDropdown from "@app/components/Inputs/FilterDropdown/FilterDropdown";
+import getProjects from "@app/services/getProjects";
 import { Project } from "@app/types";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
@@ -11,10 +12,8 @@ import SearchBar from "../SearchBar/SearchBar";
 import { ProjectsContainer, FilterWrapper, Title, Container, Header } from "./styles";
 import tagsList from "./tagsList";
 
-// import ListsSDK from "@app/SDK/lists";
-
-const AllProjects = ({ projectsData }: { projectsData: any }) => {
-  // const isRegistryAdmin = ListsSDK.isRegistryAdmin(context.accountId);
+const AllProjects = () => {
+  const projectsData = getProjects();
 
   const [totalDonation, setTotalDonation] = useState(0);
   const [totalDonated, setTotalDonated] = useState("0");
@@ -34,7 +33,7 @@ const AllProjects = ({ projectsData }: { projectsData: any }) => {
     return "";
   }
 
-  const donateConfig = DonateSDK.getConfig();
+  const donateConfig: any = DonateSDK.getConfig();
   if (donateConfig && !totalDonated && !totalDonation) {
     const lastDonationAmount = yoctosToUsd(donateConfig.net_donations_amount);
     setTotalDonated(lastDonationAmount);
@@ -156,7 +155,14 @@ const AllProjects = ({ projectsData }: { projectsData: any }) => {
       </Header>
       <ProjectsContainer>
         {filteredProjects.length ? (
+          // TODO: Isso quebra (incluindo o "shouldShuffle")
+          //   <ListSection
+          //   shouldShuffle
+          //   items={filteredProjects}
+          //   renderItem={(project: Project) => <Card projectId={project.registrant_id} />}
+          // />
           <ListSection
+            shouldShuffle={true}
             items={filteredProjects}
             renderItem={(project: Project) => <Card projectId={project.registrant_id} />}
           />

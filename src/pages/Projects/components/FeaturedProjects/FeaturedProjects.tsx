@@ -1,17 +1,14 @@
 import { useEffect, useMemo, useState } from "alem";
 import Card from "@app/components/Card/Card";
+import getProjects from "@app/services/getProjects";
 import { Project } from "@app/types";
 import CardSkeleton from "../CardSkeleton";
 import { ContainerHeader, Header, OnBottom, ProjectList, Title } from "./styles";
 
-const FeaturedProjects = ({ projectsData, isLoading }: { projectsData: any; isLoading: boolean }) => {
+const FeaturedProjects = () => {
+  const projectsData = getProjects();
   const [projects, setProjects] = useState<Project[]>([]);
 
-  // console.log("B", projectsData, projects, isLoading);
-  // console.log('FeaturedProjects - Render');
-
-  // TODO: Criar um formato para o compilador saber quando é um arquivo
-  // de custom hook e injetar no arquivo
   useEffect(() => {
     if (projectsData) {
       const { featuredProjects } = projectsData;
@@ -44,9 +41,7 @@ const FeaturedProjects = ({ projectsData, isLoading }: { projectsData: any; isLo
         <Title>Featured projects</Title>
       </Header>
 
-      <ProjectList>
-        {projects.length === 0 || !projectsData || isLoading ? <LoadingCards /> : <>{projectCards}</>}
-      </ProjectList>
+      <ProjectList>{projects.length === 0 || !projectsData ? <LoadingCards /> : <>{projectCards}</>}</ProjectList>
       <OnBottom></OnBottom>
     </ContainerHeader>
   );

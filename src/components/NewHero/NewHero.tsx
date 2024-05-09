@@ -2,11 +2,12 @@ import { context, useMemo } from "alem";
 import HomeBannerStyle from "@app/assets/svgs/HomeBannerBackground";
 import { useDonationModal } from "@app/hooks/useDonationModal";
 import DonationStats from "@app/pages/Projects/components/DonationStats/DonationStats";
+import getProjects from "@app/services/getProjects";
 import Button from "../Button";
 import { Container, HeroContainer, Line } from "./styles";
 
-const NewHero = ({ projectsData }: any) => {
-  const { allProjects, approvedProjects } = projectsData;
+const NewHero = () => {
+  const { allProjects, approvedProjects } = getProjects();
 
   const { setDonationModalProps } = useDonationModal();
 
