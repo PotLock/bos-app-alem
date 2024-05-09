@@ -3,7 +3,6 @@ import DonateSDK from "@app/SDK/donate";
 import ListsSDK from "@app/SDK/lists";
 import PotSDK from "@app/SDK/pot";
 import PotFactorySDK from "../../SDK/potfactory";
-import getProjectByProjectId from "../../services/getProjectByProjectId";
 import Body from "../Profile/components/Body/Body";
 import BannerSkeleton from "./components/BannerSkeleton";
 import ProjectBanner from "./components/ProjectBanner/ProjectBanner";
@@ -13,13 +12,12 @@ import ProjectOptions from "./utils/ProjectOptions";
 const ProjectPage = () => {
   const { projectId, nav } = useParams();
   const accountId = context.accountId;
-  const project = getProjectByProjectId(projectId);
   const pots = PotFactorySDK.getPots();
   const profile = Social.getr(`${projectId}/profile`);
   const registration = ListsSDK.getRegistration(null, projectId);
   const account = fetch("https://api3.nearblocks.io/v1/account/" + projectId);
 
-  const isReady = !!project && !!pots && !!profile && !!registration && !!account;
+  const isReady = pots !== null && profile !== null && registration !== null;
 
   if (!isReady) return <BannerSkeleton />;
 
@@ -113,7 +111,6 @@ const ProjectPage = () => {
 
       <Body
         {...{
-          project,
           profile,
           registration,
           projectId,

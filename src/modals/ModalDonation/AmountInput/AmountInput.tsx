@@ -4,7 +4,7 @@ import nearToUsd from "@app/utils/nearToUsd";
 import { Container, DropdownWrapper, PotDenomination } from "./styles";
 
 const AmountInput = (props: any) => {
-  const Dropdown = ({ selectedDenomination, denominationOptions, updateState }: any) => (
+  const Dropdown = ({ selectedDenomination, denominationOptions, updateState, amount, getTokenBalance }: any) => (
     <DropdownWrapper>
       <Select
         {...{
@@ -16,8 +16,11 @@ const AmountInput = (props: any) => {
             value: selectedDenomination.value,
           },
           onChange: ({ value }: any) => {
+            const tokenBalance = parseFloat(getTokenBalance(value));
             updateState({
               selectedDenomination: denominationOptions.find((option: any) => option.value === value),
+              amountError:
+                tokenBalance > parseFloat(amount) ? "" : "You don’t have enough balance to complete this transaction.",
             });
           },
           containerStyles: {
@@ -40,20 +43,20 @@ const AmountInput = (props: any) => {
       />
     </DropdownWrapper>
   );
-  const { value, HandleAmoutChange, donationType, denominationOptions, selectedDenomination } = props;
+  const { amount, HandleAmoutChange, donationType, denominationOptions, selectedDenomination } = props;
 
   return (
     <Container>
       <input
         type="text"
-        value={value}
+        value={amount}
         placeholder="0"
         onChange={(e) => HandleAmoutChange(e.target.value)}
         name="amount"
       />
       <div className="usd-amount">
         {" "}
-        {nearToUsd && selectedDenomination.value === "NEAR" ? `~$ ${(nearToUsd * value).toFixed(2)}` : ""}
+        {nearToUsd && selectedDenomination.value === "NEAR" ? `~$ ${(nearToUsd * amount).toFixed(2)}` : ""}
       </div>
       {donationType === "pot" || denominationOptions.length === 1 ? (
         <PotDenomination>
