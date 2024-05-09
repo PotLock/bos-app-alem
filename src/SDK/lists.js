@@ -13,8 +13,8 @@ const ListsSDK = {
     return ListsSDK.getList(potlockRegistryListId);
   },
   isRegistryAdmin: (accountId) => {
-    const registry = ListsSDK.getPotlockRegistry();
-    return registry.admins && registry.admins.includes(accountId);
+    const { admins, owner } = ListsSDK.getPotlockRegistry();
+    return (admins && admins.includes(accountId)) || owner === accountId;
   },
   getRegistrations: (listId) => {
     return Near.view(_listContractId, "get_registrations_for_list", {
