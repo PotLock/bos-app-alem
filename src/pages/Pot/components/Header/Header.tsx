@@ -3,6 +3,7 @@ import PotSDK from "@app/SDK/pot";
 import Button from "@app/components/Button";
 import constants from "@app/constants";
 import { useDonationModal } from "@app/hooks/useDonationModal";
+import useModals from "@app/hooks/useModals";
 import CopyIcon from "@app/pages/Project/components/CopyIcon";
 import { PotDetail } from "@app/types";
 import calculatePayouts from "@app/utils/calculatePayouts";
@@ -35,6 +36,9 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
 
   const { potId } = useParams();
 
+  // Start Modals provider
+  const Modals = useModals();
+  // Use specific modal context
   const { setDonationModalProps } = useDonationModal();
 
   const NADABOT_ICON_URL = IPFS_BASE_URL + "bafkreiecgkoybmplo4o542fphclxrhh4nlof5uit3lkzyv4eo2qymrpsru";
@@ -150,6 +154,7 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
 
   return (
     <Container>
+      <Modals />
       <HeaderWrapper>
         <Title>{pot_name}</Title>
         <Description>

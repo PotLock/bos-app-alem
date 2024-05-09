@@ -6,7 +6,6 @@ import Payouts from "../NavPages/Payouts/Payouts";
 import Projects from "../NavPages/Projects/Projects";
 import Settings from "../NavPages/Settings/Settings";
 import Sponsors from "../NavPages/Sponsors/Sponsors";
-import Test from "./Test";
 
 const dateNow = Date.now();
 

@@ -1,4 +1,4 @@
-import { Big, useState, Near, useParams, context, useCache, useMemo } from "alem";
+import { Big, useParams, useCache, useMemo } from "alem";
 import PotSDK from "@app/SDK/pot";
 import { PotDetail } from "@app/types";
 import Tabs from "../Profile/components/Tabs";
