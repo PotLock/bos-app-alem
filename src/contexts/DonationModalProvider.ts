@@ -34,6 +34,8 @@ const DonationModalProvider = () => {
       });
     },
   });
+
+  return getSelf();
 };
 
 export default DonationModalProvider;

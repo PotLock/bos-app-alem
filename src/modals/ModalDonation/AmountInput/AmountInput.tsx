@@ -43,20 +43,21 @@ const AmountInput = (props: any) => {
       />
     </DropdownWrapper>
   );
-  const { amount, HandleAmoutChange, donationType, denominationOptions, selectedDenomination } = props;
+  const { value, amount, HandleAmoutChange, donationType, denominationOptions, selectedDenomination } = props;
+  const _value = value || amount || 0;
 
   return (
     <Container>
       <input
         type="text"
-        value={amount}
+        value={_value}
         placeholder="0"
         onChange={(e) => HandleAmoutChange(e.target.value)}
         name="amount"
       />
       <div className="usd-amount">
         {" "}
-        {nearToUsd && selectedDenomination.value === "NEAR" ? `~$ ${(nearToUsd * amount).toFixed(2)}` : ""}
+        {nearToUsd && selectedDenomination.value === "NEAR" ? `~$ ${(nearToUsd * _value).toFixed(2)}` : ""}
       </div>
       {donationType === "pot" || denominationOptions.length === 1 ? (
         <PotDenomination>

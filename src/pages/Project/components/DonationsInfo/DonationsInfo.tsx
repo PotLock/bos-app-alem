@@ -2,6 +2,7 @@ import { Big, useMemo, useParams } from "alem";
 import Button from "@app/components/Button";
 import constants from "@app/constants";
 import { useDonationModal } from "@app/hooks/useDonationModal";
+import useModals from "@app/hooks/useModals";
 import nearToUsdWithFallback from "@app/utils/nearToUsdWithFallback";
 import FollowButton from "../FollowButton/FollowButton";
 import { Container } from "./styles";
@@ -9,6 +10,9 @@ import { Container } from "./styles";
 const DonationsInfo = ({ projectId, donations }: any) => {
   const { potId } = useParams();
 
+  // Start Modals provider
+  const Modals = useModals();
+  // Use specific modal context
   const { setDonationModalProps } = useDonationModal();
 
   // Get total donations & Unique donors count
@@ -27,6 +31,7 @@ const DonationsInfo = ({ projectId, donations }: any) => {
 
   return (
     <Container>
+      <Modals />
       <div className="donations-info">
         <div className="amount">{nearToUsdWithFallback(Number(totalDonationAmountNear))}</div>
         <div className="donors">

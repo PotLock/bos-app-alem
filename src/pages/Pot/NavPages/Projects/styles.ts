@@ -48,3 +48,8 @@ export const SearchBar = styled.div`
     }
   }
 `;
+
+export const Centralized = styled.div`
+  display: flex;
+  justify-content: center;
+`;

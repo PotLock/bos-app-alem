@@ -1,11 +1,11 @@
-import { useState, useMemo, Social, context, useParams } from "alem";
+import { useState, Social, context, useParams, createDebounce } from "alem";
 import PotSDK from "@app/SDK/pot";
 import Card from "@app/components/Card/Card";
 import ListSection from "@app/pages/Projects/components/ListSection";
 import calculatePayouts from "@app/utils/calculatePayouts";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import { Container, SearchBar, Title } from "./styles";
+import { Centralized, Container, SearchBar, Title } from "./styles";
 
 type Props = {
   potDetail: any;
@@ -13,7 +13,6 @@ type Props = {
 };
 
 const Projects = (props: Props) => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [projects, setProjects] = useState<any>(null);
   const [flaggedAddresses, setFlaggedAddresses] = useState(null);
@@ -31,7 +30,13 @@ const Projects = (props: Props) => {
     });
   }
 
-  if (!projects) return <div className="spinner-border text-secondary" role="status" />;
+  const Loading = () => (
+    <Centralized>
+      <div className="spinner-border text-secondary" role="status" />
+    </Centralized>
+  );
+
+  if (!projects) return <Loading />;
 
   const { public_round_start_ms, public_round_end_ms, referral_fee_public_round_basis_points } = potDetail;
 
@@ -63,10 +68,12 @@ const Projects = (props: Props) => {
         });
   }
 
+  if (!flaggedAddresses || !payouts) return <Loading />;
+
   const searchByWords = (searchTerm: string) => {
     if (projects.length) {
       searchTerm = searchTerm.toLowerCase().trim();
-      setSearchTerm(searchTerm);
+      // setSearchTerm(searchTerm);
       const updatedProjects = projects.filter((project: any) => {
         const profile: any = Social.getr(`${project.project_id}/profile`);
         const fields = [
@@ -82,6 +89,8 @@ const Projects = (props: Props) => {
       setFilteredProjects(updatedProjects);
     }
   };
+
+  const onSearchChange = createDebounce((searchTerm: any) => searchByWords(searchTerm), 1000);
 
   return (
     <Container>
@@ -100,7 +109,7 @@ const Projects = (props: Props) => {
         <input
           type="text"
           placeholder="Search projects"
-          onChange={(e) => searchByWords(e.target.value)}
+          onChange={(e) => onSearchChange(e.target.value)}
           className="search-input"
         />
       </SearchBar>
