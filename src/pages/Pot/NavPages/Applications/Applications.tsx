@@ -197,7 +197,7 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
                 <input type="checkbox" className="toggle-check" />
                 <div className="header">
                   <div className="header-info">
-                    <ProfileImage style={{}} profile={profile} />
+                    <ProfileImage profile={profile} style={{}} className="profile-image" />
                     {profile?.name && <div className="name">{_address(profile?.name, 10)}</div>}
 
                     <OverlayTrigger placement="top" overlay={<Tooltip>{project_id}</Tooltip>}>

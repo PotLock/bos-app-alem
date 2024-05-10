@@ -115,6 +115,8 @@ export const ApplicationRow = styled.div`
     margin-right: 8px;
     width: 24px;
     height: 24px;
+    border-radius: 50%;
+    display: flex;
   }
   .name {
     color: #292929;

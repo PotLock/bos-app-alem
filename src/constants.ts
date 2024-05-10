@@ -4,6 +4,7 @@ import styled from "styled-components";
 const constants = {
   NADABOT_CONTRACT_ID: getAlemEnvironment() === "staging" ? "v1.staging.nadabot.near" : "v1.nadabot.near",
   ownerId: "potlock.near",
+  DEFAULT_URL: "https://app.potlock.org/",
   PROJECT_STATUSES: ["Pending", "Approved", "Rejected", "Graylisted", "Blacklisted"],
   DONATION_CONTRACT_ID: "donate.potlock.near",
   NADABOT_HUMAN_METHOD: "is_human",
