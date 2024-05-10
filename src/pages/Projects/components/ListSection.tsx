@@ -59,7 +59,7 @@ const ListSection = ({ shouldShuffle, items, renderItem }: Props) => {
       (view: any) =>
         `
     @media screen and (max-width: ${view.breakpoint}px) {
-      grid-template-columns: repeat(${view._items}, 1fr);
+      grid-template-columns: repeat(${view.items}, 1fr);
     }
     `,
     )}

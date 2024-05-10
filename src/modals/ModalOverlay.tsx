@@ -3,53 +3,80 @@ import styled from "styled-components";
 type Props = {
   children: JSX.Element | JSX.Element[];
   onOverlayClick?: (event: any) => void;
-  contentStyle?: any;
-  overlayStyle?: any;
+  contentStyle?: React.CSSProperties;
+  overlayStyle?: React.CSSProperties;
 };
 
 const ModalOverlay = ({ children, onOverlayClick, contentStyle }: Props) => {
-  const ModalOverlay = styled.div`
-    position: fixed;
-    padding: 0 10px;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  const overlayShow = styled.keyframes`
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  `;
+  const contentShow = styled.keyframes`
+    from {
+      opacity: 0;
+      transform: translate(-50%, -48%) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
   `;
 
-  const ModalContent = styled.div`
-    width: 100%;
-    max-width: 600px;
-    padding: 24px 24px 18px 24px;
-    background: white;
-    display: flex;
-    flex-direction: column;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0px 0px 0px 1px rgba(41, 41, 41, 0.1), 0px 8px 12px -4px rgba(41, 41, 41, 0.1),
-      0px 20px 32px -10px rgba(41, 41, 41, 0.1), 0px 32px 44px -16px rgba(41, 41, 41, 0.1);
-  `;
-
-  const Screen = styled.div`
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
+  const Modal = styled.div`
+    .AlertDialogOverlay {
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(4px);
+      position: fixed;
+      z-index: 999;
+      inset: 0;
+      /* animation: ${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1); */
+    }
+    .AlertDialogContent {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0px 0px 0px 1px rgba(55, 55, 55, 0.04), 0px 24px 32px -12px rgba(15, 15, 15, 0.15),
+        0px 8px 40px -4px rgba(5, 5, 5, 0.08);
+      position: fixed;
+      z-index: 1000;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 600px;
+      max-height: 85vh;
+      /* animation: ${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1); */
+      padding: 24px 24px 18px 24px;
+    }
+    .AlertDialogContent:focus {
+      outline: none;
+    }
+    @media only screen and (max-width: 768px) {
+      .AlertDialogContent {
+        width: 100vw;
+        height: 100vh;
+        top: 0px;
+        transform: none;
+        left: 0;
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
   `;
 
   return (
-    <ModalOverlay style={contentStyle}>
-      <Screen onClick={onOverlayClick} />
-      <ModalContent style={contentStyle}>{children}</ModalContent>
-    </ModalOverlay>
+    <Modal>
+      <AlertDialog.Root open>
+        <AlertDialog.Overlay onClick={onOverlayClick} className="AlertDialogOverlay" />
+        <AlertDialog.Content className="AlertDialogContent" style={contentStyle}>
+          {children}
+        </AlertDialog.Content>
+      </AlertDialog.Root>
+    </Modal>
   );
 };
 
