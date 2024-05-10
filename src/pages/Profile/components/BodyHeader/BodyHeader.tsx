@@ -2,6 +2,7 @@ import { Near, clipboard, context, useMemo, useState } from "alem";
 import CheckIcon from "@app/assets/svgs/CheckIcon";
 import ReferrerIcon from "@app/assets/svgs/ReferrerIcon";
 import Button from "@app/components/Button";
+import constants from "@app/constants";
 import CopyIcon from "@app/pages/Project/components/CopyIcon";
 import DonationsInfo from "@app/pages/Project/components/DonationsInfo/DonationsInfo";
 import FollowButton from "@app/pages/Project/components/FollowButton/FollowButton";
@@ -30,6 +31,8 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
   const name = profile.name;
   const policy = projectId ? Near.view(projectId, "get_policy", {}) : (false as any);
   const isDao = !!policy;
+
+  const { DEFAULT_URL } = constants;
 
   const [copid, setCopid] = useState(false);
 
@@ -93,7 +96,7 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
               <ReferralButton
                 onClick={() => {
                   clipboard.writeText(
-                    `https://bos.potlock.org/staging.potlock.near/widget/IndexLoader?tab=project&projectId=${projectId}&referrerId=${context.accountId}`,
+                    `${DEFAULT_URL}?tab=project&projectId=${projectId}&referrerId=${context.accountId}`,
                   );
                   setCopid(true);
                   setTimeout(() => {

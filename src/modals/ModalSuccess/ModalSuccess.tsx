@@ -164,6 +164,8 @@ const ModalSuccess = () => {
                   }));
                 })
                 .catch((err) => console.log(err));
+            } else {
+              onClose();
             }
           } else {
             onClose();

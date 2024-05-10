@@ -9,7 +9,8 @@ const Image = (props: any) => {
   const className = props.className;
   const style = props.style;
   const alt = props.alt;
-  const fallbackUrl = props.fallbackUrl;
+  const fallbackUrl =
+    props.fallbackUrl ?? "https://ipfs.near.social/ipfs/bafkreiccpup6f2kihv7bhlkfi4omttbjpawnsns667gti7jbhqvdnj4vsm";
   const thumbnail = props.thumbnail;
 
   State.init({
