@@ -109,7 +109,7 @@ const Card = (props: any) => {
   if (!ready) return <CardSkeleton />;
 
   return (
-    <>
+    <div>
       <Modals />
       <RouteLink to={routesPath.PROJECT_DETAIL_TAB} params={{ projectId, ...(potId ? { potId } : {}) }}>
         <CardContainer>
@@ -208,7 +208,7 @@ const Card = (props: any) => {
           )}
         </CardContainer>
       </RouteLink>
-    </>
+    </div>
   );
 };
 
