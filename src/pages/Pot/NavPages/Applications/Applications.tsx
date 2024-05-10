@@ -143,10 +143,10 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
       <div className="dropdown">
         <Dropdown
           {...{
-            sortVal: DropdownVal,
+            sortVal: <DropdownVal />,
             showCount: true,
             sortList: Object.values(APPLICATIONS_FILTERS),
-            FilterMenuCustomStyle: `left:0; right:auto;`,
+            menuStyle: { left: "auto", right: "auto" },
             handleSortChange: ({ val }) => {
               handleSort(val);
             },
