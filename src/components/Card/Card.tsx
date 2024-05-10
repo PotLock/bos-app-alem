@@ -109,7 +109,7 @@ const Card = (props: any) => {
   if (!ready) return <CardSkeleton />;
 
   return (
-    <div>
+    <div style={{ minHeight: "405px", height: "100%" }}>
       <Modals />
       <RouteLink to={routesPath.PROJECT_DETAIL_TAB} params={{ projectId, ...(potId ? { potId } : {}) }}>
         <CardContainer>
