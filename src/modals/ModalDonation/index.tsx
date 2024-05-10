@@ -221,7 +221,7 @@ const ModalDonation = () => {
         e.stopPropagation();
         onClose();
       }}
-      contentStyle={{ padding: "0px" }}
+      contentStyle={{ padding: "0px", overflowY: "scroll" }}
     >
       <Container>
         <div>
