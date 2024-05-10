@@ -51,7 +51,7 @@ export const projectDisabled = () =>
   !state.publicGoodReason ||
   state.publicGoodReasonError ||
   (state.categories.includes(CATEGORY_MAPPINGS.OPEN_SOURCE) &&
-    !state.githubRepos.filter((val: any) => val[0]).length) ||
+    !Object.values(state.githubRepos).filter((val: any) => val[0]).length) ||
   (state.hasSmartContracts && !state.smartContracts.filter((val: any) => val[0]).length) ||
   (state.hasReceivedFunding && !state.fundingSources.length) ||
   !state.categories.length ||
