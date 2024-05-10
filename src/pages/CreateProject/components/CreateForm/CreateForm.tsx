@@ -215,7 +215,8 @@ const CreateForm = (props: { edit: boolean }) => {
                       State.update({ daoAddressTemp: daoAddress.toLowerCase(), daoAddressError: "" }),
                     validate: () => {
                       // **CALLED ON BLUR**
-                      if (state.isDao && state.daoAddress) {
+
+                      if (state.isDao && state.daoAddressTemp) {
                         const isValid = validateNearAddress(state.daoAddressTemp);
                         if (!isValid) {
                           State.update({
