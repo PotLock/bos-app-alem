@@ -1,6 +1,11 @@
 import { Near, State } from "alem";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
 import { CATEGORY_MAPPINGS } from "./fields";
+import { extractRepoPath } from "./helpers";
+
+interface GithubRepos {
+  [idx: string]: { value: string; err: string };
+}
 
 const setSocialData = (accountId: string, shouldSetTeamMembers?: any) => {
   Near.asyncView("social.near", "get", { keys: [`${accountId}/**`] })
@@ -26,6 +31,7 @@ const setSocialData = (accountId: string, shouldSetTeamMembers?: any) => {
       const description = profileData.description || "";
       const publicGoodReason = profileData.plPublicGoodReason || "";
       let categories = [];
+
       if (profileData.plCategories) {
         categories = JSON.parse(profileData.plCategories);
       } else if (profileData.category) {
@@ -53,11 +59,16 @@ const setSocialData = (accountId: string, shouldSetTeamMembers?: any) => {
       const hasSmartContracts = smartContracts.length > 0;
       smartContracts.push(["", ""]); // Add an empty string to the end of the array to allow for adding new contracts
 
-      const githubRepos = profileData.plGithubRepos
-        ? JSON.parse(profileData.plGithubRepos).map((repo: any) => [repo])
-        : [];
+      const githubRepos: GithubRepos = {};
+
+      if (profileData.plGithubRepos) {
+        JSON.parse(profileData.plGithubRepos).forEach((repo: string, idx: string) => {
+          githubRepos[idx] = extractRepoPath(repo);
+        });
+      }
+
       const originalGithubRepos = githubRepos;
-      githubRepos.push([""]); // Add an empty string to the end of the array to allow for adding new repos
+      // githubRepos.push([""]); // Add an empty string to the end of the array to allow for adding new repos
 
       const fundingSources = profileData.plFundingSources ? JSON.parse(profileData.plFundingSources) : [];
       const hasReceivedFunding = fundingSources.length > 0;

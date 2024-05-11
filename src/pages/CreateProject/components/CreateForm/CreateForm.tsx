@@ -17,7 +17,7 @@ import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
 import validateNearAddress from "@app/utils/validateNearAddress";
 import { socialFields, CATEGORY_MAPPINGS, CHAIN_OPTIONS, DEFAULT_STATE } from "../../utils/fields";
 import handleCreateOrUpdateProject from "../../utils/handleCreateOrUpdateProject";
-import { projectDisabled } from "../../utils/helpers";
+import { extractRepoPath, projectDisabled } from "../../utils/helpers";
 import setSocialData from "../../utils/setSocialData";
 import AccountsStack from "../AccountsStack/AccountsStack";
 import DAOInProgress from "../DAOInProgress/DAOInProgress";
@@ -621,30 +621,13 @@ const CreateForm = (props: { edit: boolean }) => {
                           // validate link
                           const repo = state.githubRepos[index];
 
-                          const isValid =
-                            validateGithubRepoUrl(repo.value) || repo.value === "" || repo.value === undefined;
-                          // if invalid, set the error as the 2nd element of the array
-                          if (!isValid) {
-                            State.update({
-                              githubRepos: {
-                                ...state.githubRepos,
-                                [index]: {
-                                  value: repo.value,
-                                  err: "Invalid GitHub Repo URL",
-                                },
-                              },
-                            });
-                          } else {
-                            State.update({
-                              githubRepos: {
-                                ...state.githubRepos,
-                                [index]: {
-                                  value: repo.value,
-                                  err: "",
-                                },
-                              },
-                            });
-                          }
+                          const repoObj = extractRepoPath(repo.value);
+                          State.update({
+                            githubRepos: {
+                              ...state.githubRepos,
+                              [index]: repoObj,
+                            },
+                          });
                         },
                         error: state.githubRepos[index].err || "",
                       }}

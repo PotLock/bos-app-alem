@@ -10,8 +10,7 @@ const Header = ({ edit }: { edit: boolean }) => {
     >
       <HeaderTitle>{edit ? "Edit" : "Register New"} Project</HeaderTitle>
       <HeaderDescription>
-        Create a profile for your impact project to receive direct donations, Qualify for funding rounds, join NEAR's
-        accelerator, and get discovered across social platforms.
+        Create a profile for your project to receive donations and qualify for funding rounds.
       </HeaderDescription>
     </HeaderContainer>
   );
