@@ -155,14 +155,8 @@ const AllProjects = () => {
       </Header>
       <ProjectsContainer>
         {filteredProjects.length ? (
-          // TODO: Isso quebra (incluindo o "shouldShuffle")
-          //   <ListSection
-          //   shouldShuffle
-          //   items={filteredProjects}
-          //   renderItem={(project: Project) => <Card projectId={project.registrant_id} />}
-          // />
           <ListSection
-            shouldShuffle={true}
+            shouldShuffle
             items={filteredProjects}
             renderItem={(project: Project) => <Card projectId={project.registrant_id} />}
           />
