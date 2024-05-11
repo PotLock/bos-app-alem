@@ -31,6 +31,7 @@ const handleCreateOrUpdateProject = (e: any) => {
     return;
   }
   const socialData = getSocialData();
+
   if (state.backgroundImage) {
     socialData.profile.backgroundImage = state.backgroundImage;
   }
