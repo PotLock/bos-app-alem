@@ -15,13 +15,7 @@ const SelectMultiple = (props: Props) => {
   return (
     <Container>
       {label && <Label>{label}</Label>}
-      <Typeahead
-        options={options}
-        multiple
-        onChange={onChange}
-        placeholder={placeholder}
-        // selected={selected}
-      />
+      <Typeahead options={options} multiple onChange={onChange} placeholder={placeholder} selected={selected} />
     </Container>
   );
 };
