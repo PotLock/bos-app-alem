@@ -2,13 +2,14 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
+  overflow-y: scroll;
+  max-height: 90vh;
   flex-direction: column;
   border-radius: 12px;
   background: #fff;
   font-size: 14px;
   box-shadow: 0px 0px 0px 1px rgba(41, 41, 41, 0.1), 0px 8px 12px -4px rgba(41, 41, 41, 0.1),
     0px 20px 32px -10px rgba(41, 41, 41, 0.1), 0px 32px 44px -16px rgba(41, 41, 41, 0.1);
-  overflow: hidden;
   border-radius: 6px;
   @media only screen and (max-width: 480px) {
     top: 0;
@@ -16,6 +17,7 @@ export const Container = styled.div`
     position: fixed;
     left: 0;
     width: 100vw;
+    max-height: 100vh;
     height: 100vh;
     overflow-y: scroll;
     display: flex;
