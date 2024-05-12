@@ -7,7 +7,7 @@ export const CardContainer = styled.div`
   min-height: 405px;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
   border-radius: 12px;
   background: white;
   box-shadow: 0px -2px 0px #dbdbdb inset;
