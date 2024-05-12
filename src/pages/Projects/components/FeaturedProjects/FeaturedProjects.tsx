@@ -24,18 +24,16 @@ const FeaturedProjects = () => {
     </>
   );
 
-  const projectCards = (
-    // useMemo(
-    //   () => (
-    <>
-      {projects.map((project: any) => {
-        return <Card key={project.registrant_id} projectId={project.registrant_id} />;
-      })}
-    </>
+  const projectCards = useMemo(
+    () => (
+      <>
+        {projects.map((project: any) => {
+          return <Card key={project.registrant_id} projectId={project.registrant_id} />;
+        })}
+      </>
+    ),
+    [projects],
   );
-  //   ),
-  //   [projects],
-  // );
 
   return (
     <ContainerHeader>
