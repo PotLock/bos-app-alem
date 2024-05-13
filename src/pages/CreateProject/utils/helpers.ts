@@ -1,5 +1,9 @@
-import { asyncFetch, state } from "alem";
-import { CATEGORY_MAPPINGS } from "./fields";
+import { asyncFetch, context, state } from "alem";
+import { CATEGORY_MAPPINGS, addressNamed } from "./fields";
+
+export function isNamedAccount(accountId: string) {
+  return addressNamed.some((substring) => accountId.includes(substring));
+}
 
 export const deepObjectDiff = (objOriginal: any, objUpdated: any) => {
   if (!objUpdated) objUpdated = {};
@@ -41,6 +45,7 @@ export const uploadFileUpdateState = (body: any, callback: any) => {
 };
 
 export const projectDisabled = () =>
+  (!state.isDao && !isNamedAccount(context.accountId || "")) ||
   !state.profileImage ||
   !state.backgroundImage ||
   state.daoAddressError ||

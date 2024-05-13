@@ -13,11 +13,10 @@ import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccou
 import routesPath from "@app/routes/routesPath";
 import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
 import validateEVMAddress from "@app/utils/validateEVMAddress";
-import validateGithubRepoUrl from "@app/utils/validateGithubRepoUrl";
 import validateNearAddress from "@app/utils/validateNearAddress";
 import { socialFields, CATEGORY_MAPPINGS, CHAIN_OPTIONS, DEFAULT_STATE } from "../../utils/fields";
 import handleCreateOrUpdateProject from "../../utils/handleCreateOrUpdateProject";
-import { extractRepoPath, projectDisabled } from "../../utils/helpers";
+import { extractRepoPath, isNamedAccount, projectDisabled } from "../../utils/helpers";
 import setSocialData from "../../utils/setSocialData";
 import AccountsStack from "../AccountsStack/AccountsStack";
 import DAOInProgress from "../DAOInProgress/DAOInProgress";
@@ -180,6 +179,7 @@ const CreateForm = (props: { edit: boolean }) => {
             </LowerBannerContainerRight>
           </LowerBannerContainer>
           <FormBody>
+            {/* PROJECT DETAILS */}
             <Section>
               <SubHeader title="Project details" requierd />
               <DAOselect>
@@ -209,7 +209,7 @@ const CreateForm = (props: { edit: boolean }) => {
                 <Text
                   {...{
                     label: state.isDao ? "DAO address *" : "Project ID *",
-                    value: state.isDao ? state.daoAddressTemp : context.accountId,
+                    value: state.isDao ? state.daoAddressTemp : projectId,
                     disabled: !state.isDao,
                     onChange: (daoAddress) =>
                       State.update({ daoAddressTemp: daoAddress.toLowerCase(), daoAddressError: "" }),
@@ -269,7 +269,11 @@ const CreateForm = (props: { edit: boolean }) => {
                       }
                       State.update({ daoAddressError: "" });
                     },
-                    error: state.isDao ? state.daoAddressError : "",
+                    error: state.isDao
+                      ? state.daoAddressError
+                      : !isNamedAccount(projectId)
+                      ? "Require a name account for proejct registration"
+                      : "",
                   }}
                 />
               </Row>
@@ -357,6 +361,7 @@ const CreateForm = (props: { edit: boolean }) => {
                 />
               </Row>
             </Section>
+            {/* SMART CONTRACT */}
             <Section>
               <SubHeader title="Smart contracts" />
               {state.smartContracts.map(([chain, contractAddress]: [string, string], index: number) => {
@@ -480,6 +485,7 @@ const CreateForm = (props: { edit: boolean }) => {
                 Add more contract
               </Button>
             </Section>
+            {/* FUNDING SOURCE */}
             <Section>
               <SubHeader title="Funding sources" />
               {state.fundingSources.length > 0 && (
@@ -593,12 +599,12 @@ const CreateForm = (props: { edit: boolean }) => {
                 <PlusIcon /> Add funding source
               </Button>
             </Section>
-            <Section>
-              <SubHeader title="Repositories" />
-              <Row>
-                {Array(4)
-                  .fill("")
-                  .map((_, index: number) => (
+            {/* REPOSITIORIES */}
+            {state.categories.includes("Open Source") && (
+              <Section>
+                <SubHeader title="Repositories" requierd />
+                <Row>
+                  {Object.values(state.githubRepos).map((repo: any, index: number) => (
                     <Text
                       {...{
                         preInputChildren: <InputPrefix>github.com/</InputPrefix>,
@@ -607,7 +613,7 @@ const CreateForm = (props: { edit: boolean }) => {
                           borderRadius: "0px 4px 4px 0px",
                           transform: "translateX(-1px)",
                         },
-                        value: state.githubRepos[index].value,
+                        value: repo.value,
                         onChange: (value) =>
                           State.update({
                             githubRepos: {
@@ -619,8 +625,6 @@ const CreateForm = (props: { edit: boolean }) => {
                           }),
                         validate: () => {
                           // validate link
-                          const repo = state.githubRepos[index];
-
                           const repoObj = extractRepoPath(repo.value);
                           State.update({
                             githubRepos: {
@@ -629,12 +633,34 @@ const CreateForm = (props: { edit: boolean }) => {
                             },
                           });
                         },
-                        error: state.githubRepos[index].err || "",
+                        error: repo.err || "",
                       }}
                     />
                   ))}
-              </Row>
-            </Section>
+                </Row>
+                <Button
+                  {...{
+                    varient: "plain",
+                    onClick: () => {
+                      State.update({
+                        githubRepos: {
+                          ...state.githubRepos,
+                          [Object.keys(state.githubRepos).length]: {
+                            value: "",
+                            err: "",
+                          },
+                        },
+                      });
+                    },
+                  }}
+                >
+                  <PlusIcon />
+                  Add more repo
+                </Button>
+              </Section>
+            )}
+            {/* SOCIAL LINKS */}
+
             <Section>
               <SubHeader title="Social links" />
               <Row>
