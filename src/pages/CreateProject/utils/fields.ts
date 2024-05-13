@@ -1,3 +1,5 @@
+export const addressNamed = [".tg", ".sweat", ".near"];
+
 export const socialFields = [
   {
     label: "twitter",
