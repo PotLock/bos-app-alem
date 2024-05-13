@@ -38,7 +38,7 @@ const PotCard = ({ potId }: Props) => {
   const description = !pot_description
     ? "No description"
     : pot_description.length > MAX_DESCRIPTION_LENGTH
-    ? `${pot_description.slice(0, MAX_DESCRIPTION_LENGTH)}...`
+    ? `${pot_description.slice(0, MAX_DESCRIPTION_LENGTH).trim()}...`
     : pot_description;
 
   const title = !pot_name
@@ -61,7 +61,7 @@ const PotCard = ({ potId }: Props) => {
       <CardSection>
         <Title>{title}</Title>
         <Description>
-          <Markdown text={description} />
+          <Markdown text={pot_description} />
         </Description>
       </CardSection>
       <CardSection
