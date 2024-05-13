@@ -26,7 +26,7 @@ const getSocialData = () => {
       plSmartContracts: formattedSmartContracts ? JSON.stringify(formattedSmartContracts) : null,
       plGithubRepos: JSON.stringify(
         Object.values(state.githubRepos)
-          .map(({ value, err }: any) => (err ? false : "github.com/" + value))
+          .map(({ value, err }: any) => (err || !value ? false : "github.com/" + value))
           .filter((val: any) => val),
       ),
       plFundingSources: JSON.stringify(state.fundingSources),

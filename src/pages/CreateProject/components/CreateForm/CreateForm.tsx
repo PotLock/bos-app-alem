@@ -593,12 +593,11 @@ const CreateForm = (props: { edit: boolean }) => {
                 <PlusIcon /> Add funding source
               </Button>
             </Section>
-            <Section>
-              <SubHeader title="Repositories" />
-              <Row>
-                {Array(4)
-                  .fill("")
-                  .map((_, index: number) => (
+            {state.categories.includes("Open Source") && (
+              <Section>
+                <SubHeader title="Repositories" requierd />
+                <Row>
+                  {Object.values(state.githubRepos).map((repo: any, index: number) => (
                     <Text
                       {...{
                         preInputChildren: <InputPrefix>github.com/</InputPrefix>,
@@ -607,7 +606,7 @@ const CreateForm = (props: { edit: boolean }) => {
                           borderRadius: "0px 4px 4px 0px",
                           transform: "translateX(-1px)",
                         },
-                        value: state.githubRepos[index].value,
+                        value: repo.value,
                         onChange: (value) =>
                           State.update({
                             githubRepos: {
@@ -619,8 +618,6 @@ const CreateForm = (props: { edit: boolean }) => {
                           }),
                         validate: () => {
                           // validate link
-                          const repo = state.githubRepos[index];
-
                           const repoObj = extractRepoPath(repo.value);
                           State.update({
                             githubRepos: {
@@ -629,12 +626,32 @@ const CreateForm = (props: { edit: boolean }) => {
                             },
                           });
                         },
-                        error: state.githubRepos[index].err || "",
+                        error: repo.err || "",
                       }}
                     />
                   ))}
-              </Row>
-            </Section>
+                </Row>
+                <Button
+                  {...{
+                    varient: "plain",
+                    onClick: () => {
+                      State.update({
+                        githubRepos: {
+                          ...state.githubRepos,
+                          [Object.keys(state.githubRepos).length]: {
+                            value: "",
+                            err: "",
+                          },
+                        },
+                      });
+                    },
+                  }}
+                >
+                  <PlusIcon />
+                  Add more repo
+                </Button>
+              </Section>
+            )}
             <Section>
               <SubHeader title="Social links" />
               <Row>
