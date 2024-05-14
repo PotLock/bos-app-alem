@@ -17,7 +17,7 @@ const useModals = () => {
 
   return () => (
     <>
-      {/* {(successfulDonation || _transactionHashes) && <ModalSuccess />} */}
+      {(successfulDonation || _transactionHashes) && <ModalSuccess />}
       {donationModalProps && <ModalDonation />}
     </>
   );

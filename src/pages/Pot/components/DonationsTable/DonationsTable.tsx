@@ -50,7 +50,7 @@ const DonationsTable = (props: any) => {
 
   // Handle flag success for extention wallet
   useEffect(() => {
-    if (accountId) {
+    if (accountId && transactionHashes) {
       getTransactionsFromHashes(transactionHashes, accountId).then((trxs) => {
         const transaction = trxs[0].body.result.transaction;
 

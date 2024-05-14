@@ -163,17 +163,20 @@ const ModalSuccess = () => {
                     },
                   }));
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => {
+                  console.log(err);
+                  return "";
+                });
             } else {
-              onClose();
+              return "";
             }
           } else {
-            onClose();
+            return "";
           }
         })
         .catch((err) => {
           console.log(err);
-          onClose();
+          return "";
         });
     }
   }
@@ -219,7 +222,7 @@ const ModalSuccess = () => {
 
   const needsToVerify = isUserHumanVerified === false;
 
-  return (
+  return successfulDonation || successfulApplication ? (
     <ModalOverlay onOverlayClick={onClose} contentStyle={{ padding: "0px" }}>
       <>
         {successfulApplication ? (
@@ -322,9 +325,13 @@ const ModalSuccess = () => {
             />
             {needsToVerify && !successfulDonationVals[0]?.recipient_id && <VerifyInfo />}
           </ModalMain>
-        ) : null}
+        ) : (
+          ""
+        )}
       </>
     </ModalOverlay>
+  ) : (
+    ""
   );
 };
 
