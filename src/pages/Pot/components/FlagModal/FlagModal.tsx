@@ -1,4 +1,4 @@
-import { Big, Near, context, useState } from "alem";
+import { Big, Near, context, useParams, useState } from "alem";
 import BannerBg from "@app/assets/svgs/banner-bg";
 import Button from "@app/components/Button";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
@@ -10,10 +10,12 @@ const FlagModal = (props: any) => {
   const SOCIAL_CONTRACT_ID = "social.near";
   const accountId = context.accountId || "";
 
+  const { potId } = useParams();
+
   const [reason, setReason] = useState("");
   const [reasonErr, setReasonErr] = useState("");
 
-  const { onClose, flagAddress, potId, setSuccessFlag } = props;
+  const { onClose, flagAddress, setSuccessFlag } = props;
 
   const onCancel = () => {
     onClose();
