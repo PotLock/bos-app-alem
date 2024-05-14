@@ -106,17 +106,7 @@ const DonationsTable = (props: any) => {
     <Container>
       <div className="transcation">
         <div className="header">
-          <div
-            className="address"
-            onClick={() => {
-              setSuccessFlag({
-                address: "re.near",
-                reason: "test tEST Tetset",
-              });
-            }}
-          >
-            Donor
-          </div>
+          <div className="address">Donor</div>
           <div className="address">Project</div>
           <div className="sort price" onClick={() => sortDonation("price")}>
             Amount
