@@ -30,6 +30,7 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
     application_end_ms,
     cooldown_end_ms: _cooldown_end_ms,
     all_paid_out,
+    registry_provider,
   } = potDetail;
 
   const { IPFS_BASE_URL, NADA_BOT_URL } = constants;
@@ -152,6 +153,8 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
 
   const registrationApproved = registryStatus === "Approved";
 
+  const registrationApprovedOrNoRegistryProvider = registrationApproved || !registry_provider;
+
   return (
     <Container>
       <Modals />
@@ -191,12 +194,12 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
           )}
           {canApply && (
             <Button
-              varient={registrationApproved || projectNotRegistered ? "filled" : "outline"}
+              varient={registrationApprovedOrNoRegistryProvider || projectNotRegistered ? "filled" : "outline"}
               style={{ marginRight: "24px" }}
-              isDisabled={registryStatus && !registrationApproved}
+              isDisabled={!registrationApprovedOrNoRegistryProvider}
               onClick={() => setIsApplicationModalOpen(true)}
             >
-              {registryStatus && !registrationApproved ? `Project Registration ${registryStatus}` : "Apply to pot"}
+              {registrationApprovedOrNoRegistryProvider ? "Apply to pot" : `Project Registration ${registryStatus}`}
             </Button>
           )}
           {now > public_round_end_ms && now < cooldown_end_ms && (
