@@ -65,7 +65,7 @@ export const projectDisabled = () =>
 export function extractRepoPath(url: string) {
   if (url) {
     // Define a regular expression pattern to match GitHub repository URLs
-    const pattern = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([^\/]+\/[^\/]+(?:\/.*)?)\/?$/;
+    const pattern = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([^\/]+(?:\/[^\/]+)?)\/?$/;
     // Execute the regular expression on the URL
     const match = url.match(pattern);
     // If a match is found, return the extracted repository path; otherwise, return null
