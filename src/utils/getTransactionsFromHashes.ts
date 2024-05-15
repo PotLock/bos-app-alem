@@ -10,7 +10,10 @@ export default function getTransactionsFromHashes(transactionHashes: string, acc
       method: "tx",
       params: [transaction, accountId],
     });
-    return asyncFetch("https://rpc.mainnet.near.org", {
+
+    // archival RPC node
+    // https://archival-rpc.mainnet.near.org
+    return asyncFetch("https://near.lava.build", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

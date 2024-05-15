@@ -85,3 +85,17 @@ export type FundDonation = {
   chef_id: null | "string";
   chef_fee: null | "string";
 };
+
+export type RegistrationStatus = "Approved" | "Rejected" | "Pending" | "Graylisted" | "Blacklisted";
+
+export type Registration = {
+  id: string;
+  registrant_id: string;
+  list_id: number;
+  status: RegistrationStatus;
+  submitted_ms: number;
+  updated_ms: number;
+  admin_notes: null | string;
+  registrant_notes: null | string;
+  registered_by: string;
+};

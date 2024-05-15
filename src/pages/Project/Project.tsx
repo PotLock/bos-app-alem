@@ -116,7 +116,6 @@ const ProjectPage = () => {
       <Body
         {...{
           profile,
-          registration,
           projectId,
           post: projectId === accountId,
           nav: nav ?? props.nav ?? "home",
