@@ -1,8 +1,11 @@
 import { Near, State, state, useParams } from "alem";
+import PotSDK from "@app/SDK/pot";
 import Button from "@app/components/Button";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import constants from "@app/constants";
+import { useToastNotification } from "@app/hooks/useToast";
 import ModalOverlay from "@app/modals/ModalOverlay";
+import { PotApplication } from "@app/types";
 import { ModalBody, ModalFooter, ModalHeader } from "./styles";
 
 const ApplicationReviewModal = ({
@@ -19,6 +22,8 @@ const ApplicationReviewModal = ({
     reviewMessageError: "",
   });
 
+  const { toast } = useToastNotification();
+
   const { reviewMessage, reviewMessageError } = state;
 
   const { potId } = useParams();
@@ -33,6 +38,24 @@ const ApplicationReviewModal = ({
   const handleCancel = () => {
     State.update({ reviewMessage: "", reviewMessageError: "" });
     onClose();
+  };
+
+  const handleSuccess = () => {
+    const applicationSuccess = setInterval(() => {
+      PotSDK.asyncGetApplicationByProjectId(potId, projectId).then((application: PotApplication) => {
+        if (application.status === newStatus) {
+          toast({
+            title: "Updated Successfully!",
+            description: `Application has been successfully updated to ${newStatus}.`,
+          });
+        }
+      });
+    }, 1000);
+    // Clear the interval after 60 seconds
+    setTimeout(() => {
+      onClose();
+      clearInterval(applicationSuccess);
+    }, 60000);
   };
 
   const handleSubmit = () => {
@@ -51,8 +74,7 @@ const ApplicationReviewModal = ({
       },
     ];
     Near.call(transactions);
-    // NB: we won't get here if user used a web wallet, as it will redirect to the wallet
-    // <---- TODO: IMPLEMENT EXTENSION WALLET HANDLING ---->
+    handleSuccess();
   };
 
   return (

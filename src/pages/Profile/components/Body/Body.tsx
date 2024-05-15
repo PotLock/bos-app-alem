@@ -81,7 +81,7 @@ const Body = (props: any) => {
   // Handle update project status for web wallet
   useEffect(() => {
     if (accountId && transactionHashes) {
-      getTransactionsFromHashes(transactionHashes, "plugrel.near").then((trxs) => {
+      getTransactionsFromHashes(transactionHashes, accountId).then((trxs) => {
         const transaction = trxs[0].body.result.transaction;
         const methodName = transaction.actions[0].FunctionCall.method_name;
         const successVal = trxs[0].body.result.status?.SuccessValue;

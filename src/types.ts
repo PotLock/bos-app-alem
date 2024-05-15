@@ -88,6 +88,8 @@ export type FundDonation = {
 
 export type RegistrationStatus = "Approved" | "Rejected" | "Pending" | "Graylisted" | "Blacklisted";
 
+export type ApplicationStatus = "Pending" | "Approved" | "Rejected";
+
 export type Registration = {
   id: string;
   registrant_id: string;
@@ -98,4 +100,13 @@ export type Registration = {
   admin_notes: null | string;
   registrant_notes: null | string;
   registered_by: string;
+};
+
+export type PotApplication = {
+  project_id: string;
+  message: string;
+  status: ApplicationStatus;
+  submitted_at: 1715764402476;
+  updated_at: null;
+  review_notes: null;
 };
