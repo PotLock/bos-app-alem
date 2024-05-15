@@ -25,7 +25,7 @@ export type PotDetail = {
   pot_name: string;
   pot_description: string;
   max_projects: number;
-  base_currency: string;
+  base_currency: "near";
   application_start_ms: number;
   application_end_ms: number;
   public_round_start_ms: number;
@@ -43,7 +43,7 @@ export type PotDetail = {
   total_public_donations: string;
   public_donations_count: number;
   payouts: [];
-  cooldown_end_ms?: number;
+  cooldown_end_ms: number | null;
   all_paid_out: boolean;
   protocol_config_provider: string;
 };
@@ -52,4 +52,36 @@ export type Pot = {
   id: string;
   deployed_by: string;
   deployed_at_ms: number;
+};
+
+export type PotDonation = {
+  id: string;
+  donor_id: string;
+  total_amount: string;
+  net_amount: string;
+  message: string;
+  donated_at: number;
+  project_id: null | "string";
+  referrer_id: null | "string";
+  referrer_fee: null | "string";
+  protocol_fee: string;
+  matching_pool: boolean;
+  chef_id: null | "string";
+  chef_fee: null | "string";
+};
+
+export type FundDonation = {
+  id: string;
+  donor_id: string;
+  total_amount: string;
+  net_amount: string;
+  message: string;
+  donated_at: number;
+  project_id: null;
+  referrer_id: null | "string";
+  referrer_fee: null | "string";
+  protocol_fee: string;
+  matching_pool: true;
+  chef_id: null | "string";
+  chef_fee: null | "string";
 };
