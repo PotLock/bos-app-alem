@@ -3,7 +3,6 @@ import PotSDK from "@app/SDK/pot";
 import Button from "@app/components/Button";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import constants from "@app/constants";
-import { useToastNotification } from "@app/hooks/useToast";
 import ModalOverlay from "@app/modals/ModalOverlay";
 import { PotApplication } from "@app/types";
 import { ModalBody, ModalFooter, ModalHeader } from "./styles";
@@ -12,17 +11,17 @@ const ApplicationReviewModal = ({
   projectId,
   onClose,
   newStatus,
+  toast,
 }: {
   projectId: string;
   newStatus: string;
   onClose: () => void;
+  toast: (newStatus: string) => void;
 }) => {
   State.init({
     reviewMessage: "",
     reviewMessageError: "",
   });
-
-  const { toast } = useToastNotification();
 
   const { reviewMessage, reviewMessageError } = state;
 
@@ -44,10 +43,7 @@ const ApplicationReviewModal = ({
     const applicationSuccess = setInterval(() => {
       PotSDK.asyncGetApplicationByProjectId(potId, projectId).then((application: PotApplication) => {
         if (application.status === newStatus) {
-          toast({
-            title: "Updated Successfully!",
-            description: `Application has been successfully updated to ${newStatus}.`,
-          });
+          toast(newStatus);
         }
       });
     }, 1000);

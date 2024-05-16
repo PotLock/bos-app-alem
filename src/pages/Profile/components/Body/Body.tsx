@@ -2,9 +2,8 @@ import { Near, context, props, useState, useParams, useMemo, useEffect } from "a
 import ListsSDK from "@app/SDK/lists";
 import Button from "@app/components/Button";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
-import getToastContainer from "@app/components/ToastNotification/getToastContainer";
+import ToastContainer from "@app/components/ToastNotification/getToastContainer";
 import constants from "@app/constants";
-import { useToastNotification } from "@app/hooks/useToast";
 import ModalOverlay from "@app/modals/ModalOverlay";
 import { Registration, RegistrationStatus } from "@app/types";
 import getTransactionsFromHashes from "@app/utils/getTransactionsFromHashes";
@@ -35,19 +34,27 @@ const Body = (props: any) => {
   } = constants;
 
   const [statusReview, setStatusReview] = useState({ modalOpen: false, notes: "", newStatus: "" });
-
-  const ToastNotification = getToastContainer();
-
-  const { toast } = useToastNotification();
+  const [toastContent, setToastContent] = useState({
+    title: "",
+    description: "",
+  });
 
   const listsContractId = ListsSDK.getContractId();
   const userIsRegistryAdmin = ListsSDK.isRegistryAdmin(context.accountId);
 
-  const statusToast = (status: RegistrationStatus) =>
-    toast({
+  const statusToast = (status: RegistrationStatus) => {
+    setToastContent({
       title: "Updated Successfully!",
       description: `Project has been successfully updated to ${status.toLowerCase()}.`,
     });
+
+    setTimeout(() => {
+      setToastContent({
+        title: "",
+        description: ``,
+      });
+    }, 7000);
+  };
 
   const handleUpdateStatus = () => {
     Near.call([
@@ -167,7 +174,7 @@ const Body = (props: any) => {
           </>
         </ModalOverlay>
       )}
-      <ToastNotification />
+      <ToastContainer toastContent={toastContent} />
     </Wrapper>
   );
 };

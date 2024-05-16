@@ -30,8 +30,8 @@ const ToastProvider = () => {
         updateData({
           toastContent: EMPTY_TOAST,
         });
-        // Wait 5sec before clearing the notification
-      }, 5000);
+        // Wait 7sec before clearing the notification
+      }, 7000);
     },
   });
 

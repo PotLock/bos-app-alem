@@ -2,9 +2,8 @@ import { Social, State, context, state, useParams, Tooltip, OverlayTrigger, useE
 import PotSDK from "@app/SDK/pot";
 import Button from "@app/components/Button";
 import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
-import getToastContainer from "@app/components/ToastNotification/getToastContainer";
+import ToastContainer from "@app/components/ToastNotification/getToastContainer";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
-import { useToastNotification } from "@app/hooks/useToast";
 import { PotDetail } from "@app/types";
 import _address from "@app/utils/_address";
 import daysAgo from "@app/utils/daysAgo";
@@ -34,15 +33,15 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
     allApplications: null,
     filteredApplications: [],
     filterVal: "ALL",
+    toastContent: {
+      title: "",
+      description: "",
+    },
   });
 
-  const { newStatus, projectId, searchTerm, allApplications, filteredApplications, filterVal } = state;
+  const { newStatus, projectId, searchTerm, allApplications, filteredApplications, filterVal, toastContent } = state;
 
   const applications = PotSDK.getApplications(potId);
-
-  const ToastNotification = getToastContainer();
-
-  const { toast } = useToastNotification();
 
   const getApplicationCount = (sortVal: string) => {
     if (!applications) return;
@@ -64,6 +63,23 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
 
   const { owner, admins, chef } = potDetail;
 
+  const toast = (newStatus: string) => {
+    State.update({
+      toastContent: {
+        title: "Updated Successfully!",
+        description: `Application status has been successfully updated to ${newStatus}.`,
+      },
+    });
+    setTimeout(() => {
+      State.update({
+        toastContent: {
+          title: "",
+          description: "",
+        },
+      });
+    }, 7000);
+  };
+
   // Handle update application status for web wallet
   useEffect(() => {
     if (accountId && transactionHashes) {
@@ -75,10 +91,7 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
         const result = JSON.parse(Buffer.from(successVal, "base64").toString("utf-8"));
 
         if (methodName === "chef_set_application_status" && result) {
-          toast({
-            title: "Updated Successfully!",
-            description: `Application status has been successfully updated to ${result.status}.`,
-          });
+          toast(result.status);
         }
       });
     }
@@ -297,8 +310,10 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
           <div style={{ padding: "1rem" }}>No applications to display</div>
         )}
       </ApplicationsWrapper>
-      {projectId && <ApplicationReviewModal projectId={projectId} newStatus={newStatus} onClose={handleCloseModal} />}
-      <ToastNotification />
+      {projectId && (
+        <ApplicationReviewModal toast={toast} projectId={projectId} newStatus={newStatus} onClose={handleCloseModal} />
+      )}
+      <ToastContainer toastContent={toastContent} />
     </Container>
   );
 };
