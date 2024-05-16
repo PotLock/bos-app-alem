@@ -1,18 +1,22 @@
 import { Near, State, state, useParams } from "alem";
+import PotSDK from "@app/SDK/pot";
 import Button from "@app/components/Button";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import constants from "@app/constants";
 import ModalOverlay from "@app/modals/ModalOverlay";
+import { PotApplication } from "@app/types";
 import { ModalBody, ModalFooter, ModalHeader } from "./styles";
 
 const ApplicationReviewModal = ({
   projectId,
   onClose,
   newStatus,
+  toast,
 }: {
   projectId: string;
   newStatus: string;
   onClose: () => void;
+  toast: (newStatus: string) => void;
 }) => {
   State.init({
     reviewMessage: "",
@@ -35,6 +39,21 @@ const ApplicationReviewModal = ({
     onClose();
   };
 
+  const handleSuccess = () => {
+    const applicationSuccess = setInterval(() => {
+      PotSDK.asyncGetApplicationByProjectId(potId, projectId).then((application: PotApplication) => {
+        if (application.status === newStatus) {
+          toast(newStatus);
+        }
+      });
+    }, 1000);
+    // Clear the interval after 60 seconds
+    setTimeout(() => {
+      onClose();
+      clearInterval(applicationSuccess);
+    }, 60000);
+  };
+
   const handleSubmit = () => {
     const args = {
       project_id: projectId,
@@ -51,8 +70,7 @@ const ApplicationReviewModal = ({
       },
     ];
     Near.call(transactions);
-    // NB: we won't get here if user used a web wallet, as it will redirect to the wallet
-    // <---- TODO: IMPLEMENT EXTENSION WALLET HANDLING ---->
+    handleSuccess();
   };
 
   return (

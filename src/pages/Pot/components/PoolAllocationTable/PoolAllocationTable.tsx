@@ -31,6 +31,7 @@ const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
   }
 
   let sponsorshipDonations = PotSDK.getMatchingPoolDonations(potId);
+
   if (sponsorshipDonations) sponsorshipDonations.sort((a: any, b: any) => b.net_amount - a.net_amount);
 
   const calcMatchedAmount = (donations: any) => {

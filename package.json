@@ -14,7 +14,7 @@
     "test": "npx playwright test"
   },
   "dependencies": {
-    "alem": "1.1.2"
+    "alem": "1.1.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.38.1",

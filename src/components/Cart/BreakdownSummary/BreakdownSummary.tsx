@@ -1,7 +1,6 @@
 import { State, props, state } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import NearIcon from "@app/assets/svgs/near-icon";
-import constants from "@app/constants";
 import basisPointsToPercent from "@app/utils/basisPointsToPercent";
 import {
   BreakdownAmount,
@@ -18,11 +17,10 @@ const BreakdownSummary = ({
   referrerId,
   totalAmount,
   bypassProtocolFee,
-  recipientId,
   potRferralFeeBasisPoints,
   ftIcon,
   bypassChefFee,
-  chef,
+  label,
   chefFeeBasisPoints,
 }: any) => {
   const donationContractConfig = DonateSDK.getConfig();
@@ -36,6 +34,7 @@ const BreakdownSummary = ({
   const { protocol_fee_basis_points } = donationContractConfig;
 
   const protocolFeeBasisPoints = props.protocolFeeBasisPoints ?? protocol_fee_basis_points;
+
   const referralFeeBasisPoints = potRferralFeeBasisPoints || props.referralFeeBasisPoints;
 
   const TOTAL_BASIS_POINTS = 10_000;
@@ -81,7 +80,7 @@ const BreakdownSummary = ({
       show: true,
     },
     {
-      label: "Project allocation",
+      label: `${label ?? "Project"} allocation`,
       percentage: projectAllocationPercent,
       amount: projectAllocationAmount,
       show: true,

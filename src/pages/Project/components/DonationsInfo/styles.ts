@@ -32,7 +32,6 @@ export const Container = styled.div`
     display: flex;
     gap: 1.5rem;
     justify-content: space-between;
-    > div,
     button {
       padding: 10px 0;
       width: 160px;

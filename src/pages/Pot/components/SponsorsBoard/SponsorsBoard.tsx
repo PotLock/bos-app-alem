@@ -13,7 +13,7 @@ const Sponsor = ({ donation: { amount, donor_id, percentage_share }, colIdx }: a
 
   return (
     <div className={`item ${colIdx === 2 && "first"}`}>
-      <ProfileImage style={{}} profile={profile} />
+      <ProfileImage style={{}} profile={profile} accountId={donor_id} />
       <a href={hrefWithParams(`?tab=profile&accountId=${donor_id}`)} target="_blank" className="name">
         {_address(profile.name || donor_id, 15)}
       </a>

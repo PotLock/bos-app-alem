@@ -7,6 +7,7 @@ import useModals from "@app/hooks/useModals";
 import CopyIcon from "@app/pages/Project/components/CopyIcon";
 import { PotDetail } from "@app/types";
 import calculatePayouts from "@app/utils/calculatePayouts";
+import getTransactionsFromHashes from "@app/utils/getTransactionsFromHashes";
 import nearToUsd from "@app/utils/nearToUsd";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
@@ -14,6 +15,7 @@ import ChallengeModal from "../ChallengeModal/ChallengeModal";
 import FundModal from "../FundModal/FundModal";
 import NewApplicationModal from "../NewApplicationModal/NewApplicationModal";
 import PoolAllocationTable from "../PoolAllocationTable/PoolAllocationTable";
+import SuccessFundModal, { ExtendedFundDonation } from "../SuccessFundModal/SuccessFundModal";
 import { ButtonsWrapper, Container, Description, Fund, HeaderWrapper, Referral, Title } from "./styles";
 
 const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonations: any }) => {
@@ -30,11 +32,12 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
     application_end_ms,
     cooldown_end_ms: _cooldown_end_ms,
     all_paid_out,
+    registry_provider,
   } = potDetail;
 
   const { IPFS_BASE_URL, NADA_BOT_URL } = constants;
 
-  const { potId } = useParams();
+  const { potId, transactionHashes } = useParams();
 
   // Start Modals provider
   const Modals = useModals();
@@ -52,6 +55,8 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
   const [isDao, setIsDao] = useState(null);
   const [applicationSuccess, setApplicationSuccess] = useState(null);
   const [flaggedAddresses, setFlaggedAddresses] = useState(null);
+  // set fund mathcing pool success
+  const [fundDonation, setFundDonation] = useState<null | ExtendedFundDonation>(null);
 
   const verifyIsOnRegistry = (address: any) => {
     Near.asyncView("lists.potlock.near", "get_registrations_for_registrant", {
@@ -69,6 +74,28 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
   useEffect(() => {
     if (!isDao) {
       verifyIsOnRegistry(context.accountId || "");
+    }
+  }, []);
+
+  // Handle fund success for web wallet
+  useEffect(() => {
+    if (accountId && transactionHashes) {
+      getTransactionsFromHashes(transactionHashes, accountId).then((trxs) => {
+        const transaction = trxs[0].body.result.transaction;
+
+        const methodName = transaction.actions[0].FunctionCall.method_name;
+        const receiver_id = transaction.receiver_id;
+        const successVal = trxs[0].body.result.status?.SuccessValue;
+        const result = JSON.parse(Buffer.from(successVal, "base64").toString("utf-8")); // atob not working
+
+        if (methodName === "donate" && receiver_id === potId && result) {
+          setFundDonation({
+            ...result,
+            potId,
+            potDetail,
+          });
+        }
+      });
     }
   }, []);
 
@@ -152,6 +179,8 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
 
   const registrationApproved = registryStatus === "Approved";
 
+  const registrationApprovedOrNoRegistryProvider = registrationApproved || !registry_provider;
+
   return (
     <Container>
       <Modals />
@@ -191,12 +220,12 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
           )}
           {canApply && (
             <Button
-              varient={registrationApproved || projectNotRegistered ? "filled" : "outline"}
+              varient={registrationApprovedOrNoRegistryProvider || projectNotRegistered ? "filled" : "outline"}
               style={{ marginRight: "24px" }}
-              isDisabled={registryStatus && !registrationApproved}
+              isDisabled={!registrationApprovedOrNoRegistryProvider}
               onClick={() => setIsApplicationModalOpen(true)}
             >
-              {registryStatus && !registrationApproved ? `Project Registration ${registryStatus}` : "Apply to pot"}
+              {registrationApprovedOrNoRegistryProvider ? "Apply to pot" : `Project Registration ${registryStatus}`}
             </Button>
           )}
           {now > public_round_end_ms && now < cooldown_end_ms && (
@@ -226,18 +255,29 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
           potDetail={potDetail}
         />
       )}
+      {showChallengePayoutsModal && (
+        <ChallengeModal
+          existingChallengeForUser={existingChallengeForUser}
+          onClose={() => setShowChallengePayoutsModal(false)}
+        />
+      )}
+      {/* Fund Matching Pool Modal */}
       {isMatchingPoolModalOpen && (
         <FundModal
+          setFundDonation={setFundDonation}
           potDetail={potDetail}
           onClose={() => {
             setIsMatchingPoolModalOpen(false);
           }}
         />
       )}
-      {showChallengePayoutsModal && (
-        <ChallengeModal
-          existingChallengeForUser={existingChallengeForUser}
-          onClose={() => setShowChallengePayoutsModal(false)}
+      {/* Fund Matching Pool Success Modal */}
+      {fundDonation && (
+        <SuccessFundModal
+          fundDonation={fundDonation}
+          onClose={() => {
+            setFundDonation(null);
+          }}
         />
       )}
     </Container>

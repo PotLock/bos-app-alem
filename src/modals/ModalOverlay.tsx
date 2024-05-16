@@ -3,8 +3,8 @@ import styled from "styled-components";
 type Props = {
   children: JSX.Element | JSX.Element[];
   onOverlayClick?: (event: any) => void;
-  contentStyle?: any;
-  overlayStyle?: any;
+  contentStyle?: React.CSSProperties;
+  overlayStyle?: React.CSSProperties;
 };
 
 const ModalOverlay = ({ children, onOverlayClick, contentStyle }: Props) => {

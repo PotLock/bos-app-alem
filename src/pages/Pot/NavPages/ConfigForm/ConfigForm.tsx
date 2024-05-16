@@ -1,5 +1,6 @@
-import { Big, Near, State, context, state, useMemo, useParams } from "alem";
+import { Big, Near, context, useEffect, useMemo, useParams, useState } from "alem";
 import ListsSDK from "@app/SDK/lists";
+import PotSDK from "@app/SDK/pot";
 import PotFactorySDK from "@app/SDK/potfactory";
 import AccountsList from "@app/components/AccountsList/AccountsList";
 import Button from "@app/components/Button";
@@ -8,8 +9,11 @@ import DateInput from "@app/components/Inputs/Date/Date";
 import Text from "@app/components/Inputs/Text/Text";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import ModalMultiAccount from "@app/components/ModalMultiAccount/ModalMultiAccount";
+import ToastContainer from "@app/components/ToastNotification/getToastContainer";
 import constants from "@app/constants";
 import { PotDetail } from "@app/types";
+import deepEqual from "@app/utils/deepEqual";
+import getTransactionsFromHashes from "@app/utils/getTransactionsFromHashes";
 import validateNearAddress from "@app/utils/validateNearAddress";
 import {
   CheckboxWrapper,
@@ -24,7 +28,8 @@ import {
 } from "./styles";
 
 const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }) => {
-  const { potId } = useParams();
+  const { potId, transactionHashes } = useParams();
+
   const {
     NADABOT_HUMAN_METHOD,
     ONE_TGAS,
@@ -73,7 +78,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
 
   // console.log("potDetail: ", potDetail);
 
-  State.init({
+  const inital_state = {
     owner: isUpdate ? potDetail.owner : context.accountId,
     ownerError: "",
     admin: "",
@@ -118,12 +123,23 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
     usePotlockRegistry: isUpdate ? potDetail.registry_provider == DEFAULT_REGISTRY_PROVIDER : true,
     latestSourceCodeCommitHash: "",
     deploymentSuccess: false,
-  });
+    toastContent: {
+      title: "",
+      description: "",
+    },
+  };
+
+  const [state, setState] = useState<any>(inital_state);
+  const updateState = (updatedState: any) =>
+    setState({
+      ...inital_state,
+      ...updatedState,
+    });
 
   if (!isUpdate && !state.latestSourceCodeCommitHash) {
     const res: any = fetch("https://api.github.com/repos/PotLock/core/commits");
     if (res.ok && res.body.length > 0) {
-      State.update({
+      updateState({
         latestSourceCodeCommitHash: res.body[0].sha,
       });
     }
@@ -132,7 +148,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
   const getPotDetailArgsFromState = () => {
     const args = {
       owner: state.owner,
-      admins: state.admins.filter((admin: any) => !admin.remove).map((admin: any) => admin.accountId),
+      admins: state.admins?.filter((admin: any) => !admin.remove).map((admin: any) => admin.accountId),
       chef: state.chef || null,
       pot_name: state.name,
       pot_description: state.description,
@@ -229,17 +245,50 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
           const pot = pots.find((pot: any) => pot.deployed_by === context.accountId && pot.deployed_at_ms > now);
           if (pot) {
             clearInterval(pollId);
-            State.update({ deploymentSuccess: true });
+            updateState({ deploymentSuccess: true });
           }
         });
       }, pollIntervalMs);
     });
   };
 
+  const toast = () => {
+    updateState({
+      toastContent: {
+        title: "Saved Successfully!",
+        description: "Changes to pot has been saved successfully.",
+      },
+    });
+    setTimeout(() => {
+      updateState({
+        toastContent: {
+          title: "",
+          description: "",
+        },
+      });
+    }, 7000);
+  };
+
+  useEffect(() => {
+    if (context.accountId && transactionHashes) {
+      getTransactionsFromHashes(transactionHashes, context.accountId).then((trxs) => {
+        console.log("trxs", trxs);
+
+        const transaction = trxs[0].body.result.transaction;
+
+        const methodName = transaction.actions[0].FunctionCall.method_name;
+        const successVal = trxs[0].body.result.status?.SuccessValue;
+        const result = JSON.parse(Buffer.from(successVal, "base64").toString("utf-8"));
+        if (methodName === "admin_dangerously_set_pot_config" && result) {
+          toast();
+        }
+      });
+    }
+  }, []);
+
   const handleUpdate = () => {
     // create update pot args
     const updateArgs = getPotDetailArgsFromState();
-    // console.log("updateArgs: ", updateArgs);
     const depositFloat = JSON.stringify(updateArgs).length * 0.00003;
     const deposit = Big(depositFloat).mul(Big(10).pow(24));
     const transactions = [
@@ -252,12 +301,21 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
       },
     ];
     Near.call(transactions);
-    // NB: we won't get here if user used a web wallet, as it will redirect to the wallet
-    // <---- EXTENSION WALLET HANDLING ---->
-    // TODO: IMPLEMENT
-  };
 
-  // console.log("state: ", state);
+    const potConfigSuccess = setInterval(() => {
+      PotSDK.asyncGetConfig(potId).then((detail: PotDetail) => {
+        if (deepEqual(updateArgs, detail, ["source_metadata", "toastContent"])) {
+          toast();
+          clearInterval(potConfigSuccess);
+        }
+      });
+    }, 1000);
+
+    // Clear the interval after 60 seconds
+    setTimeout(() => {
+      clearInterval(potConfigSuccess);
+    }, 60000);
+  };
 
   const validateAndUpdatePercentages = (percent: any, stateKey: any, errorKey: any, maxVal: any) => {
     // TODO: move this to separate component for percentage input that accepts "basisPoints" bool parameter
@@ -276,7 +334,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
       }
       // if it ends with a period and this is the only period in the string, set on state
       if (percent.endsWith(".") && percent.indexOf(".") === percent.length - 1) {
-        State.update({
+        updateState({
           [stateKey]: percent,
         });
         return;
@@ -290,13 +348,13 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
         }
       }
     }
-    State.update(updates);
+    updateState(updates);
   };
 
   const handleAddAdmin = () => {
     let isValid = validateNearAddress(state.admin);
     if (!isValid) {
-      State.update({
+      updateState({
         adminsError: "Invalid NEAR account ID",
       });
       return;
@@ -311,7 +369,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
       };
       const admins = [...state.admins, newAdmin];
       // console.log("admins: ", admins);
-      State.update({
+      updateState({
         admins,
         admin: "",
         adminsError: "",
@@ -320,7 +378,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
   };
 
   const handleRemoveAdmin = (accountId: any) => {
-    State.update({
+    updateState({
       admins: state.admins.map((admin: any) => {
         if (admin.accountId == accountId) {
           return { ...admin, remove: true };
@@ -353,11 +411,11 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               label: "Owner *",
               placeholder: `E.g. ${context.accountId}`,
               value: state.owner,
-              onChange: (owner) => State.update({ owner, ownerError: "" }),
+              onChange: (owner) => updateState({ owner, ownerError: "" }),
               validate: () => {
                 // **CALLED ON BLUR**
                 const valid = validateNearAddress(state.owner);
-                State.update({ ownerError: valid ? "" : "Invalid NEAR account ID" });
+                updateState({ ownerError: valid ? "" : "Invalid NEAR account ID" });
               },
               error: state.ownerError,
               disabled: isUpdate ? !userIsOwner : true,
@@ -367,7 +425,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
           <Label>Admins</Label>
           <AccountsList
             {...{
-              accountIds: state.admins
+              accountIds: (state.admins || [])
                 .filter((account: any) => !account.remove)
                 .map((account: any) => account.accountId),
               allowRemove: isUpdate ? userIsOwner : true,
@@ -380,7 +438,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               {...{
                 varient: "outline",
                 style: { width: "fit-content" },
-                onClick: () => State.update({ isAdminsModalOpen: true }),
+                onClick: () => updateState({ isAdminsModalOpen: true }),
               }}
             >
               Add admins
@@ -392,11 +450,11 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               label: "Name *",
               placeholder: "E.g. DeFi Center",
               value: state.name,
-              onChange: (name) => State.update({ name, nameError: "" }),
+              onChange: (name) => updateState({ name, nameError: "" }),
               validate: () => {
                 // **CALLED ON BLUR**
                 const valid = state.name.length <= MAX_POT_NAME_LENGTH;
-                State.update({
+                updateState({
                   nameError: valid ? "" : `Name must be ${MAX_POT_NAME_LENGTH} characters or less`,
                 });
               },
@@ -409,7 +467,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               label: "Custom handle (optional - will slugify name by default)",
               placeholder: "e.g. my-pot-handle",
               value: state.customHandle,
-              onChange: (customHandle) => State.update({ customHandle, customHandleError: "" }),
+              onChange: (customHandle) => updateState({ customHandle, customHandleError: "" }),
               validate: () => {
                 // **CALLED ON BLUR**
                 const suffix = `.${potFactoryContractId}`;
@@ -423,7 +481,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
                     ? ""
                     : `Invalid handle (can only contain lowercase alphanumeric symbols +  _ or -)`;
                 }
-                State.update({
+                updateState({
                   customHandleError,
                 });
               },
@@ -437,11 +495,11 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               label: "Description",
               placeholder: "Type description",
               value: state.description,
-              onChange: (description: string) => State.update({ description }),
+              onChange: (description: string) => updateState({ description }),
               validate: () => {
                 // **CALLED ON BLUR**
                 const valid = state.description.length <= MAX_POT_DESCRIPTION_LENGTH;
-                State.update({
+                updateState({
                   descriptionError: valid ? "" : `Description must be ${MAX_POT_DESCRIPTION_LENGTH} characters or less`,
                 });
               },
@@ -509,7 +567,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               selectTime: true,
               value: state.applicationStartDate,
               onChange: (date) => {
-                State.update({ applicationStartDate: date });
+                updateState({ applicationStartDate: date });
               },
               validate: () => {
                 // **CALLED ON BLUR**
@@ -520,7 +578,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
                 const applicationEndDate = new Date(state.applicationEndDate).getTime();
                 const valid =
                   applicationStartDate > now && (!applicationEndDate || applicationStartDate < applicationEndDate);
-                State.update({
+                updateState({
                   applicationStartDateError: valid ? "" : "Invalid application start date",
                 });
               },
@@ -534,14 +592,14 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               //   placeholder: "0", // TODO: possibly add this back in
               selectTime: true,
               value: state.applicationEndDate,
-              onChange: (date) => State.update({ applicationEndDate: date }),
+              onChange: (date) => updateState({ applicationEndDate: date }),
               validate: () => {
                 // **CALLED ON BLUR**
                 // must be before matching round start date
                 const valid =
                   (!state.matchingRoundStartDate || state.applicationEndDate < state.matchingRoundStartDate) &&
                   (!state.applicationStartDate || state.applicationEndDate > state.applicationStartDate);
-                State.update({
+                updateState({
                   applicationEndDateError: valid ? "" : "Invalid application end date",
                 });
               },
@@ -554,14 +612,14 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               label: "Matching round start date",
               selectTime: true,
               value: state.matchingRoundStartDate,
-              onChange: (date) => State.update({ matchingRoundStartDate: date }),
+              onChange: (date) => updateState({ matchingRoundStartDate: date }),
               validate: () => {
                 // **CALLED ON BLUR**
                 // must be after application end and before matching round end
                 const valid =
                   (!state.applicationEndDate || state.matchingRoundStartDate > state.applicationEndDate) &&
                   (!state.matchingRoundEndDate || state.matchingRoundStartDate < state.matchingRoundEndDate);
-                State.update({
+                updateState({
                   matchingRoundStartDateError: valid ? "" : "Invalid round start date",
                 });
               },
@@ -576,13 +634,13 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               //   placeholder: "0", // TODO: possibly add this back in
               selectTime: true,
               value: state.matchingRoundEndDate,
-              onChange: (date) => State.update({ matchingRoundEndDate: date }),
+              onChange: (date) => updateState({ matchingRoundEndDate: date }),
               validate: () => {
                 // **CALLED ON BLUR**
                 // must be after matching round start
                 const valid =
                   !state.matchingRoundStartDate || state.matchingRoundEndDate > state.matchingRoundStartDate;
-                State.update({ matchingRoundEndDateError: valid ? "" : "Invalid round end date" });
+                updateState({ matchingRoundEndDateError: valid ? "" : "Invalid round end date" });
               },
               error: state.matchingRoundEndDateError,
               disabled: isUpdate ? !isAdminOrGreater : false,
@@ -596,7 +654,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
                 placeholder: "0",
                 value: state.minMatchingPoolDonationAmount,
                 onChange: (amountNear) => {
-                  State.update({ minMatchingPoolDonationAmount: amountNear });
+                  updateState({ minMatchingPoolDonationAmount: amountNear });
                 },
                 validate: () => {
                   // **CALLED ON BLUR**
@@ -618,11 +676,11 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
                 label: "Assign chef",
                 placeholder: "E.g. user.near",
                 value: state.chef,
-                onChange: (chef) => State.update({ chef }),
+                onChange: (chef) => updateState({ chef }),
                 validate: () => {
                   // **CALLED ON BLUR**
                   const valid = validateNearAddress(state.chef);
-                  State.update({ chefError: valid ? "" : "Invalid NEAR account ID" });
+                  updateState({ chefError: valid ? "" : "Invalid NEAR account ID" });
                 },
                 error: state.chefError,
                 disabled: isUpdate ? !isAdminOrGreater : false,
@@ -662,11 +720,11 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
               label: "Max. approved projects",
               placeholder: "e.g. 20",
               value: state.maxProjects,
-              onChange: (maxProjects) => State.update({ maxProjects }),
+              onChange: (maxProjects) => updateState({ maxProjects }),
               validate: () => {
                 // **CALLED ON BLUR**
                 const valid = parseInt(state.maxProjects) <= MAX_MAX_PROJECTS;
-                State.update({ maxProjectsError: valid ? "" : `Maximum ${MAX_MAX_PROJECTS}` });
+                updateState({ maxProjectsError: valid ? "" : `Maximum ${MAX_MAX_PROJECTS}` });
               },
               error: state.maxProjectsError,
               disabled: isUpdate ? !isAdminOrGreater : false,
@@ -684,7 +742,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
                   id: "registrationSelector",
                   checked: state.usePotlockRegistry,
                   onClick: (e: any) => {
-                    State.update({
+                    updateState({
                       usePotlockRegistry: e.target.checked,
                     });
                   },
@@ -707,7 +765,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
                   id: "sybilSelector",
                   checked: state.useNadabotSybil,
                   onClick: (e: any) => {
-                    State.update({
+                    updateState({
                       useNadabotSybil: e.target.checked,
                     });
                   },
@@ -749,12 +807,12 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
       {state.isAdminsModalOpen && (
         <ModalMultiAccount
           {...{
-            onClose: () => State.update({ isAdminsModalOpen: false }),
+            onClose: () => updateState({ isAdminsModalOpen: false }),
             titleText: "Add admins",
             descriptionText: "Add NEAR account IDs for your admins.",
             inputValue: state.admin,
             onInputChange: (admin: any) => {
-              State.update({ admin, adminsError: "" });
+              updateState({ admin, adminsError: "" });
             },
             handleAddAccount: handleAddAdmin,
             handleRemoveAccount: handleRemoveAdmin,
@@ -764,6 +822,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
           }}
         />
       )}
+      <ToastContainer toastContent={state.toastContent} />
     </FormBody>
   );
 };
