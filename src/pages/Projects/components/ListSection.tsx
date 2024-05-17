@@ -9,7 +9,7 @@ type BreakPoint = {
 type Props = {
   shouldShuffle?: boolean;
   renderItem: any;
-  items: any;
+  items: any[];
   maxCols?: number;
   responsive?: BreakPoint[];
 };
@@ -23,12 +23,12 @@ const ListSection = ({ shouldShuffle, items, renderItem }: Props) => {
     return <p>Loading...</p>;
   }
 
-  const _items = useMemo(() => {
-    if (shouldShuffle) {
-      return [...items].sort(() => Math.random() - 0.5);
-    }
-    return items;
-  }, [items, shouldShuffle]);
+  // const _items = useMemo(() => {
+  //   if (shouldShuffle) {
+  //     return [...items].sort(() => Math.random() - 0.5);
+  //   }
+  //   return items;
+  // }, [items, shouldShuffle]);
 
   const PAGE_SIZE = 9;
 
@@ -65,7 +65,7 @@ const ListSection = ({ shouldShuffle, items, renderItem }: Props) => {
     )}
   `;
 
-  return <Feed items={_items} Item={renderItem} Layout={Grid} perPage={PAGE_SIZE} />;
+  return <Feed items={items} Item={renderItem} Layout={Grid} perPage={PAGE_SIZE} />;
 };
 
 export default ListSection;
