@@ -1,38 +1,40 @@
-import { useEffect, useMemo, useParams, useState } from "alem";
+import { useParams, useState } from "alem";
 import PotSDK from "@app/SDK/pot";
 import PotFactorySDK from "@app/SDK/potfactory";
 import PotCard from "@app/components/PotCard/PotCard";
-import ListSection from "@app/pages/Projects/components/ListSection";
 import { Container, NoResults } from "./styles";
 
 const Pots = () => {
   const pots = PotFactorySDK.getPots();
   const { projectId } = useParams();
 
-  const POT_STATUS = ["Approved", "pending"];
-
   const [potIds, setPotIds] = useState<any>(null); // ids[] of pots that approved project
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // ids[] of pots that approved project
 
-  useEffect(() => {
-    if (pots && !potIds) {
-      const applicationsPrmomises = pots.map(({ id }: any) => PotSDK.asyncGetApplicationByProjectId(id, projectId));
-      Promise.allSettled(applicationsPrmomises).then((applications: any) => {
-        const enrolledPots: any = [];
-        applications.forEach((obj: any, idx: number) => {
-          if (POT_STATUS.includes(obj.value.status)) {
-            enrolledPots.push(pots[idx]);
-          }
-        });
-        setPotIds(enrolledPots);
-      });
-    }
-  }, [pots]);
+  const getApprovedApplications = (potId: any) =>
+    PotSDK.asyncGetApprovedApplications(potId)
+      .then((applications: any) => {
+        if (applications.some((app: any) => app.project_id === projectId)) {
+          setPotIds([...(potIds || []), potId]);
+        }
+        if (pots[pots.length - 1].id === potId) setLoading(false);
+      })
+      .catch(() => console.log(`Error fetching approved applications for ${potId}`));
 
-  return potIds === null ? (
+  if (pots && loading) {
+    pots.forEach((pot: any) => {
+      getApprovedApplications(pot.id);
+    });
+  }
+
+  return loading ? (
     "Loading..."
   ) : potIds.length ? (
-    <ListSection maxCols={3} items={potIds} renderItem={(pot: any) => <PotCard potId={pot.id} key={pot.id} />} />
+    <Container>
+      {potIds.map((potId: string) => (
+        <PotCard {...{ potId, tab: "pots" }} />
+      ))}
+    </Container>
   ) : (
     <NoResults>
       <div className="text">This project has not participated in any pots yet.</div>

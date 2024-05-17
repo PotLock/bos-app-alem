@@ -18,10 +18,11 @@ type Props = {
 
 const PotCard = ({ potId }: Props) => {
   const potConfig: PotDetail = PotSDK.getConfig(potId);
+
   if (!potConfig)
     return (
       <Card style={{ justifyContent: "center", alignItems: "center" }}>
-        {potConfig === null ? (
+        {potConfig == null ? (
           <div className="spinner-border text-secondary" role="status" />
         ) : (
           <div>Pot {potId} not found.</div>
@@ -54,7 +55,6 @@ const PotCard = ({ potId }: Props) => {
 
   return (
     <Card
-      key={potId}
       href={hrefWithParams(`?tab=pot&potId=${potId}`)}
       data-testid={applicationOpen ? "active-pot" : "inactive-pot"}
     >
