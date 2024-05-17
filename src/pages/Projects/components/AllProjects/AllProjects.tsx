@@ -24,8 +24,9 @@ const AllProjects = () => {
   useEffect(() => {
     if (projects.length === 0 && projectsData) {
       const { allProjects, approvedProjects } = projectsData;
+      const shuffledProjects = [...approvedProjects].sort(() => Math.random() - 0.5);
       setProjects(allProjects);
-      setFilteredProjects(approvedProjects);
+      setFilteredProjects(shuffledProjects);
     }
   }, [projectsData]);
 
@@ -156,9 +157,9 @@ const AllProjects = () => {
       <ProjectsContainer>
         {filteredProjects.length ? (
           <ListSection
-            shouldShuffle
+            // shouldShuffle
             items={filteredProjects}
-            renderItem={(project: Project) => <Card projectId={project.registrant_id} />}
+            renderItem={(project: Project) => <Card key={project.registrant_id} projectId={project.registrant_id} />}
           />
         ) : (
           <div style={{ alignSelf: "flex-start", margin: "24px 0px" }}>No results</div>

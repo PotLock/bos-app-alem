@@ -9,7 +9,7 @@ type BreakPoint = {
 type Props = {
   shouldShuffle?: boolean;
   renderItem: any;
-  items: any;
+  items: any[];
   maxCols?: number;
   responsive?: BreakPoint[];
 };

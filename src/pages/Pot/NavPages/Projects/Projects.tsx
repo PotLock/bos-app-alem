@@ -1,4 +1,4 @@
-import { useState, Social, context, useParams, createDebounce } from "alem";
+import { useState, Social, context, useParams, createDebounce, useEffect } from "alem";
 import PotSDK from "@app/SDK/pot";
 import Card from "@app/components/Card/Card";
 import ListSection from "@app/pages/Projects/components/ListSection";
@@ -15,7 +15,7 @@ type Props = {
 const Projects = (props: Props) => {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [projects, setProjects] = useState<any>(null);
-  const [flaggedAddresses, setFlaggedAddresses] = useState(null);
+  const [flaggedAddresses, setFlaggedAddresses] = useState<null | []>(null);
   const [payouts, setPayouts] = useState<any>(null);
 
   // get projects
@@ -24,10 +24,16 @@ const Projects = (props: Props) => {
   const { potDetail, allDonations } = props;
 
   if (!projects) {
-    PotSDK.asyncGetApprovedApplications(potId).then((projects: any) => {
-      setProjects(projects);
-      setFilteredProjects(projects);
-    });
+    PotSDK.asyncGetApprovedApplications(potId)
+      .then((projects: any) => {
+        setProjects(projects);
+        setFilteredProjects(projects);
+      })
+      .catch((err: any) => {
+        console.log("error fetching projects ", err);
+        setProjects([]);
+        setFilteredProjects([]);
+      });
   }
 
   const Loading = () => (
@@ -56,24 +62,28 @@ const Projects = (props: Props) => {
       .catch((err) => console.log("error getting the flagged accounts ", err));
   }
 
-  if (!payouts) {
-    if (allDonations.length && flaggedAddresses)
-      calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses)
-        .then((payouts: any) => {
-          setPayouts(payouts ?? []);
-        })
-        .catch((err) => {
-          console.log("error while calculating payouts ", err);
-          setPayouts([]);
-        });
-  }
+  useEffect(() => {
+    if (!payouts) {
+      if (allDonations.length && flaggedAddresses)
+        calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses)
+          .then((payouts: any) => {
+            setPayouts(payouts ?? []);
+          })
+          .catch((err) => {
+            console.log("error while calculating payouts ", err);
+            setPayouts([]);
+          });
+      else if (allDonations.length === 0 && flaggedAddresses?.length === 0) {
+        setPayouts([]);
+      }
+    }
+  }, [allDonations, flaggedAddresses]);
 
   if (!flaggedAddresses || !payouts) return <Loading />;
 
   const searchByWords = (searchTerm: string) => {
     if (projects.length) {
       searchTerm = searchTerm.toLowerCase().trim();
-      // setSearchTerm(searchTerm);
       const updatedProjects = projects.filter((project: any) => {
         const profile: any = Social.getr(`${project.project_id}/profile`);
         const fields = [
@@ -113,39 +123,43 @@ const Projects = (props: Props) => {
           className="search-input"
         />
       </SearchBar>
-      <ListSection
-        shouldShuffle={true}
-        maxCols={3}
-        items={filteredProjects}
-        responsive={[
-          {
-            breakpoint: 1200,
-            items: 2,
-          },
-          {
-            breakpoint: 870,
-            items: 1,
-          },
-        ]}
-        renderItem={(project: any) => {
-          return (
-            <Card
-              {...{
-                potDetail,
-                projects,
-                projectId: project.project_id,
-                allowDonate: publicRoundOpen && project.project_id !== context.accountId,
-                potRferralFeeBasisPoints: referral_fee_public_round_basis_points,
-                payoutDetails: payouts[project.project_id] || {
-                  donorCount: 0,
-                  matchingAmount: "0",
-                  totalAmount: "0",
-                },
-              }}
-            />
-          );
-        }}
-      />
+      {filteredProjects.length > 0 ? (
+        <ListSection
+          shouldShuffle={true}
+          maxCols={3}
+          items={filteredProjects}
+          responsive={[
+            {
+              breakpoint: 1200,
+              items: 2,
+            },
+            {
+              breakpoint: 870,
+              items: 1,
+            },
+          ]}
+          renderItem={(project: any) => {
+            return (
+              <Card
+                {...{
+                  potDetail,
+                  projects,
+                  projectId: project.project_id,
+                  allowDonate: publicRoundOpen && project.project_id !== context.accountId,
+                  potRferralFeeBasisPoints: referral_fee_public_round_basis_points,
+                  payoutDetails: payouts[project.project_id] || {
+                    donorCount: 0,
+                    matchingAmount: "0",
+                    totalAmount: "0",
+                  },
+                }}
+              />
+            );
+          }}
+        />
+      ) : (
+        <div>No projects</div>
+      )}
     </Container>
   );
 };

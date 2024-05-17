@@ -25,47 +25,32 @@ const FollowButton = ({ accountId, classname }: Props) => {
 
   const type = follow ? "unfollow" : "follow";
 
-  const socialArgs = {
-    data: {
-      [context.accountId]: {
-        graph: { follow: { [accountId]: follow ? null : "" } },
-        index: {
-          graph: JSON.stringify({
-            key: "follow",
-            value: {
-              type,
-              accountId: accountId,
-            },
-          }),
-          notify: JSON.stringify({
-            key: accountId,
-            value: {
-              type,
-            },
-          }),
+  const data = {
+    graph: { follow: { [accountId]: follow ? null : "" } },
+    index: {
+      graph: JSON.stringify({
+        key: "follow",
+        value: {
+          type,
+          accountId: accountId,
         },
-      },
+      }),
+      notify: JSON.stringify({
+        key: accountId,
+        value: {
+          type,
+        },
+      }),
     },
   };
 
   const buttonText = loading ? "Loading" : follow ? "Following" : inverse ? "Follow back" : "Follow";
 
   return (
-    <FollowContainer
-      className={classname || ""}
-      onClick={() => {
-        const transactions = [
-          {
-            contractName: "social.near",
-            methodName: "set",
-            deposit: Big(JSON.stringify(socialArgs).length * 0.00003).mul(Big(10).pow(24)),
-            args: socialArgs,
-          },
-        ];
-        Near.call(transactions);
-      }}
-    >
-      {buttonText}
+    <FollowContainer buttonText={buttonText}>
+      <CommitButton className={classname || ""} disabled={loading} data={data}>
+        {buttonText}
+      </CommitButton>
     </FollowContainer>
   );
 };

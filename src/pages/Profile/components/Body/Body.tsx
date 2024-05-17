@@ -1,9 +1,12 @@
-import { Near, context, props, useState, useParams, useMemo } from "alem";
+import { Near, context, props, useState, useParams, useMemo, useEffect } from "alem";
 import ListsSDK from "@app/SDK/lists";
 import Button from "@app/components/Button";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
+import ToastContainer from "@app/components/ToastNotification/getToastContainer";
 import constants from "@app/constants";
 import ModalOverlay from "@app/modals/ModalOverlay";
+import { Registration, RegistrationStatus } from "@app/types";
+import getTransactionsFromHashes from "@app/utils/getTransactionsFromHashes";
 import Select from "../../../../components/Inputs/Select/Select";
 import BannerHeader from "../BannerHeader/BannerHeader";
 import BodyHeader from "../BodyHeader/BodyHeader";
@@ -19,8 +22,11 @@ import { Container, Details, ModalTitle, Row, Wrapper } from "./styles";
 // };
 
 const Body = (props: any) => {
-  const { projectId, registration } = props;
-  const { accountId: _accountId } = useParams();
+  const { projectId } = props;
+  const { accountId: _accountId, transactionHashes } = useParams();
+
+  const registration = ListsSDK.getRegistration(null, projectId);
+
   const accountId = _accountId ?? context.accountId;
   const {
     PROJECT_STATUSES,
@@ -28,9 +34,27 @@ const Body = (props: any) => {
   } = constants;
 
   const [statusReview, setStatusReview] = useState({ modalOpen: false, notes: "", newStatus: "" });
+  const [toastContent, setToastContent] = useState({
+    title: "",
+    description: "",
+  });
 
   const listsContractId = ListsSDK.getContractId();
   const userIsRegistryAdmin = ListsSDK.isRegistryAdmin(context.accountId);
+
+  const statusToast = (status: RegistrationStatus) => {
+    setToastContent({
+      title: "Updated Successfully!",
+      description: `Project has been successfully updated to ${status.toLowerCase()}.`,
+    });
+
+    setTimeout(() => {
+      setToastContent({
+        title: "",
+        description: ``,
+      });
+    }, 7000);
+  };
 
   const handleUpdateStatus = () => {
     Near.call([
@@ -45,7 +69,36 @@ const Body = (props: any) => {
         deposit: NEAR.toIndivisible(0.01).toString(),
       },
     ]);
+
+    // success update project notification
+    const updateProjectSuccess = setInterval(() => {
+      ListsSDK.asyncGetRegistration(null, projectId).then((registration: Registration) => {
+        if (registration.status === statusReview.newStatus) {
+          statusToast(registration.status);
+        }
+      });
+    }, 1000);
+
+    // Clear the interval after 60 seconds
+    setTimeout(() => {
+      clearInterval(updateProjectSuccess);
+    }, 60000);
   };
+
+  // Handle update project status for web wallet
+  useEffect(() => {
+    if (accountId && transactionHashes) {
+      getTransactionsFromHashes(transactionHashes, accountId).then((trxs) => {
+        const transaction = trxs[0].body.result.transaction;
+        const methodName = transaction.actions[0].FunctionCall.method_name;
+        const successVal = trxs[0].body.result.status?.SuccessValue;
+        const result = JSON.parse(Buffer.from(successVal, "base64").toString("utf-8"));
+        if (methodName === "update_registration" && result) {
+          statusToast(result.status);
+        }
+      });
+    }
+  }, []);
 
   const SelectedNavComponent = useMemo(() => {
     return props.navOptions.find((option: any) => option.id == props.nav).source;
@@ -69,7 +122,7 @@ const Body = (props: any) => {
                 value: status,
                 text: status,
               })),
-              value: { text: props.registration.status, value: props.registration.status },
+              value: { text: registration.status, value: registration.status },
               onChange: (status) => {
                 if (status.value != registration.status) {
                   setStatusReview({ ...statusReview, newStatus: status.value, modalOpen: true });
@@ -121,6 +174,7 @@ const Body = (props: any) => {
           </>
         </ModalOverlay>
       )}
+      <ToastContainer toastContent={toastContent} />
     </Wrapper>
   );
 };
