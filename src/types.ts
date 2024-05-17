@@ -61,13 +61,13 @@ export type PotDonation = {
   net_amount: string;
   message: string;
   donated_at: number;
-  project_id: null | "string";
-  referrer_id: null | "string";
-  referrer_fee: null | "string";
+  project_id: null | string;
+  referrer_id: null | string;
+  referrer_fee: null | string;
   protocol_fee: string;
   matching_pool: boolean;
-  chef_id: null | "string";
-  chef_fee: null | "string";
+  chef_id: null | string;
+  chef_fee: null | string;
 };
 
 export type FundDonation = {
@@ -78,12 +78,12 @@ export type FundDonation = {
   message: string;
   donated_at: number;
   project_id: null;
-  referrer_id: null | "string";
-  referrer_fee: null | "string";
+  referrer_id: null | string;
+  referrer_fee: null | string;
   protocol_fee: string;
   matching_pool: true;
-  chef_id: null | "string";
-  chef_fee: null | "string";
+  chef_id: null | string;
+  chef_fee: null | string;
 };
 
 export type RegistrationStatus = "Approved" | "Rejected" | "Pending" | "Graylisted" | "Blacklisted";
@@ -106,7 +106,7 @@ export type PotApplication = {
   project_id: string;
   message: string;
   status: ApplicationStatus;
-  submitted_at: 1715764402476;
-  updated_at: null;
-  review_notes: null;
+  submitted_at: number;
+  updated_at: null | string;
+  review_notes: null | string;
 };
