@@ -159,7 +159,7 @@ const AllProjects = () => {
           <ListSection
             // shouldShuffle
             items={filteredProjects}
-            renderItem={(project: Project) => <Card projectId={project.registrant_id} />}
+            renderItem={(project: Project) => <Card key={project.registrant_id} projectId={project.registrant_id} />}
           />
         ) : (
           <div style={{ alignSelf: "flex-start", margin: "24px 0px" }}>No results</div>
