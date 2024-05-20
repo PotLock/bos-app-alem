@@ -17,10 +17,15 @@ const AmountInput = (props: any) => {
           },
           onChange: ({ value }: any) => {
             const tokenBalance = parseFloat(getTokenBalance(value));
+
             updateState({
               selectedDenomination: denominationOptions.find((option: any) => option.value === value),
               amountError:
-                tokenBalance > parseFloat(amount) ? "" : "You don’t have enough balance to complete this transaction.",
+                tokenBalance !== null
+                  ? tokenBalance > parseFloat(amount)
+                    ? ""
+                    : "You don’t have enough balance to complete this transaction."
+                  : "",
             });
           },
           containerStyles: {
