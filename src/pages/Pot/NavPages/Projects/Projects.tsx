@@ -1,6 +1,6 @@
 import { useState, Social, context, useParams, createDebounce, useEffect } from "alem";
 import PotSDK from "@app/SDK/pot";
-import Card from "@app/components/Card/Card";
+import SimpleCard from "@app/components/Card/SimpleCard";
 import ListSection from "@app/pages/Projects/components/ListSection";
 import calculatePayouts from "@app/utils/calculatePayouts";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
@@ -140,7 +140,7 @@ const Projects = (props: Props) => {
           ]}
           renderItem={(project: any) => {
             return (
-              <Card
+              <SimpleCard
                 {...{
                   potDetail,
                   projects,

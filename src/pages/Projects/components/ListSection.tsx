@@ -1,5 +1,6 @@
 import { VM, props, useMemo } from "alem";
 import styled from "styled-components";
+import Feed from "@app/components/devs.near/Feed";
 
 type BreakPoint = {
   breakpoint: number;
@@ -17,11 +18,11 @@ type Props = {
 const ListSection = ({ shouldShuffle, items, renderItem }: Props) => {
   const responsive = props.responsive || [];
 
-  const { Feed } = VM.require("devs.near/widget/Feed");
+  // const { Feed } = VM.require("devs.near/widget/Feed");
 
-  if (!Feed) {
-    return <p>Loading...</p>;
-  }
+  // if (!Feed) {
+  //   return <p>Loading...</p>;
+  // }
 
   const _items = useMemo(() => {
     if (shouldShuffle) {
