@@ -79,8 +79,6 @@ const Projects = (props: Props) => {
     }
   }, [allDonations, flaggedAddresses]);
 
-  if (!flaggedAddresses || !payouts) return <Loading />;
-
   const searchByWords = (searchTerm: string) => {
     if (projects.length) {
       searchTerm = searchTerm.toLowerCase().trim();
@@ -142,6 +140,7 @@ const Projects = (props: Props) => {
             return (
               <SimpleCard
                 {...{
+                  potId,
                   potDetail,
                   projects,
                   projectId: project.project_id,
