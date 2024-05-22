@@ -24,13 +24,12 @@ const ChallengeModal = ({ onClose, existingChallengeForUser }: any) => {
   const { challengeReason, challengeReasonError } = state;
 
   const handleCancelChallenge = () => {
-    onClose();
     State.update({ challengeReason: "", challengeReasonError: "" });
+    onClose();
   };
 
   const handleSubmitChallenge = () => {
     PotSDK.challengePayouts(potId, challengeReason);
-    onClose();
   };
 
   const MAX_CHALLENGE_TEXT_LENGTH = 1000;
