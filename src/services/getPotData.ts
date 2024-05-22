@@ -3,10 +3,12 @@ import PotSDK from "@app/SDK/pot";
 import { FlaggedAddress, Payout, PotApplication, PotDetail, PotDonation } from "@app/types";
 import calculatePayouts from "@app/utils/calculatePayouts";
 
-type UpdateState = (newValues: Partial<ProjectsState>) => void;
+// type UpdateState = (newValues: Partial<ProjectsState>) => void;
+type UpdateState = (newValues: any) => void;
 
 type GetPayoutProps = {
   potId: string;
+  withTotalAmount: boolean;
   allDonations: PotDonation[];
   flaggedAddresses: FlaggedAddress[];
   potDetail: PotDetail;
@@ -20,6 +22,11 @@ export type ProjectsState = {
   projects?: PotApplication[] | null;
   flaggedAddresses?: FlaggedAddress[] | null;
   payouts?: Record<string, Payout> | null;
+};
+
+type CalculatedPayout = {
+  project_id: string;
+  amount: number;
 };
 
 function isEqual(obj1: any, obj2: any) {
@@ -49,28 +56,43 @@ function isEqual(obj1: any, obj2: any) {
   return true;
 }
 
+function isObjectEqual(obj1: CalculatedPayout, obj2: CalculatedPayout): boolean {
+  return obj1.project_id === obj2.project_id && obj1.amount === obj2.amount;
+}
+
+function areListsEqual(list1: CalculatedPayout[], list2: CalculatedPayout[]): boolean {
+  // Check if both lists have the same length
+  if (list1.length !== list2.length) {
+    return false;
+  }
+
+  // Check if all objects in the lists are equal
+  for (let i = 0; i < list1.length; i++) {
+    if (!isObjectEqual(list1[i], list2[i])) {
+      return false;
+    }
+  }
+
+  // If no differences are found, return true
+  return true;
+}
+
 const getPotData = (potId: string, property: string) => Storage.get(`${potId}-${property}`);
 
 const setPotData = (potId: string, property: string, value: any) => Storage.set(`${potId}-${property}`, value);
 
 // Get pot detail
 export const getConfig = ({ potId, updateState }: { potId: string; updateState: UpdateState }) => {
-  const potData = getPotData(potId, "config");
-  const potDetail = potData?.potDetail;
+  const potDetail = getPotData(potId, "config");
 
-  if (potDetail)
-    updateState({
-      potDetail,
-    });
+  if (potDetail) updateState(potDetail);
 
   PotSDK.asyncGetConfig(potId)
     .then((currentPotDetail: PotDetail) => {
       if (isEqual(potDetail, currentPotDetail)) return;
       else {
         setPotData(potId, "config", currentPotDetail);
-        updateState({
-          potDetail: currentPotDetail,
-        });
+        updateState(currentPotDetail);
       }
     })
     .catch((err: unknown) => {
@@ -89,71 +111,75 @@ export function getPotProjects({
   isApprpved: boolean;
 }) {
   // get projects from local storage
-  const potData = getPotData(potId, "projects");
-  const savedProject = potData.projects || [];
+  const savedProject = getPotData(potId, "projects") || [];
 
   if (savedProject) {
     // if storage project exist show it
     let allProjects = savedProject;
     // Check if only approved applications is requested
     if (isApprpved) allProjects = allProjects.filter((project: PotApplication) => project.status === "Approved");
-    updateState({
-      projects: allProjects,
-      filteredProjects: allProjects,
-    });
+    updateState(allProjects);
   }
   // check the current projects
-  PotSDK.asyncGetApprovedApplications(potId)
+  PotSDK.asyncGetApplications(potId)
     .then((projects: PotApplication[]) => {
-      if (projects.length === potData.projects?.length) return;
+      if (projects.length === savedProject?.length) return;
       setPotData(potId, "projects", projects);
       let allProjects = projects;
       if (isApprpved) allProjects = allProjects.filter((project: PotApplication) => project.status === "Approved");
-      updateState({
-        projects,
-        filteredProjects: allProjects,
-      });
+      updateState(allProjects);
     })
     .catch((error: unknown) => {
-      updateState({
-        projects: [],
-        filteredProjects: [],
-      });
+      console.log("error fetching pot applications ", error);
+
+      updateState([]);
     });
 }
 
 // get pot payouts
-export const getPayout = ({ potId, allDonations, flaggedAddresses, potDetail, updateState }: GetPayoutProps) => {
-  const potData = getPotData(potId, "payouts");
-  const payouts = potData.payouts;
-  if (payouts)
-    updateState({
-      payouts,
-    });
+export const getPayout = ({
+  potId,
+  allDonations,
+  flaggedAddresses,
+  potDetail,
+  withTotalAmount, // true => return object false=> return false
+  updateState,
+}: GetPayoutProps) => {
+  const storageKey = withTotalAmount ? "payouts-obj" : "payouts";
+
+  const payouts = getPotData(potId, storageKey);
+
+  if (payouts) updateState(payouts);
 
   if (flaggedAddresses) {
-    if (potDetail.payouts) {
+    if (potDetail.payouts && !withTotalAmount) {
       if (isEqual(potDetail.payouts, payouts)) return;
       else {
-        setPotData(potId, "payouts", payouts);
-        updateState({
-          payouts,
-        });
+        const sortedPayouts = potDetail.payouts;
+        sortedPayouts.sort((a: any, b: any) => b.matchingAmount - a.matchingAmount);
+        setPotData(potId, storageKey, sortedPayouts);
+        updateState(sortedPayouts);
       }
     } else if (allDonations.length && flaggedAddresses)
-      calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses).then((currentPayouts) => {
-        if (isEqual(payouts, currentPayouts)) return;
+      calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses).then((calculatedPayouts) => {
+        const currentPayouts = Object.entries(calculatedPayouts)
+          .map(([projectId, { matchingAmount, donorCount, totalAmount }]: any) => ({
+            project_id: projectId,
+            amount: matchingAmount,
+            donorCount,
+            totalAmount,
+          }))
+          .filter((payout) => payout.amount !== "0");
+        currentPayouts.sort((a: any, b: any) => b.matchingAmount - a.matchingAmount);
+
+        if (areListsEqual(currentPayouts, payouts)) return;
         else {
-          setPotData(potId, "payouts", currentPayouts);
-          updateState({
-            payouts: currentPayouts,
-          });
+          setPotData(potId, storageKey, withTotalAmount ? calculatedPayouts : currentPayouts);
+          updateState(withTotalAmount ? calculatedPayouts : currentPayouts);
         }
       });
     else if (allDonations?.length === 0 && flaggedAddresses?.length === 0) {
-      updateState({
-        payouts: {},
-      });
+      updateState({});
     }
   }
 };
@@ -187,23 +213,17 @@ export const getDonations = ({
 }: {
   potId: string;
   potDetail: PotDetail;
-  updateState: (newValues: Partial<ProjectsState>) => void;
+  updateState: UpdateState;
 }) => {
-  const potData = getPotData(potId, "donations");
-  const donations = potData.donations || [];
+  const donations = getPotData(potId, "donations") || [];
 
-  if (donations)
-    updateState({
-      donations,
-    });
+  if (donations) updateState(donations);
 
   if (potDetail.public_donations_count !== donations.length) {
     asyncGetPublicDonations(potDetail, potId).then((paginatedDonations) => {
       const currentDonations = paginatedDonations ? paginatedDonations.flat() : [];
       setPotData(potId, "donations", currentDonations);
-      updateState({
-        donations: currentDonations,
-      });
+      updateState(currentDonations);
     });
   }
 };
@@ -225,7 +245,7 @@ export const getFlaggedAccounts = ({
 }: {
   potId: string;
   potDetail: PotDetail;
-  updateState: (newValues: Partial<ProjectsState>) => void;
+  updateState: UpdateState;
   type: "list" | "obj";
 }) => {
   const potData = getPotData(potId, "flaggedAccounts");
@@ -234,10 +254,7 @@ export const getFlaggedAccounts = ({
   if (type === "list") {
     flaggedAddresses = getListOfFlagged(flaggedAddresses);
   }
-  updateState({
-    flaggedAddresses,
-  });
-
+  updateState(flaggedAddresses);
   PotSDK.getFlaggedAccounts(potDetail)
     .then((data) => {
       if (type === "list") {
@@ -245,9 +262,7 @@ export const getFlaggedAccounts = ({
         if (liftOfFlagged.length === flaggedAddresses.length) return;
         else {
           setPotData(potId, "flaggedAccounts", data);
-          updateState({
-            flaggedAddresses: data,
-          });
+          updateState(data);
         }
       } else {
         const isNotEqual = data.some((adminFlaggedAcc: FlaggedAddress, idx: string) => {
@@ -257,81 +272,30 @@ export const getFlaggedAccounts = ({
 
         if (isNotEqual) {
           setPotData(potId, "flaggedAccounts", data);
-          updateState({
-            flaggedAddresses: data,
-          });
+          updateState(data);
         }
       }
     })
     .catch((err) => console.log("error getting the flagged accounts ", err));
 };
 
-// const allDonations = allDonationsPaginated ? allDonationsPaginated.flat() : null;
+export const getSponsorships = ({ potId, updateState }: { potId: string; updateState: UpdateState }) => {
+  const sponsors = getPotData(potId, "sponsors");
+  console.log("sponsors", sponsors);
 
-// const potOptions = {
-//   potDetail: ({ potId }: { potId: string }) => PotSDK.asyncGetConfig(potId),
-//   projects: ({ potId }: { potId: string }) => PotSDK.asyncGetApprovedApplications(potId),
-//   sponsorshipDonations: ({ potId }: { potId: string }) => PotSDK.asyncGetMatchingPoolDonations(potId),
-//   // need potDetail, flaggedAddresses, potDetail
-//   payout: ({ allDonations, flaggedAddresses, potDetail }: GetPayoutProps) =>
-//     getPayout({
-//       allDonations,
-//       flaggedAddresses,
-//       potDetail,
-//     }),
-//   // need potDetail
-//   flaggedAddresses: ({ potId, potDetail }: { potId: string; potDetail: PotDetail }) =>
-//     PotSDK.getFlaggedAccounts(potDetail, potId),
-//   donations: ({ potId, potDetail }: { potId: string; potDetail: PotDetail }) =>
-//     asyncGetPublicDonations(potDetail, potId),
-// };
+  if (sponsors) updateState(sponsors);
 
-// type PotDataOptions = "potDetail" | "payout" | "flaggedAddresses" | "projects" | "donations" | "sponsorshipDonations";
-
-// export function getFlaggedAddresses({
-//   potId,
-//   optionsHandler,
-//   updateState,
-// }: {
-//   potId: string;
-//   optionsHandler: Record<PotDataOptions, (data: any) => any>;
-//   updateState: (newValues: Partial<ProjectsState>) => void;
-// }) {
-//   // get pot Data from local storage
-//   const potData: ProjectsState = JSON.parse(Storage.get(potId) || "{}");
-
-//   const potDetail = potData.potDetail;
-//   const donations = potData.donations;
-
-//   const options = Object.keys(optionsHandler) as PotDataOptions[];
-
-//   const needsPotDetail = ["payout", "donations", "flaggedAddresses"];
-//   const needsAll = "payout";
-//   // what is needed before fetching
-//   let fetchFirst: Record<string, ""> = {};
-
-//   options.forEach((option) => {
-//     if (needsPotDetail.includes(option)) fetchFirst["potDetail"] = "";
-//     if (needsAll === option) {
-//       fetchFirst = {
-//         potDetail: "",
-//         donations: "",
-//         flaggedAddresses: "",
-//       };
-//     }
-//   });
-
-//   if(
-//     fetchFirst["potDetail"] &&
-//   ){
-//     PotSDK.asyncGetConfig(potId).then((potDetail:PotDetail)=>{
-
-//     })
-//   }
-
-//   const promises = {};
-//   const results = {};
-//   options.forEach((option) => {
-//     const result = potOptions[option]({});
-//   });
-// }
+  PotSDK.asyncGetMatchingPoolDonations(potId)
+    .then((sponsorshipDonations: PotDonation[]) => {
+      sponsorshipDonations.sort((a: any, b: any) => b.net_amount - a.net_amount);
+      if (sponsors?.length === sponsorshipDonations?.length) return;
+      else {
+        updateState(sponsorshipDonations);
+        setPotData(potId, "sponsors", sponsorshipDonations);
+      }
+    })
+    .catch((err: unknown) => {
+      console.log("error fetching sponsors ", err);
+      updateState([]);
+    });
+};

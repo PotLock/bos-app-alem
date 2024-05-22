@@ -32,9 +32,7 @@ import {
 } from "./styles";
 
 const Card = (props: any) => {
-  const { payoutDetails, allowDonate: _allowDonate } = props;
-  const { potId } = useParams();
-
+  const { payoutDetails, allowDonate: _allowDonate, potId } = props;
   // Start Modals provider
   const Modals = useModals();
   const { setDonationModalProps } = useDonationModal();
@@ -55,7 +53,7 @@ const Card = (props: any) => {
       ? DonateSDK.getDonationsForRecipient(projectId)
       : [];
 
-  const totalAmountNear = useMemo(() => {
+  const getTotalAmountNear = () => {
     if (payoutDetails) return payoutDetails.totalAmount;
     if (!donationsForProject) return "0";
     let totalDonationAmountNear = new Big(0);
@@ -65,7 +63,9 @@ const Card = (props: any) => {
       }
     }
     return totalDonationAmountNear.toString();
-  }, [donationsForProject, payoutDetails]);
+  };
+
+  const totalAmountNear = getTotalAmountNear();
 
   const getImageSrc = (image: any) => {
     const defaultImageUrl = "https://ipfs.near.social/ipfs/bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";

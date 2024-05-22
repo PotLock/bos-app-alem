@@ -1,50 +1,26 @@
-import { useState, Social, context, useParams, createDebounce, useEffect, Storage, promisify } from "alem";
+import { useState, Social, context, useParams, createDebounce, useEffect } from "alem";
 import Card from "@app/components/Card/Card";
-import { getPotDonations } from "@app/pages/Donor/NavPages/Donations/utils";
+import ListSection from "@app/pages/Projects/components/ListSection";
 import { getConfig, getDonations, getFlaggedAccounts, getPayout, getPotProjects } from "@app/services/getPotData";
 import { FlaggedAddress, Payout, PotApplication, PotDetail, PotDonation } from "@app/types";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import { Centralized, Container, SearchBar, Title, ProjectsWrapper } from "./styles";
+import { Centralized, Container, SearchBar, Title } from "./styles";
 
 type Props = {
   potDetail: any;
   allDonations: any;
 };
 
-type ProjectsState = {
-  potDetail: PotDetail | null;
-  donations: PotDonation[] | null;
-  filteredProjects: PotApplication[];
-  projects: PotApplication[] | null;
-  flaggedAddresses: FlaggedAddress[] | null;
-  payouts: Record<string, Payout> | null;
-};
-
 const Projects = (props: Props) => {
   const { potId } = useParams();
 
-  const [state, setState] = useState<ProjectsState>({
-    filteredProjects: [],
-    donations: null,
-    projects: null,
-    flaggedAddresses: null,
-    payouts: null,
-    potDetail: null,
-  });
-
-  // const [projects, setProjects] = useState<PotApplication[] | null>(null);
-  // const [filteredProjects, setFilteredProjects] = useState<PotDonation[]>([]);
-  // const [donations, setDonations] = useState<PotDonation[] | null>(null);
-  // const [flaggedAddresses, setFlaggedAddresses] = useState<FlaggedAddress[] | null>(null);
-  // const [payouts, setPayouts] = useState<Record<string, Payout> | null>(null);
-  // const [potDetail, setPotDetail] = useState<PotDetail | null>(null);
-
-  const updateState = (newValue: Partial<ProjectsState>) => {
-    setState((prevState) => ({ ...prevState, ...newValue }));
-  };
-
-  const { filteredProjects, flaggedAddresses, payouts, projects, potDetail, donations } = state;
+  const [projects, setProjects] = useState<PotApplication[] | null>(null);
+  const [filteredProjects, setFilteredProjects] = useState<PotApplication[]>([]);
+  const [donations, setDonations] = useState<PotDonation[] | null>(null);
+  const [flaggedAddresses, setFlaggedAddresses] = useState<FlaggedAddress[] | null>(null);
+  const [payouts, setPayouts] = useState<Record<string, Payout> | null>(null);
+  const [potDetail, setPotDetail] = useState<PotDetail | null>(null);
 
   const Loading = () => (
     <Centralized>
@@ -57,13 +33,16 @@ const Projects = (props: Props) => {
     if (!projects)
       getPotProjects({
         potId,
-        updateState,
+        updateState: (projects: PotApplication[]) => {
+          setFilteredProjects(projects);
+          setProjects(projects);
+        },
         isApprpved: true,
       });
     if (!potDetail)
       getConfig({
         potId,
-        updateState,
+        updateState: setPotDetail,
       });
   }, []);
 
@@ -74,20 +53,28 @@ const Projects = (props: Props) => {
           potId,
           potDetail,
           type: "list",
-          updateState,
+          updateState: setFlaggedAddresses,
         });
       if (!donations)
         getDonations({
           potId,
           potDetail,
-          updateState,
+          updateState: setDonations,
         });
     }
   }, [potDetail]);
 
   useEffect(() => {
-    if (potDetail && flaggedAddresses && donations)
-      getPayout({ allDonations: donations, flaggedAddresses, potDetail, potId, updateState });
+    if (potDetail && flaggedAddresses && donations) {
+      getPayout({
+        allDonations: donations,
+        flaggedAddresses,
+        potDetail,
+        potId,
+        withTotalAmount: true,
+        updateState: setPayouts,
+      });
+    }
   }, [potDetail, flaggedAddresses, donations]);
 
   if (!projects || !potDetail) return <Loading />;
@@ -112,9 +99,7 @@ const Projects = (props: Props) => {
         ];
         return fields.some((item) => (item || "").toLowerCase().includes(searchTerm.toLowerCase()));
       });
-      updateState({
-        filteredProjects: updatedProjects,
-      });
+      setFilteredProjects(updatedProjects);
     }
   };
 
@@ -142,24 +127,38 @@ const Projects = (props: Props) => {
         />
       </SearchBar>
       {filteredProjects.length > 0 ? (
-        <ProjectsWrapper>
-          {filteredProjects.map((project: PotApplication) => (
-            <Card
-              {...{
-                potId,
-                projectId: project.project_id,
-                allowDonate: publicRoundOpen && project.project_id !== context.accountId,
-                payoutDetails: payouts
-                  ? payouts[project.project_id]
-                  : {
-                      donorCount: 0,
-                      matchingAmount: "0",
-                      totalAmount: "0",
-                    },
-              }}
-            />
-          ))}
-        </ProjectsWrapper>
+        <ListSection
+          shouldShuffle={true}
+          maxCols={3}
+          items={filteredProjects}
+          responsive={[
+            {
+              breakpoint: 1200,
+              items: 2,
+            },
+            {
+              breakpoint: 870,
+              items: 1,
+            },
+          ]}
+          renderItem={(project: any) => {
+            return (
+              <Card
+                {...{
+                  potDetail,
+                  projects,
+                  projectId: project.project_id,
+                  allowDonate: publicRoundOpen && project.project_id !== context.accountId,
+                  payoutDetails: (payouts || {})[project.project_id] || {
+                    donorCount: 0,
+                    matchingAmount: "0",
+                    totalAmount: "0",
+                  },
+                }}
+              />
+            );
+          }}
+        />
       ) : (
         <div>No projects</div>
       )}

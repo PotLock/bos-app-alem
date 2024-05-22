@@ -1,10 +1,9 @@
-import { useState, useParams, Big, Social } from "alem";
-import PotSDK from "@app/SDK/pot";
+import { useState, useParams, Big, Social, useEffect } from "alem";
 import Image from "@app/components/mob.near/Image";
 import constants from "@app/constants";
-import { PotDetail, PotDonation } from "@app/types";
+import { getConfig, getDonations, getFlaggedAccounts, getPayout, getSponsorships } from "@app/services/getPotData";
+import { FlaggedAddress, Payout, PotDetail, PotDonation } from "@app/types";
 import _address from "@app/utils/_address";
-import calculatePayouts from "@app/utils/calculatePayouts";
 import formatWithCommas from "@app/utils/formatWithCommas";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import nearToUsd from "@app/utils/nearToUsd";
@@ -13,36 +12,65 @@ import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import TableSkeleton from "./Table/TableSkeleton";
 import { Container, Row } from "./Table/styles";
 
-type Props = {
-  potDetail: PotDetail;
-  allDonations: any;
-};
-
-const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
+const PoolAllocationTable = () => {
   const { SUPPORTED_FTS } = constants;
-
-  const { total_public_donations, matching_pool_balance, public_donations_count } = potDetail;
-
-  const [projectsId, setProjectsId] = useState<any>(null);
-  const [allPayouts, setAllPayouts] = useState<any>(null);
-  const [flaggedAddresses, setFlaggedAddresses] = useState(null);
-  const [sponsorshipDonations, setSponsorshipDonations] = useState<PotDonation[] | null>(null);
-  const [usdToggle, setUsdToggle] = useState<any>(false);
 
   const { potId } = useParams();
 
-  if (!projectsId) {
-    PotSDK.asyncGetApprovedApplications(potId).then((projects: any) => {
-      setProjectsId(projects);
-    });
-  }
+  const [allPayouts, setAllPayouts] = useState<any>(null);
+  const [sponsorshipDonations, setSponsorshipDonations] = useState<PotDonation[] | null>(null);
+  const [usdToggle, setUsdToggle] = useState<any>(false);
+  const [allDonations, setDonations] = useState<PotDonation[] | null>(null);
+  const [flaggedAddresses, setFlaggedAddresses] = useState<FlaggedAddress[] | null>(null);
+  const [potDetail, setPotDetail] = useState<PotDetail | null>(null);
 
-  if (potDetail && public_donations_count === 0) {
-    PotSDK.asyncGetMatchingPoolDonations(potId).then((sponsorshipDonations: PotDonation[]) => {
-      sponsorshipDonations.sort((a: any, b: any) => b.net_amount - a.net_amount);
-      setSponsorshipDonations(sponsorshipDonations);
-    });
-  }
+  useEffect(() => {
+    if (!sponsorshipDonations)
+      getSponsorships({
+        potId,
+        updateState: setSponsorshipDonations,
+      });
+    if (!potDetail)
+      getConfig({
+        potId,
+        updateState: setPotDetail,
+      });
+  }, []);
+
+  useEffect(() => {
+    if (potDetail) {
+      if (!flaggedAddresses)
+        getFlaggedAccounts({
+          potId,
+          potDetail,
+          type: "list",
+          updateState: setFlaggedAddresses,
+        });
+      if (!allDonations)
+        getDonations({
+          potId,
+          potDetail,
+          updateState: setDonations,
+        });
+    }
+  }, [potDetail]);
+
+  useEffect(() => {
+    if (potDetail && flaggedAddresses && allDonations && !allPayouts) {
+      getPayout({
+        allDonations,
+        flaggedAddresses,
+        potDetail,
+        potId,
+        withTotalAmount: false,
+        updateState: setAllPayouts,
+      });
+    }
+  }, [potDetail, flaggedAddresses, allDonations]);
+
+  if (potDetail === null || sponsorshipDonations === null) return "";
+
+  const { total_public_donations, matching_pool_balance, public_donations_count } = potDetail;
 
   const calcMatchedAmount = (donations: any) => {
     if (donations) {
@@ -59,53 +87,7 @@ const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
 
   const donorsCount = uniqueDonorIds.size;
 
-  if (!flaggedAddresses && allDonations) {
-    PotSDK.getFlaggedAccounts(potDetail, potId)
-      .then((data) => {
-        if (data) {
-          const listOfFlagged: any = [];
-          data?.forEach((adminFlaggedAcc: any) => {
-            const addresses = Object.keys(adminFlaggedAcc.potFlaggedAcc);
-            listOfFlagged.push(...addresses);
-          });
-          setFlaggedAddresses(listOfFlagged);
-        }
-      })
-      .catch((err) => console.log("error getting the flagged accounts ", err));
-  }
-
-  const sortAndSetPayouts = (payouts: any) => {
-    payouts.sort((a: any, b: any) => {
-      // sort by matching pool allocation, highest to lowest
-      return b.matchingAmount - a.matchingAmount;
-    });
-    setAllPayouts(payouts.slice(0, 5));
-  };
-
-  if (!allPayouts && allDonations?.length > 0 && flaggedAddresses) {
-    let allPayouts = [];
-
-    if (potDetail.payouts.length) {
-      allPayouts = potDetail.payouts.map((payout) => {
-        const { project_id, amount } = payout;
-        return {
-          projectId: project_id,
-          matchingAmount: amount,
-        };
-      });
-      sortAndSetPayouts(allPayouts);
-    } else {
-      calculatePayouts(allDonations, matching_pool_balance, flaggedAddresses).then((calculatedPayouts: any) => {
-        allPayouts = Object.entries(calculatedPayouts).map(([projectId, { matchingAmount }]: any) => {
-          return {
-            projectId,
-            matchingAmount,
-          };
-        });
-        sortAndSetPayouts(allPayouts);
-      });
-    }
-  }
+  console.log("allPayouts", allPayouts);
 
   const Table = ({ donations, totalAmount, totalUniqueDonors, title }: any) => {
     return (
@@ -136,14 +118,16 @@ const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
             {usdToggle ? "USD" : "NEAR"}
           </div>
         </div>
-        {donations.map(({ projectId, donor_id, matchingAmount, net_amount }: any, idx: number) => {
-          const id = donor_id || projectId;
-          const nearAmount = formatWithCommas(SUPPORTED_FTS["NEAR"].fromIndivisible(net_amount || matchingAmount));
+        {donations.map(({ project_id, donor_id, matchingAmount, net_amount, amount }: any, idx: number) => {
+          const id = donor_id || project_id;
+          const nearAmount = formatWithCommas(
+            SUPPORTED_FTS["NEAR"].fromIndivisible(net_amount || matchingAmount || amount),
+          );
 
           const profile = Social.getr(`${id}/profile`);
           const matchedAmout = usdToggle ? yoctosToUsdWithFallback(matchingAmount || net_amount, true) : nearAmount;
 
-          const url = projectId ? `?tab=project&projectId=${projectId}` : `?tab=profile&accountId=${donor_id}`;
+          const url = project_id ? `?tab=project&projectId=${project_id}` : `?tab=profile&accountId=${donor_id}`;
           return (
             <Row>
               <div>#{idx + 1}</div>
@@ -172,7 +156,7 @@ const PoolAllocationTable = ({ potDetail, allDonations }: Props) => {
         title="matching pool allocations"
         totalAmount={yoctosToUsdWithFallback(total_public_donations, true)}
         totalUniqueDonors={donorsCount}
-        donations={allPayouts}
+        donations={allPayouts.slice(0, 5)}
       />
     ) : (
       <TableSkeleton />
