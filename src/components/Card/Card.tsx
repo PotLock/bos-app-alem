@@ -1,4 +1,4 @@
-import { Big, RouteLink, Social, context, useEffect, useMemo, useParams, useState } from "alem";
+import { Big, RouteLink, Social, context } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import PotSDK from "@app/SDK/pot";
 import { useDonationModal } from "@app/hooks/useDonationModal";
@@ -33,6 +33,7 @@ import {
 
 const Card = (props: any) => {
   const { payoutDetails, allowDonate: _allowDonate, potId } = props;
+
   // Start Modals provider
   const Modals = useModals();
   const { setDonationModalProps } = useDonationModal();
@@ -196,7 +197,7 @@ const Card = (props: any) => {
           {payoutDetails && (
             <MatchingSection>
               <MatchingTitle>Estimated matched amount</MatchingTitle>
-              <MatchingAmount>{yoctosToNear(payoutDetails.matchingAmount) || "- N"}</MatchingAmount>
+              <MatchingAmount>{yoctosToNear(payoutDetails.amount) || "- N"}</MatchingAmount>
             </MatchingSection>
           )}
         </CardContainer>

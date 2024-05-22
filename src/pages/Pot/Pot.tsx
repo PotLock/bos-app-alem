@@ -76,7 +76,7 @@ const Pot = () => {
 
   return (
     <Wrapper>
-      <HeaderStatus potDetail={potDetail} />
+      {/* <HeaderStatus potDetail={potDetail} /> */}
       <Header potDetail={potDetail} allDonations={allDonations} />
 
       <Tabs nav={nav} navOptions={options} />

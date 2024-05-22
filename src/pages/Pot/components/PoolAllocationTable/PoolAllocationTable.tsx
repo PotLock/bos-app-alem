@@ -1,4 +1,4 @@
-import { useState, useParams, Big, Social, useEffect } from "alem";
+import { useState, useParams, Big, Social, useEffect, useMemo } from "alem";
 import Image from "@app/components/mob.near/Image";
 import constants from "@app/constants";
 import { getConfig, getDonations, getFlaggedAccounts, getPayout, getSponsorships } from "@app/services/getPotData";
@@ -83,9 +83,10 @@ const PoolAllocationTable = () => {
     }
   };
 
-  const uniqueDonorIds = allDonations ? new Set(allDonations.map((donation: any) => donation.donor_id)) : new Set([]);
-
-  const donorsCount = uniqueDonorIds.size;
+  const donorsCount = useMemo(() => {
+    const uniqueDonorIds = allDonations ? new Set(allDonations.map((donation: any) => donation.donor_id)) : new Set([]);
+    return uniqueDonorIds.size;
+  }, [allDonations]);
 
   const Table = ({ donations, totalAmount, totalUniqueDonors, title }: any) => {
     return (

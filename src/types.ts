@@ -123,9 +123,16 @@ export type FlaggedAddress = {
   potFlaggedAcc: "string";
 };
 
-export interface Payout {
+export type Payout = {
   id: string;
   project_id: string;
   amount: string;
   paid_at: number;
-}
+};
+
+export type CalculatedPayout = {
+  project_id: string;
+  amount: number;
+  donorCount: number;
+  totalAmount: string;
+};

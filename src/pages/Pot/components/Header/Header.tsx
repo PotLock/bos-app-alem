@@ -242,7 +242,7 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
         </Referral>
       </HeaderWrapper>
       <div className="pool-table">
-        <PoolAllocationTable allDonations={allDonations} potDetail={potDetail} />
+        <PoolAllocationTable />
       </div>
       {isApplicationModalOpen && (
         <NewApplicationModal

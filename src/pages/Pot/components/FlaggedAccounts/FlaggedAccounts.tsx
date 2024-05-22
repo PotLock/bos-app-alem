@@ -1,36 +1,45 @@
-import { useParams, useState } from "alem";
+import { useEffect, useParams, useState } from "alem";
 import PotSDK from "@app/SDK/pot";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import { getConfig, getFlaggedAccounts } from "@app/services/getPotData";
 import { PotDetail } from "@app/types";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import { Container, Flag, Line, Table, Title } from "./styles";
 
-const FlaggedAccounts = ({ potDetail }: { potDetail: PotDetail }) => {
+const FlaggedAccounts = () => {
   const { potId } = useParams();
 
   const [flaggedAddresses, setFlaggedAddresses] = useState<any>(null);
+  const [potDetail, setPotDetail] = useState<any | PotDetail>(null);
   const [toggleView, setToggleView] = useState<any>(null);
 
-  if (!flaggedAddresses) {
-    PotSDK.getFlaggedAccounts(potDetail, potId)
-      .then((data) => {
-        const listOfFlagged: any = [];
-        data.forEach((adminFlaggedAcc: any) => {
-          const addresses = Object.keys(adminFlaggedAcc.potFlaggedAcc);
-          addresses.forEach((address) => {
-            listOfFlagged.push({
-              address: address,
-              reason: adminFlaggedAcc.potFlaggedAcc[address],
-              flaggedBy: adminFlaggedAcc.flaggedBy,
-              role: adminFlaggedAcc.role,
+  useEffect(() => {
+    if (!potDetail) getConfig({ potId, updateState: setPotDetail });
+    if (!flaggedAddresses && potDetail)
+      getFlaggedAccounts({
+        potId,
+        potDetail,
+        type: "obj",
+        updateState: (data) => {
+          console.log("data", data);
+
+          const listOfFlagged: any = [];
+          data.forEach((adminFlaggedAcc: any) => {
+            const addresses = Object.keys(adminFlaggedAcc.potFlaggedAcc);
+            addresses.forEach((address) => {
+              listOfFlagged.push({
+                address: address,
+                reason: adminFlaggedAcc.potFlaggedAcc[address],
+                flaggedBy: adminFlaggedAcc.flaggedBy,
+                role: adminFlaggedAcc.role,
+              });
             });
           });
-        });
 
-        setFlaggedAddresses(listOfFlagged);
-      })
-      .catch((err) => console.log("error getting the flagged accounts ", err));
-  }
+          setFlaggedAddresses(listOfFlagged);
+        },
+      });
+  }, [potDetail]);
 
   return !flaggedAddresses ? (
     "Loading..."

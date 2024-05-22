@@ -1,6 +1,6 @@
 import { Storage } from "alem";
 import PotSDK from "@app/SDK/pot";
-import { FlaggedAddress, Payout, PotApplication, PotDetail, PotDonation } from "@app/types";
+import { FlaggedAddress, Payout, PotApplication, PotDetail, PotDonation, CalculatedPayout } from "@app/types";
 import calculatePayouts from "@app/utils/calculatePayouts";
 
 // type UpdateState = (newValues: Partial<ProjectsState>) => void;
@@ -22,11 +22,6 @@ export type ProjectsState = {
   projects?: PotApplication[] | null;
   flaggedAddresses?: FlaggedAddress[] | null;
   payouts?: Record<string, Payout> | null;
-};
-
-type CalculatedPayout = {
-  project_id: string;
-  amount: number;
 };
 
 function isEqual(obj1: any, obj2: any) {
@@ -148,6 +143,7 @@ export const getPayout = ({
   const storageKey = withTotalAmount ? "payouts-obj" : "payouts";
 
   const payouts = getPotData(potId, storageKey);
+  console.log("payouts", payouts);
 
   if (payouts) updateState(payouts);
 
@@ -156,29 +152,33 @@ export const getPayout = ({
       if (isEqual(potDetail.payouts, payouts)) return;
       else {
         const sortedPayouts = potDetail.payouts;
-        sortedPayouts.sort((a: any, b: any) => b.matchingAmount - a.matchingAmount);
+        sortedPayouts.sort((a: any, b: any) => b.amount - a.amount);
         setPotData(potId, storageKey, sortedPayouts);
         updateState(sortedPayouts);
       }
-    } else if (allDonations.length && flaggedAddresses)
+    } else if (allDonations.length && flaggedAddresses) {
       calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses).then((calculatedPayouts) => {
-        const currentPayouts = Object.entries(calculatedPayouts)
-          .map(([projectId, { matchingAmount, donorCount, totalAmount }]: any) => ({
-            project_id: projectId,
-            amount: matchingAmount,
-            donorCount,
-            totalAmount,
-          }))
-          .filter((payout) => payout.amount !== "0");
-        currentPayouts.sort((a: any, b: any) => b.matchingAmount - a.matchingAmount);
+        const currentPayouts = potDetail.payouts
+          ? potDetail.payouts.map((payout: Payout) => ({
+              ...payout,
+              donorCount: calculatedPayouts[payout.project_id].donorCount,
+              totalAmount: calculatedPayouts[payout.project_id].totalAmount,
+            }))
+          : Object.entries(calculatedPayouts).map(([projectId, { matchingAmount, donorCount, totalAmount }]: any) => ({
+              project_id: projectId,
+              amount: matchingAmount,
+              donorCount,
+              totalAmount,
+            }));
+        currentPayouts.sort((a: any, b: any) => b.amount - a.amount);
 
         if (areListsEqual(currentPayouts, payouts)) return;
         else {
-          setPotData(potId, storageKey, withTotalAmount ? calculatedPayouts : currentPayouts);
-          updateState(withTotalAmount ? calculatedPayouts : currentPayouts);
+          setPotData(potId, storageKey, currentPayouts);
+          updateState(currentPayouts);
         }
       });
-    else if (allDonations?.length === 0 && flaggedAddresses?.length === 0) {
+    } else if (allDonations?.length === 0 && flaggedAddresses?.length === 0) {
       updateState({});
     }
   }
@@ -249,29 +249,25 @@ export const getFlaggedAccounts = ({
   updateState: UpdateState;
   type: "list" | "obj";
 }) => {
-  const potData = getPotData(potId, "flaggedAccounts");
-  let flaggedAddresses = potData.flaggedAddresses || [];
+  const flaggedAddresses = getPotData(potId, "flaggedAccounts") || [];
+
+  const saveListOfFlagged = getListOfFlagged(flaggedAddresses);
 
   if (type === "list") {
-    flaggedAddresses = getListOfFlagged(flaggedAddresses);
+    updateState(saveListOfFlagged);
+  } else {
+    updateState(flaggedAddresses);
   }
-  updateState(flaggedAddresses);
-  PotSDK.getFlaggedAccounts(potDetail)
+
+  PotSDK.getFlaggedAccounts(potDetail, potId)
     .then((data) => {
-      if (type === "list") {
-        const liftOfFlagged = getListOfFlagged(data);
-        if (liftOfFlagged.length === flaggedAddresses.length) return;
-        else {
+      const liftOfFlagged = getListOfFlagged(data);
+
+      if (liftOfFlagged.length !== saveListOfFlagged.length) {
+        if (type === "list") {
           setPotData(potId, "flaggedAccounts", data);
           updateState(data);
-        }
-      } else {
-        const isNotEqual = data.some((adminFlaggedAcc: FlaggedAddress, idx: string) => {
-          if (adminFlaggedAcc?.potFlaggedAcc?.length === adminFlaggedAcc?.potFlaggedAcc?.length) return false;
-          else return true;
-        });
-
-        if (isNotEqual) {
+        } else {
           setPotData(potId, "flaggedAccounts", data);
           updateState(data);
         }

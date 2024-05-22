@@ -12,14 +12,14 @@ type Props = {
   allDonations: any;
 };
 
-const Projects = (props: Props) => {
+const Projects = () => {
   const { potId } = useParams();
 
   const [projects, setProjects] = useState<PotApplication[] | null>(null);
   const [filteredProjects, setFilteredProjects] = useState<PotApplication[]>([]);
   const [donations, setDonations] = useState<PotDonation[] | null>(null);
   const [flaggedAddresses, setFlaggedAddresses] = useState<FlaggedAddress[] | null>(null);
-  const [payouts, setPayouts] = useState<Record<string, Payout> | null>(null);
+  const [payouts, setPayouts] = useState<Payout[] | null>(null);
   const [potDetail, setPotDetail] = useState<PotDetail | null>(null);
 
   const Loading = () => (
@@ -65,7 +65,7 @@ const Projects = (props: Props) => {
   }, [potDetail]);
 
   useEffect(() => {
-    if (potDetail && flaggedAddresses && donations) {
+    if (potDetail && flaggedAddresses && donations && !payouts) {
       getPayout({
         allDonations: donations,
         flaggedAddresses,
@@ -77,7 +77,7 @@ const Projects = (props: Props) => {
     }
   }, [potDetail, flaggedAddresses, donations]);
 
-  if (!projects || !potDetail) return <Loading />;
+  if (projects === null || potDetail === null) return <Loading />;
 
   const { public_round_start_ms, public_round_end_ms } = potDetail;
 
@@ -149,7 +149,7 @@ const Projects = (props: Props) => {
                   projects,
                   projectId: project.project_id,
                   allowDonate: publicRoundOpen && project.project_id !== context.accountId,
-                  payoutDetails: (payouts || {})[project.project_id] || {
+                  payoutDetails: (payouts || []).find((payout: Payout) => payout.project_id === project.project_id) || {
                     donorCount: 0,
                     matchingAmount: "0",
                     totalAmount: "0",
