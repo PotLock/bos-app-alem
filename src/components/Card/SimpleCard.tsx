@@ -1,4 +1,4 @@
-import { Big, RouteLink, Social, context } from "alem";
+import { Big, RouteLink, Social, context, useParams } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import PotSDK from "@app/SDK/pot";
 import { useDonationModal } from "@app/hooks/useDonationModal";
@@ -32,7 +32,8 @@ import {
 } from "./styles";
 
 const SimpleCard = (props: any) => {
-  const { payoutDetails, allowDonate: _allowDonate, potId } = props;
+  const { payoutDetails, allowDonate: _allowDonate } = props;
+  const { potId } = useParams();
 
   // Start Modals provider
   const Modals = useModals();

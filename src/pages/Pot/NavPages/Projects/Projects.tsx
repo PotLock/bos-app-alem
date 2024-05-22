@@ -140,7 +140,6 @@ const Projects = (props: Props) => {
             return (
               <SimpleCard
                 {...{
-                  potId,
                   potDetail,
                   projects,
                   projectId: project.project_id,
