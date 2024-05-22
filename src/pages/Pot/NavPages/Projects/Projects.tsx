@@ -1,40 +1,50 @@
-import { useState, Social, context, useParams, createDebounce, useEffect } from "alem";
-import PotSDK from "@app/SDK/pot";
+import { useState, Social, context, useParams, createDebounce, useEffect, Storage, promisify } from "alem";
 import Card from "@app/components/Card/Card";
-import ListSection from "@app/pages/Projects/components/ListSection";
-import calculatePayouts from "@app/utils/calculatePayouts";
+import { getPotDonations } from "@app/pages/Donor/NavPages/Donations/utils";
+import { getConfig, getDonations, getFlaggedAccounts, getPayout, getPotProjects } from "@app/services/getPotData";
+import { FlaggedAddress, Payout, PotApplication, PotDetail, PotDonation } from "@app/types";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import { Centralized, Container, SearchBar, Title } from "./styles";
+import { Centralized, Container, SearchBar, Title, ProjectsWrapper } from "./styles";
 
 type Props = {
   potDetail: any;
   allDonations: any;
 };
 
-const Projects = (props: Props) => {
-  const [filteredProjects, setFilteredProjects] = useState([]);
-  const [projects, setProjects] = useState<any>(null);
-  const [flaggedAddresses, setFlaggedAddresses] = useState<null | []>(null);
-  const [payouts, setPayouts] = useState<any>(null);
+type ProjectsState = {
+  potDetail: PotDetail | null;
+  donations: PotDonation[] | null;
+  filteredProjects: PotApplication[];
+  projects: PotApplication[] | null;
+  flaggedAddresses: FlaggedAddress[] | null;
+  payouts: Record<string, Payout> | null;
+};
 
-  // get projects
+const Projects = (props: Props) => {
   const { potId } = useParams();
 
-  const { potDetail, allDonations } = props;
+  const [state, setState] = useState<ProjectsState>({
+    filteredProjects: [],
+    donations: null,
+    projects: null,
+    flaggedAddresses: null,
+    payouts: null,
+    potDetail: null,
+  });
 
-  if (!projects) {
-    PotSDK.asyncGetApprovedApplications(potId)
-      .then((projects: any) => {
-        setProjects(projects);
-        setFilteredProjects(projects);
-      })
-      .catch((err: any) => {
-        console.log("error fetching projects ", err);
-        setProjects([]);
-        setFilteredProjects([]);
-      });
-  }
+  // const [projects, setProjects] = useState<PotApplication[] | null>(null);
+  // const [filteredProjects, setFilteredProjects] = useState<PotDonation[]>([]);
+  // const [donations, setDonations] = useState<PotDonation[] | null>(null);
+  // const [flaggedAddresses, setFlaggedAddresses] = useState<FlaggedAddress[] | null>(null);
+  // const [payouts, setPayouts] = useState<Record<string, Payout> | null>(null);
+  // const [potDetail, setPotDetail] = useState<PotDetail | null>(null);
+
+  const updateState = (newValue: Partial<ProjectsState>) => {
+    setState((prevState) => ({ ...prevState, ...newValue }));
+  };
+
+  const { filteredProjects, flaggedAddresses, payouts, projects, potDetail, donations } = state;
 
   const Loading = () => (
     <Centralized>
@@ -42,44 +52,50 @@ const Projects = (props: Props) => {
     </Centralized>
   );
 
-  if (!projects) return <Loading />;
+  // get projects
+  useEffect(() => {
+    if (!projects)
+      getPotProjects({
+        potId,
+        updateState,
+        isApprpved: true,
+      });
+    if (!potDetail)
+      getConfig({
+        potId,
+        updateState,
+      });
+  }, []);
 
-  const { public_round_start_ms, public_round_end_ms, referral_fee_public_round_basis_points } = potDetail;
+  useEffect(() => {
+    if (potDetail) {
+      if (!flaggedAddresses)
+        getFlaggedAccounts({
+          potId,
+          potDetail,
+          type: "list",
+          updateState,
+        });
+      if (!donations)
+        getDonations({
+          potId,
+          potDetail,
+          updateState,
+        });
+    }
+  }, [potDetail]);
+
+  useEffect(() => {
+    if (potDetail && flaggedAddresses && donations)
+      getPayout({ allDonations: donations, flaggedAddresses, potDetail, potId, updateState });
+  }, [potDetail, flaggedAddresses, donations]);
+
+  if (!projects || !potDetail) return <Loading />;
+
+  const { public_round_start_ms, public_round_end_ms } = potDetail;
 
   const now = Date.now();
   const publicRoundOpen = now >= public_round_start_ms && now < public_round_end_ms;
-
-  if (!flaggedAddresses) {
-    PotSDK.getFlaggedAccounts(potDetail, potId)
-      .then((data) => {
-        const listOfFlagged: any = [];
-        data.forEach((adminFlaggedAcc: any) => {
-          const addresses = Object.keys(adminFlaggedAcc.potFlaggedAcc);
-          listOfFlagged.push(...addresses);
-        });
-        setFlaggedAddresses(listOfFlagged);
-      })
-      .catch((err) => console.log("error getting the flagged accounts ", err));
-  }
-
-  useEffect(() => {
-    if (!payouts) {
-      if (allDonations.length && flaggedAddresses)
-        calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses)
-          .then((payouts: any) => {
-            setPayouts(payouts ?? []);
-          })
-          .catch((err) => {
-            console.log("error while calculating payouts ", err);
-            setPayouts([]);
-          });
-      else if (allDonations.length === 0 && flaggedAddresses?.length === 0) {
-        setPayouts([]);
-      }
-    }
-  }, [allDonations, flaggedAddresses]);
-
-  if (!flaggedAddresses || !payouts) return <Loading />;
 
   const searchByWords = (searchTerm: string) => {
     if (projects.length) {
@@ -96,7 +112,9 @@ const Projects = (props: Props) => {
         ];
         return fields.some((item) => (item || "").toLowerCase().includes(searchTerm.toLowerCase()));
       });
-      setFilteredProjects(updatedProjects);
+      updateState({
+        filteredProjects: updatedProjects,
+      });
     }
   };
 
@@ -124,39 +142,24 @@ const Projects = (props: Props) => {
         />
       </SearchBar>
       {filteredProjects.length > 0 ? (
-        <ListSection
-          shouldShuffle={true}
-          maxCols={3}
-          items={filteredProjects}
-          responsive={[
-            {
-              breakpoint: 1200,
-              items: 2,
-            },
-            {
-              breakpoint: 870,
-              items: 1,
-            },
-          ]}
-          renderItem={(project: any) => {
-            return (
-              <Card
-                {...{
-                  potDetail,
-                  projects,
-                  projectId: project.project_id,
-                  allowDonate: publicRoundOpen && project.project_id !== context.accountId,
-                  potRferralFeeBasisPoints: referral_fee_public_round_basis_points,
-                  payoutDetails: payouts[project.project_id] || {
-                    donorCount: 0,
-                    matchingAmount: "0",
-                    totalAmount: "0",
-                  },
-                }}
-              />
-            );
-          }}
-        />
+        <ProjectsWrapper>
+          {filteredProjects.map((project: PotApplication) => (
+            <Card
+              {...{
+                potId,
+                projectId: project.project_id,
+                allowDonate: publicRoundOpen && project.project_id !== context.accountId,
+                payoutDetails: payouts
+                  ? payouts[project.project_id]
+                  : {
+                      donorCount: 0,
+                      matchingAmount: "0",
+                      totalAmount: "0",
+                    },
+              }}
+            />
+          ))}
+        </ProjectsWrapper>
       ) : (
         <div>No projects</div>
       )}

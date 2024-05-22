@@ -25,7 +25,7 @@ const ConfirmPot = ({
   bypassChefFee,
   updateState,
   potDetail,
-  potId,
+  selectedRound,
   referrerId,
   accountId,
   amount,
@@ -62,13 +62,13 @@ const ConfirmPot = ({
     const pollIntervalMs = 1000;
     // const totalPollTimeMs = 60000; // consider adding in to make sure interval doesn't run indefinitely
     const pollId = setInterval(() => {
-      PotSDK.asyncGetDonationsForDonor(potId, accountId)
+      PotSDK.asyncGetDonationsForDonor(selectedRound, accountId)
         .then((alldonations: any) => {
           const donations: Record<string, any> = {};
           for (const donation of alldonations) {
             const { project_id, donated_at_ms, donated_at } = donation;
             if (projectIds.includes(project_id) && (donated_at_ms || donated_at) > afterTs) {
-              donations[project_id] = { ...donation, potId };
+              donations[project_id] = { ...donation, potId: selectedRound };
             }
           }
           if (Object.keys(donations).length === projectIds.length) {
@@ -128,7 +128,7 @@ const ConfirmPot = ({
 
       if (amount) {
         transactions.push({
-          contractName: potId,
+          contractName: selectedRound,
           methodName: "donate",
           args: {
             referrer_id: referrerId,

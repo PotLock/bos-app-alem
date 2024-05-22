@@ -32,7 +32,6 @@ import {
 } from "./styles";
 
 const Card = (props: any) => {
-  const [ready, isReady] = useState(false);
   const { payoutDetails, allowDonate: _allowDonate } = props;
   const { potId } = useParams();
 
@@ -100,13 +99,7 @@ const Card = (props: any) => {
 
   const tags = getTagsFromSocialProfileData(profile);
 
-  useEffect(() => {
-    if (profile !== null && !ready) {
-      isReady(true);
-    }
-  }, [profile, donationsForProject, tags]);
-
-  if (!ready) return <CardSkeleton />;
+  if (profile === null && totalAmountNear === null) return <CardSkeleton />;
 
   return (
     <>

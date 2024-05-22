@@ -1,6 +1,5 @@
 import { Social, useState } from "alem";
 import Image from "@app/components/mob.near/Image";
-import ProfileImage from "@app/components/mob.near/ProfileImage";
 import constants from "@app/constants";
 import _address from "@app/utils/_address";
 import formatWithCommas from "@app/utils/formatWithCommas";

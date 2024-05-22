@@ -88,7 +88,7 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
         const successVal = trxs[0].body.result.status?.SuccessValue;
         const result = JSON.parse(Buffer.from(successVal, "base64").toString("utf-8")); // atob not working
 
-        if (methodName === "donate" && receiver_id === potId && result) {
+        if (methodName === "donate" && receiver_id === potId && result.matching_pool) {
           setFundDonation({
             ...result,
             potId,

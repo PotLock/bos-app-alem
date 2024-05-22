@@ -54,22 +54,6 @@ export type Pot = {
   deployed_at_ms: number;
 };
 
-export type PotDonation = {
-  id: string;
-  donor_id: string;
-  total_amount: string;
-  net_amount: string;
-  message: string;
-  donated_at: number;
-  project_id: null | string;
-  referrer_id: null | string;
-  referrer_fee: null | string;
-  protocol_fee: string;
-  matching_pool: boolean;
-  chef_id: null | string;
-  chef_fee: null | string;
-};
-
 export type FundDonation = {
   id: string;
   donor_id: string;
@@ -110,3 +94,38 @@ export type PotApplication = {
   updated_at: null | string;
   review_notes: null | string;
 };
+
+export interface PotDonation {
+  id: string;
+  donor_id: string;
+  total_amount: string;
+  net_amount: string;
+  message: string;
+  donated_at: number;
+  project_id: null | string;
+  referrer_id: null | string;
+  referrer_fee: null | string;
+  protocol_fee: string;
+  matching_pool: boolean;
+  chef_id: null | string;
+  chef_fee: null | string;
+}
+
+export enum PotAdminRoles {
+  Admin = "admin",
+  Chef = "chef",
+  Wwner = "owner",
+}
+
+export type FlaggedAddress = {
+  flaggedBy: string;
+  role: PotAdminRoles;
+  potFlaggedAcc: "string";
+};
+
+export interface Payout {
+  id: string;
+  project_id: string;
+  amount: string;
+  paid_at: number;
+}
