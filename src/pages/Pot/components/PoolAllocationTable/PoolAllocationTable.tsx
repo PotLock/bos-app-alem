@@ -68,9 +68,9 @@ const PoolAllocationTable = () => {
     }
   }, [potDetail, flaggedAddresses, allDonations]);
 
-  if (potDetail === null || sponsorshipDonations === null) return "";
+  if (potDetail === null) return <TableSkeleton />;
 
-  const { total_public_donations, matching_pool_balance, public_donations_count } = potDetail;
+  const { total_public_donations, public_donations_count } = potDetail;
 
   const calcMatchedAmount = (donations: any) => {
     if (donations) {
@@ -86,8 +86,6 @@ const PoolAllocationTable = () => {
   const uniqueDonorIds = allDonations ? new Set(allDonations.map((donation: any) => donation.donor_id)) : new Set([]);
 
   const donorsCount = uniqueDonorIds.size;
-
-  console.log("allPayouts", allPayouts);
 
   const Table = ({ donations, totalAmount, totalUniqueDonors, title }: any) => {
     return (
@@ -120,12 +118,13 @@ const PoolAllocationTable = () => {
         </div>
         {donations.map(({ project_id, donor_id, matchingAmount, net_amount, amount }: any, idx: number) => {
           const id = donor_id || project_id;
-          const nearAmount = formatWithCommas(
-            SUPPORTED_FTS["NEAR"].fromIndivisible(net_amount || matchingAmount || amount),
-          );
+
+          const generalAmount = net_amount || matchingAmount || amount;
+
+          const nearAmount = formatWithCommas(SUPPORTED_FTS["NEAR"].fromIndivisible(generalAmount));
 
           const profile = Social.getr(`${id}/profile`);
-          const matchedAmout = usdToggle ? yoctosToUsdWithFallback(matchingAmount || net_amount, true) : nearAmount;
+          const matchedAmout = usdToggle ? yoctosToUsdWithFallback(generalAmount, true) : nearAmount;
 
           const url = project_id ? `?tab=project&projectId=${project_id}` : `?tab=profile&accountId=${donor_id}`;
           return (
