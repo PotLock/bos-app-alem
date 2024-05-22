@@ -215,13 +215,14 @@ export const getDonations = ({
   potDetail: PotDetail;
   updateState: UpdateState;
 }) => {
-  const donations = getPotData(potId, "donations") || [];
+  const donations = getPotData(potId, "donations");
 
   if (donations) updateState(donations);
 
-  if (potDetail.public_donations_count !== donations.length) {
+  if (potDetail.public_donations_count !== donations?.length) {
     asyncGetPublicDonations(potDetail, potId).then((paginatedDonations) => {
       const currentDonations = paginatedDonations ? paginatedDonations.flat() : [];
+      currentDonations.reverse();
       setPotData(potId, "donations", currentDonations);
       updateState(currentDonations);
     });
@@ -281,7 +282,6 @@ export const getFlaggedAccounts = ({
 
 export const getSponsorships = ({ potId, updateState }: { potId: string; updateState: UpdateState }) => {
   const sponsors = getPotData(potId, "sponsors");
-  console.log("sponsors", sponsors);
 
   if (sponsors) updateState(sponsors);
 

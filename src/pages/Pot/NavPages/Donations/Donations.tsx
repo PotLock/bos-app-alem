@@ -1,21 +1,22 @@
 import { State, state, useEffect, useParams } from "alem";
 import Arrow from "@app/assets/svgs/Arrow";
-import constants from "@app/constants";
-import { PotDetail } from "@app/types";
+import { getConfig, getDonations } from "@app/services/getPotData";
+import { PotDetail, PotDonation } from "@app/types";
 import _address from "@app/utils/_address";
-import getTimePassed from "@app/utils/getTimePassed";
 import DonationsTable from "../../components/DonationsTable/DonationsTable";
-import { Container, DonationsCount, OuterText, OuterTextContainer, Sort, TableContainer } from "./styes";
+import { Container, DonationsCount, OuterText, OuterTextContainer, Sort } from "./styes";
 
 type Props = {
   allDonations: any[];
   potDetail: PotDetail;
 };
 
-const Donations = (props: Props) => {
-  const { allDonations, potDetail } = props;
+const Donations = () => {
+  const { potId } = useParams();
 
   State.init({
+    potDetail: null,
+    allDonations: null,
     filteredDonations: [],
     currentFilter: "date",
     filter: {
@@ -24,23 +25,39 @@ const Donations = (props: Props) => {
     },
   });
 
-  const { filteredDonations, currentFilter, filter } = state;
+  const { filteredDonations, currentFilter, filter, potDetail, allDonations } = state;
 
   useEffect(() => {
-    if (allDonations && filteredDonations.length === 0) {
-      const sortedDonations = [...allDonations].reverse();
-      State.update({ filteredDonations: sortedDonations });
-    }
-  }, [allDonations]);
-  if (!allDonations) return <div className="spinner-border text-secondary" role="status" />;
+    if (!potDetail)
+      getConfig({
+        potId,
+        updateState: (potDetail) =>
+          State.update({
+            potDetail,
+          }),
+      });
+    if (!allDonations && potDetail)
+      getDonations({
+        potId,
+        potDetail,
+        updateState: (allDonations) =>
+          State.update({
+            allDonations,
+            filteredDonations: allDonations,
+          }),
+      });
+  }, [potDetail]);
+
+  if (allDonations === null && potDetail === null)
+    return <div className="spinner-border text-secondary" role="status" />;
 
   const searchDonations = (searchTerm: string) => {
     // filter donations that match the search term (donor_id, project_id)
-    const filteredDonations = allDonations.filter((donation) => {
+    const filteredDonations = allDonations.filter((donation: PotDonation) => {
       const { donor_id, project_id } = donation;
       const searchFields = [donor_id, project_id];
 
-      return searchFields.some((field) => field.toLowerCase().includes(searchTerm.toLowerCase()));
+      return searchFields.some((field) => (field || "").toLowerCase().includes(searchTerm.toLowerCase()));
     });
     return filteredDonations;
   };
