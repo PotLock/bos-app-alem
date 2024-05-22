@@ -1,4 +1,4 @@
-import { Big, useParams, useCache, useMemo } from "alem";
+import { Big, useParams, useCache } from "alem";
 import PotSDK from "@app/SDK/pot";
 import { PotDetail } from "@app/types";
 import Tabs from "../Profile/components/Tabs";
@@ -70,9 +70,11 @@ const Pot = () => {
 
   const options = navOptions(potId || "", potDetail);
 
-  const SelectedNavComponent = useMemo(() => {
+  const getSelectedNavComponent = () => {
     return options.find((option: any) => option.id === nav).source;
-  }, []);
+  };
+
+  const SelectedNavComponent = getSelectedNavComponent();
 
   return (
     <Wrapper>
