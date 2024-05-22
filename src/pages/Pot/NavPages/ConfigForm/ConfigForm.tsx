@@ -132,7 +132,7 @@ const ConfigForm = ({ potDetail, style }: { potDetail?: PotDetail; style?: any }
   const [state, setState] = useState<any>(inital_state);
   const updateState = (updatedState: any) =>
     setState({
-      ...inital_state,
+      ...state,
       ...updatedState,
     });
 
