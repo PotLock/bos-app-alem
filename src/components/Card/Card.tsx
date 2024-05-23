@@ -1,4 +1,4 @@
-import { Big, RouteLink, Social, context } from "alem";
+import { Big, RouteLink, Social, context, useMemo, useParams } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import PotSDK from "@app/SDK/pot";
 import { useDonationModal } from "@app/hooks/useDonationModal";
@@ -32,7 +32,9 @@ import {
 } from "./styles";
 
 const Card = (props: any) => {
-  const { payoutDetails, allowDonate: _allowDonate, potId } = props;
+  const { potId } = useParams();
+
+  const { payoutDetails, allowDonate: _allowDonate } = props;
 
   // Start Modals provider
   const Modals = useModals();
@@ -66,7 +68,7 @@ const Card = (props: any) => {
     return totalDonationAmountNear.toString();
   };
 
-  const totalAmountNear = getTotalAmountNear();
+  const totalAmountNear = useMemo(getTotalAmountNear, [donationsForProject, payoutDetails]);
 
   const getImageSrc = (image: any) => {
     const defaultImageUrl = "https://ipfs.near.social/ipfs/bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";
