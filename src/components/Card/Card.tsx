@@ -65,7 +65,7 @@ const Card = (props: any) => {
   // console.log("totalAmountNear", totalAmountNear);
   // console.log("profile", profile);
 
-  if (profile === null || totalAmountNear === null) return <CardSkeleton />;
+  if (profile === null) return <CardSkeleton />;
 
   const getImageSrc = (image: any) => {
     const defaultImageUrl = "https://ipfs.near.social/ipfs/bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";
