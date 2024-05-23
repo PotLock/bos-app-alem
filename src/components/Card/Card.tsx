@@ -102,7 +102,7 @@ const Card = (props: any) => {
 
   const tags = getTagsFromSocialProfileData(profile);
 
-  if (profile === null || totalAmountNear === null) return <CardSkeleton />;
+  if (profile === null) return <CardSkeleton />;
 
   return (
     <>
