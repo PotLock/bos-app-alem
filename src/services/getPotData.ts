@@ -142,44 +142,58 @@ export const getPayout = ({
 }: GetPayoutProps) => {
   const storageKey = withTotalAmount ? "payouts-obj" : "payouts";
 
-  const payouts = getPotData(potId, storageKey);
-  console.log("payouts", payouts);
+  const flaggedLength = flaggedAddresses.length;
+  const allDonationsLength = allDonations.length;
+
+  const potData = getPotData(potId, storageKey);
+
+  const payouts = potData?.payouts;
+  const storedFlaggedLength = potData?.flaggedLength;
+  const storedAllDonationsLength = potData?.allDonationsLength;
+
+  // limit payment calculations by checking the calculatePayouts params
+  const isEqualStored = flaggedLength === storedFlaggedLength && storedAllDonationsLength === allDonationsLength;
 
   if (payouts) updateState(payouts);
 
-  if (flaggedAddresses) {
-    if (potDetail.payouts && !withTotalAmount) {
-      if (isEqual(potDetail.payouts, payouts)) return;
-      else {
-        const sortedPayouts = potDetail.payouts;
-        sortedPayouts.sort((a: any, b: any) => b.amount - a.amount);
-        setPotData(potId, storageKey, sortedPayouts);
-        updateState(sortedPayouts);
-      }
-    } else if (allDonations.length && flaggedAddresses) {
-      calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses).then((calculatedPayouts) => {
-        const currentPayouts = potDetail.payouts
-          ? potDetail.payouts.map((payout: Payout) => ({
-              ...payout,
-              donorCount: calculatedPayouts[payout.project_id].donorCount,
-              totalAmount: calculatedPayouts[payout.project_id].totalAmount,
-            }))
-          : Object.entries(calculatedPayouts).map(([projectId, { matchingAmount, donorCount, totalAmount }]: any) => ({
-              project_id: projectId,
-              amount: matchingAmount,
-              donorCount,
-              totalAmount,
-            }));
-        currentPayouts.sort((a: any, b: any) => b.amount - a.amount);
-
-        if (areListsEqual(currentPayouts, payouts)) return;
-        else {
-          setPotData(potId, storageKey, currentPayouts);
-          updateState(currentPayouts);
-        }
+  if (!isEqualStored || payouts.length === 0) {
+    if (potDetail.payouts.length && !withTotalAmount) {
+      const sortedPayouts = potDetail.payouts;
+      sortedPayouts.sort((a: any, b: any) => b.amount - a.amount);
+      setPotData(potId, storageKey, {
+        payouts: sortedPayouts,
+        flaggedLength,
+        allDonationsLength,
       });
+      updateState(sortedPayouts);
     } else if (allDonations?.length === 0 && flaggedAddresses?.length === 0) {
       updateState({});
+    } else if (allDonations && flaggedAddresses) {
+      calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses).then((calculatedPayouts) => {
+        const currentPayouts =
+          potDetail.payouts.length > 0
+            ? potDetail.payouts.map((payout: Payout) => ({
+                ...payout,
+                donorCount: calculatedPayouts[payout.project_id].donorCount,
+                totalAmount: calculatedPayouts[payout.project_id].totalAmount,
+              }))
+            : Object.entries(calculatedPayouts).map(
+                ([projectId, { matchingAmount, donorCount, totalAmount }]: any) => ({
+                  project_id: projectId,
+                  amount: matchingAmount,
+                  donorCount,
+                  totalAmount,
+                }),
+              );
+        currentPayouts.sort((a: any, b: any) => b.amount - a.amount);
+
+        setPotData(potId, storageKey, {
+          payouts: currentPayouts,
+          flaggedLength,
+          allDonationsLength,
+        });
+        updateState(currentPayouts);
+      });
     }
   }
 };

@@ -151,7 +151,7 @@ const Projects = () => {
                   allowDonate: publicRoundOpen && project.project_id !== context.accountId,
                   payoutDetails: (payouts || []).find((payout: Payout) => payout.project_id === project.project_id) || {
                     donorCount: 0,
-                    matchingAmount: "0",
+                    amount: "0",
                     totalAmount: "0",
                   },
                 }}
