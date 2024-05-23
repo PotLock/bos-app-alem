@@ -41,7 +41,7 @@ const About = ({ projectId, accountId }: Props) => {
       return `https://${path}`;
     }
     // If the path does not contain "github.com/", assume it's a repository path and prepend the prefix
-    return `${prefix}${path}`;
+    return path;
   }
 
   const Github = () =>
