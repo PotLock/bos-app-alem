@@ -1,13 +1,23 @@
-import { useState } from "alem";
+import { useEffect, useParams, useState } from "alem";
 import styled from "styled-components";
+import { getConfig } from "@app/services/getPotData";
 import { PotDetail } from "@app/types";
 import TimeLeft from "../TimeLeft";
 import ProgressBar from "./ProgressBar";
 import statsList from "./statsList";
 import { Loader, State, Wrapper } from "./styles";
 
-const HeaderStatus = ({ potDetail }: { potDetail: PotDetail }) => {
+const HeaderStatus = () => {
+  const { potId } = useParams();
   const [mobileMenuActive, setMobileMenuActive] = useState(false);
+
+  const [potDetail, setPotDetail] = useState<null | PotDetail>(null);
+
+  useEffect(() => {
+    if (!potDetail) getConfig({ potId, updateState: setPotDetail });
+  }, []);
+
+  if (potDetail === null) return "";
 
   const stats = statsList(potDetail);
 

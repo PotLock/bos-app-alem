@@ -7,11 +7,6 @@ import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileDat
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
 import { Centralized, Container, SearchBar, Title } from "./styles";
 
-type Props = {
-  potDetail: any;
-  allDonations: any;
-};
-
 const Projects = () => {
   const { potId } = useParams();
 

@@ -5,7 +5,8 @@ import constants from "@app/constants";
 import { useDonationModal } from "@app/hooks/useDonationModal";
 import useModals from "@app/hooks/useModals";
 import CopyIcon from "@app/pages/Project/components/CopyIcon";
-import { PotDetail } from "@app/types";
+import { getConfig, getDonations, getFlaggedAccounts, getPotProjects } from "@app/services/getPotData";
+import { PotDetail, PotDonation } from "@app/types";
 import calculatePayouts from "@app/utils/calculatePayouts";
 import getTransactionsFromHashes from "@app/utils/getTransactionsFromHashes";
 import nearToUsd from "@app/utils/nearToUsd";
@@ -18,23 +19,7 @@ import PoolAllocationTable from "../PoolAllocationTable/PoolAllocationTable";
 import SuccessFundModal, { ExtendedFundDonation } from "../SuccessFundModal/SuccessFundModal";
 import { ButtonsWrapper, Container, Description, Fund, HeaderWrapper, Referral, Title } from "./styles";
 
-const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonations: any }) => {
-  const {
-    admins,
-    chef,
-    owner,
-    pot_name,
-    pot_description,
-    matching_pool_balance,
-    public_round_end_ms,
-    public_round_start_ms,
-    application_start_ms,
-    application_end_ms,
-    cooldown_end_ms: _cooldown_end_ms,
-    all_paid_out,
-    registry_provider,
-  } = potDetail;
-
+const Header = () => {
   const { IPFS_BASE_URL, NADA_BOT_URL } = constants;
 
   const { potId, transactionHashes } = useParams();
@@ -55,29 +40,59 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
   const [isDao, setIsDao] = useState(null);
   const [applicationSuccess, setApplicationSuccess] = useState(null);
   const [flaggedAddresses, setFlaggedAddresses] = useState(null);
+  const [potDetail, setPotDetail] = useState<null | PotDetail>(null);
+  const [allDonations, setAlldonations] = useState<null | PotDonation[]>(null);
   // set fund mathcing pool success
   const [fundDonation, setFundDonation] = useState<null | ExtendedFundDonation>(null);
 
-  const verifyIsOnRegistry = (address: any) => {
-    Near.asyncView("lists.potlock.near", "get_registrations_for_registrant", {
-      registrant_id: address,
-    }).then((registrations) => {
-      const registration = registrations.find(
-        (registration: any) => registration.list_id === 1, // potlock registry list id
-      );
-      if (registration) {
-        setRegistryStatus(registration.status);
-      }
-    });
-  };
-
   useEffect(() => {
-    if (!isDao) {
-      verifyIsOnRegistry(context.accountId || "");
+    if (!potDetail)
+      getConfig({
+        potId,
+        updateState: setPotDetail,
+      });
+    if (!projects)
+      getPotProjects({
+        potId,
+        isApprpved: true,
+        updateState: setProjects,
+      });
+    if (potDetail && !flaggedAddresses) {
+      getFlaggedAccounts({
+        potId,
+        potDetail,
+        type: "list",
+        updateState: setFlaggedAddresses,
+      });
     }
-  }, []);
+    if (!allDonations && potDetail)
+      getDonations({
+        potId,
+        potDetail,
+        updateState: setAlldonations,
+      });
+  }, [potDetail]);
+
+  if (potDetail === null) return <div className="spinner-border text-secondary" role="status" />;
 
   // Handle fund success for web wallet
+
+  const {
+    admins,
+    chef,
+    owner,
+    pot_name,
+    pot_description,
+    matching_pool_balance,
+    public_round_end_ms,
+    public_round_start_ms,
+    application_start_ms,
+    application_end_ms,
+    cooldown_end_ms: _cooldown_end_ms,
+    all_paid_out,
+    registry_provider,
+  } = potDetail;
+
   useEffect(() => {
     if (accountId && transactionHashes) {
       getTransactionsFromHashes(transactionHashes, accountId).then((trxs) => {
@@ -99,19 +114,30 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
     }
   }, []);
 
+  const verifyIsOnRegistry = (address: any) => {
+    Near.asyncView("lists.potlock.near", "get_registrations_for_registrant", {
+      registrant_id: address,
+    }).then((registrations) => {
+      const registration = registrations.find(
+        (registration: any) => registration.list_id === 1, // potlock registry list id
+      );
+      if (registration) {
+        setRegistryStatus(registration.status);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (!isDao) {
+      verifyIsOnRegistry(context.accountId || "");
+    }
+  }, []);
+
   const projectNotRegistered = registryStatus === null;
   const userIsAdminOrGreater = admins.includes(accountId) || owner === accountId;
   const userIsChefOrGreater = userIsAdminOrGreater || chef === accountId;
 
   const existingApplication = PotSDK.getApplicationByProjectId(potId, context.accountId);
-
-  useEffect(() => {
-    if (!projects) {
-      PotSDK.asyncGetApprovedApplications(potId).then((projects: any) => {
-        setProjects(projects);
-      });
-    }
-  }, []);
 
   const applicationExists = existingApplication || applicationSuccess;
 
@@ -135,19 +161,6 @@ const Header = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonation
   const canPayoutsBeSet = userIsChefOrGreater && !all_paid_out && publicRoundEnded;
 
   const payoutsChallenges = PotSDK.getPayoutsChallenges(potId);
-
-  if (!flaggedAddresses) {
-    PotSDK.getFlaggedAccounts(potDetail, potId)
-      .then((data) => {
-        const listOfFlagged: any = [];
-        data.forEach((adminFlaggedAcc: any) => {
-          const addresses = Object.keys(adminFlaggedAcc.potFlaggedAcc);
-          listOfFlagged.push(...addresses);
-        });
-        setFlaggedAddresses(listOfFlagged);
-      })
-      .catch((err) => console.log("error getting the flagged accounts ", err));
-  }
 
   const handleSetPayouts = () => {
     if (allDonations && flaggedAddresses !== null) {

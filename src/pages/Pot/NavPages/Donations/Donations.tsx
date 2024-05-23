@@ -6,11 +6,6 @@ import _address from "@app/utils/_address";
 import DonationsTable from "../../components/DonationsTable/DonationsTable";
 import { Container, DonationsCount, OuterText, OuterTextContainer, Sort } from "./styes";
 
-type Props = {
-  allDonations: any[];
-  potDetail: PotDetail;
-};
-
 const Donations = () => {
   const { potId } = useParams();
 
