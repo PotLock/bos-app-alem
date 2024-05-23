@@ -34,9 +34,7 @@ const ListsSDK = {
       const registration = registrations.find(
         (registration) => registration.list_id === (listId || potlockRegistryListId),
       );
-      return Near.view(_listContractId, "get_registration", {
-        registration_id: registration.id,
-      });
+      return registration;
     }
   },
   asyncGetRegistration: (listId, registrantId) => {
