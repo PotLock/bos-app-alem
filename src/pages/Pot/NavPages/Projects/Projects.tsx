@@ -72,7 +72,7 @@ const Projects = () => {
     }
   }, [potDetail, flaggedAddresses, donations]);
 
-  if (projects === null || potDetail === null) return <Loading />;
+  if (potDetail === null || projects === null) return <Loading />;
 
   const { public_round_start_ms, public_round_end_ms } = potDetail;
 

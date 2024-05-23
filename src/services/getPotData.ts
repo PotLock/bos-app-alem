@@ -106,7 +106,7 @@ export function getPotProjects({
   isApprpved: boolean;
 }) {
   // get projects from local storage
-  const savedProject = getPotData(potId, "projects") || [];
+  const savedProject = getPotData(potId, "projects");
 
   if (savedProject) {
     // if storage project exist show it
