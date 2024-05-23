@@ -1,12 +1,12 @@
 import { useState, useParams, Big, Social, useEffect, useMemo } from "alem";
 import Image from "@app/components/mob.near/Image";
 import constants from "@app/constants";
+import nearToUsd from "@app/modules/nearToUsd";
 import { getConfig, getDonations, getFlaggedAccounts, getPayout, getSponsorships } from "@app/services/getPotData";
 import { FlaggedAddress, Payout, PotDetail, PotDonation } from "@app/types";
 import _address from "@app/utils/_address";
 import formatWithCommas from "@app/utils/formatWithCommas";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import nearToUsd from "@app/utils/nearToUsd";
 import nearToUsdWithFallback from "@app/utils/nearToUsdWithFallback";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import TableSkeleton from "./Table/TableSkeleton";

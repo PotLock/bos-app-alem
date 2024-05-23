@@ -8,8 +8,8 @@ import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import constants from "@app/constants";
+import nearToUsd from "@app/modules/nearToUsd";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import nearToUsd from "@app/utils/nearToUsd";
 import { Amout, ButtonWrapper, Container, FeesRemoval, Label, NoteWrapper } from "./styles";
 
 const ConfirmDirect = ({

@@ -2,9 +2,9 @@ import { OverlayTrigger, useEffect, useState, Tooltip, useParams } from "alem";
 import Pagination from "@app/components/Pagination/Pagination";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import constants from "@app/constants";
+import nearToUsd from "@app/modules/nearToUsd";
 import _address from "@app/utils/_address";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import nearToUsd from "@app/utils/nearToUsd";
 import { Container, NoResult, Percentage, TrRow } from "./styles";
 
 const SponsorsTable = ({ sponsors }: { sponsors: any }) => {

@@ -11,7 +11,7 @@ const SuccessfullRegister = ({ registeredProject }: { registeredProject: any }) 
         <Button
           {...{
             isDisabled: false,
-            href: hrefWithParams(`?tab=project&projectId=${registeredProject?.id || context.accountId}`),
+            href: hrefWithParams(`?tab=project&projectId=${registeredProject?.registrant_id || context.accountId}`),
           }}
         >
           View your project
