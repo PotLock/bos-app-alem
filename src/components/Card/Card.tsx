@@ -63,10 +63,6 @@ const Card = (props: any) => {
 
   const totalAmountNear = getTotalAmountNear();
   // useMemo(getTotalAmountNear, [donationsForProject, payoutDetails]);
-  // console.log("totalAmountNear", totalAmountNear);
-  // console.log("profile", profile);
-
-  if (profile === null) return <CardSkeleton />;
 
   const getImageSrc = (image: any) => {
     const defaultImageUrl = "https://ipfs.near.social/ipfs/bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";
@@ -99,6 +95,8 @@ const Card = (props: any) => {
   };
 
   const tags = getTagsFromSocialProfileData(profile);
+
+  if (profile === null) return <CardSkeleton />;
 
   return (
     <>
