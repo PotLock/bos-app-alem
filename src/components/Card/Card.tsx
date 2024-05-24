@@ -1,4 +1,4 @@
-import { Big, RouteLink, Social, useEffect } from "alem";
+import { Big, RouteLink, Social } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import PotSDK from "@app/SDK/pot";
 import routesPath from "@app/routes/routesPath";
@@ -8,7 +8,6 @@ import ipfsUrlFromCid from "@app/utils/ipfsUrlFromCid";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import CardSkeleton from "../../pages/Projects/components/CardSkeleton";
-import Button from "../Button";
 import Image from "../mob.near/Image";
 import ButtonDonation from "./ButtonDonation";
 import {
@@ -32,6 +31,8 @@ import {
 
 const Card = (props: any) => {
   const { payoutDetails, allowDonate: _allowDonate, potId } = props;
+
+  // const Modals = useModals();
 
   const projectId = props.project.registrant_id || props.projectId;
   const profile = Social.getr(`${projectId}/profile`) as any;

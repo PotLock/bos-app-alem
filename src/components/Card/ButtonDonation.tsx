@@ -1,12 +1,10 @@
-import { context, useEffect } from "alem";
+import { context } from "alem";
 import { useDonationModal } from "@app/hooks/useDonationModal";
-import useModals from "@app/hooks/useModals";
 import Button from "../Button";
 
 const ButtonDonation = ({ allowDonate, projectId }: { allowDonate: boolean; projectId: string }) => {
-  const Modals = useModals();
   const { setDonationModalProps } = useDonationModal();
-  useEffect(() => {}, []); // make the component statefull so it does not break
+
   return (
     <div
       onClick={(e) => e.preventDefault()}
@@ -15,7 +13,7 @@ const ButtonDonation = ({ allowDonate, projectId }: { allowDonate: boolean; proj
         color: "#292929",
       }}
     >
-      <Modals />
+      {/* <Modals /> */}
       {allowDonate && context.accountId && (
         <Button
           varient="tonal"
