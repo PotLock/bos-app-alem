@@ -38,6 +38,8 @@ const Card = (props: any) => {
   const profile = Social.getr(`${projectId}/profile`) as any;
   const allowDonate = _allowDonate ?? true;
 
+  if (profile === null) return <CardSkeleton />;
+
   const MAX_DESCRIPTION_LENGTH = 80;
 
   const { name, description } = profile;
@@ -95,8 +97,6 @@ const Card = (props: any) => {
   };
 
   const tags = getTagsFromSocialProfileData(profile);
-
-  if (profile === null) return <CardSkeleton />;
 
   return (
     <>

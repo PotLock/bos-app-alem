@@ -16,7 +16,7 @@ export const CardContainer = styled.div`
   margin-right: auto;
   transition: all 300ms;
   &:hover {
-    /* transform: translateY(-1rem); */
+    transform: translateY(-1rem);
   }
 `;
 
