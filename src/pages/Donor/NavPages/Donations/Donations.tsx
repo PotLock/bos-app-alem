@@ -9,11 +9,11 @@ import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
 import Pagination from "@app/components/Pagination/Pagination";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import constants from "@app/constants";
+import nearToUsd from "@app/modules/nearToUsd";
 import { PotDetail, Pot } from "@app/types";
 import _address from "@app/utils/_address";
 import getTimePassed from "@app/utils/getTimePassed";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import nearToUsd from "@app/utils/nearToUsd";
 import { Container, DropdownLabelWrapper, FundingSrc, ImgIcon, Funding, SearchBar, Sort, Stats } from "./styles";
 import { getPotDonations, filterDonations, searchDonations, getName, addTrailingZeros } from "./utils";
 

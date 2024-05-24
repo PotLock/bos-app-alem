@@ -1,5 +1,6 @@
 import { Big, useParams, useCache, useMemo } from "alem";
 import PotSDK from "@app/SDK/pot";
+import useModals from "@app/hooks/useModals";
 import { PotDetail } from "@app/types";
 import Tabs from "../Profile/components/Tabs";
 import Header from "./components/Header/Header";
@@ -50,8 +51,11 @@ const Pot = () => {
     return options.find((option: any) => option.id === nav).source;
   }, []);
 
+  const Modals = useModals();
+
   return (
     <Wrapper>
+      <Modals />
       <HeaderStatus />
       <Header />
 

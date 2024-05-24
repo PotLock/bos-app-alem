@@ -5,9 +5,9 @@ import Button from "@app/components/Button";
 import BreakdownSummary from "@app/components/Cart/BreakdownSummary/BreakdownSummary";
 import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import nearToUsd from "@app/modules/nearToUsd";
 import _address from "@app/utils/_address";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import nearToUsd from "@app/utils/nearToUsd";
 import {
   Amout,
   ButtonWrapper,

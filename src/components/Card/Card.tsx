@@ -1,8 +1,6 @@
-import { Big, RouteLink, Social, context, useMemo, useParams } from "alem";
+import { Big, RouteLink, Social } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import PotSDK from "@app/SDK/pot";
-import { useDonationModal } from "@app/hooks/useDonationModal";
-import useModals from "@app/hooks/useModals";
 import routesPath from "@app/routes/routesPath";
 import _address from "@app/utils/_address";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
@@ -10,8 +8,8 @@ import ipfsUrlFromCid from "@app/utils/ipfsUrlFromCid";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import CardSkeleton from "../../pages/Projects/components/CardSkeleton";
-import Button from "../Button";
 import Image from "../mob.near/Image";
+import ButtonDonation from "./ButtonDonation";
 import {
   Amount,
   AmountDescriptor,
@@ -32,17 +30,12 @@ import {
 } from "./styles";
 
 const Card = (props: any) => {
-  const { potId } = useParams();
+  const { payoutDetails, allowDonate: _allowDonate, potId } = props;
 
-  const { payoutDetails, allowDonate: _allowDonate } = props;
-
-  // Start Modals provider
-  const Modals = useModals();
-  const { setDonationModalProps } = useDonationModal();
+  // const Modals = useModals();
 
   const projectId = props.project.registrant_id || props.projectId;
   const profile = Social.getr(`${projectId}/profile`) as any;
-
   const allowDonate = _allowDonate ?? true;
 
   const MAX_DESCRIPTION_LENGTH = 80;
@@ -68,7 +61,8 @@ const Card = (props: any) => {
     return totalDonationAmountNear.toString();
   };
 
-  const totalAmountNear = useMemo(getTotalAmountNear, [donationsForProject, payoutDetails]);
+  const totalAmountNear = getTotalAmountNear();
+  // useMemo(getTotalAmountNear, [donationsForProject, payoutDetails]);
 
   const getImageSrc = (image: any) => {
     const defaultImageUrl = "https://ipfs.near.social/ipfs/bafkreih4i6kftb34wpdzcuvgafozxz6tk6u4f5kcr2gwvtvxikvwriteci";
@@ -106,7 +100,7 @@ const Card = (props: any) => {
 
   return (
     <>
-      <Modals />
+      {/* <Modals /> */}
       <RouteLink to={routesPath.PROJECT_DETAIL_TAB} params={{ projectId, ...(potId ? { potId } : {}) }}>
         <CardContainer>
           <HeaderContainer className="pt-0 position-relative">
@@ -181,20 +175,7 @@ const Card = (props: any) => {
                 <AmountDescriptor>{payoutDetails.donorCount === 1 ? "Donor" : "Donors"}</AmountDescriptor>
               </DonationsInfoItem>
             )}
-            {allowDonate && context.accountId && (
-              <Button
-                varient="tonal"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setDonationModalProps({
-                    projectId,
-                  });
-                }}
-                isDisabled={!context.accountId}
-              >
-                Donate
-              </Button>
-            )}
+            <ButtonDonation allowDonate={allowDonate} projectId={projectId} />
           </DonationsInfoContainer>
           {payoutDetails && (
             <MatchingSection>
