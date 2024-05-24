@@ -167,7 +167,7 @@ export const getPayout = ({
       });
       updateState(sortedPayouts);
     } else if (allDonations?.length === 0 && flaggedAddresses?.length === 0) {
-      updateState({});
+      updateState([]);
     } else if (allDonations && flaggedAddresses) {
       calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses).then((calculatedPayouts) => {
         const currentPayouts =
