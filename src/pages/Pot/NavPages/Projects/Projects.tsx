@@ -1,11 +1,11 @@
-import { useState, Social, context, useParams, createDebounce, useEffect } from "alem";
+import { useState, Social, context, useParams, createDebounce, useEffect, InfiniteScroll } from "alem";
 import Card from "@app/components/Card/Card";
 import ListSection from "@app/pages/Projects/components/ListSection";
 import { getConfig, getDonations, getFlaggedAccounts, getPayout, getPotProjects } from "@app/services/getPotData";
 import { FlaggedAddress, Payout, PotApplication, PotDetail, PotDonation } from "@app/types";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import { Centralized, Container, SearchBar, Title } from "./styles";
+import { Centralized, Container, ProjectsWrapper, SearchBar, Title } from "./styles";
 
 const Projects = () => {
   const { potId } = useParams();
@@ -100,6 +100,30 @@ const Projects = () => {
 
   const onSearchChange = createDebounce((searchTerm: any) => searchByWords(searchTerm), 1000);
 
+  const [lastNumber, setLastNumber] = useState(0);
+  const [display, setDisplay] = useState([]);
+
+  const loadNumbers = (page: number) => {
+    const toDisplay: any = filteredProjects.slice(0, lastNumber + page * 6).map((project) => (
+      <Card
+        {...{
+          potDetail,
+          projects,
+          projectId: project.project_id,
+          allowDonate: publicRoundOpen && project.project_id !== context.accountId,
+          payoutDetails: (payouts || []).find((payout: Payout) => payout.project_id === project.project_id) || {
+            donorCount: 0,
+            amount: "0",
+            totalAmount: "0",
+          },
+        }}
+      />
+    ));
+
+    setDisplay(toDisplay);
+    setLastNumber(lastNumber + page * 6);
+  };
+
   return (
     <Container>
       <Title>
@@ -122,22 +146,10 @@ const Projects = () => {
         />
       </SearchBar>
       {filteredProjects.length > 0 ? (
-        <ListSection
-          shouldShuffle={true}
-          maxCols={3}
-          items={filteredProjects}
-          responsive={[
-            {
-              breakpoint: 1200,
-              items: 2,
-            },
-            {
-              breakpoint: 870,
-              items: 1,
-            },
-          ]}
-          renderItem={(project: any) => {
-            return (
+        <InfiniteScroll loadMore={loadNumbers} hasMore={lastNumber < filteredProjects.length} useWindow={true}>
+          <ProjectsWrapper>
+            {display}
+            {/* {filteredProjects.map((project) => (
               <Card
                 {...{
                   potDetail,
@@ -151,10 +163,42 @@ const Projects = () => {
                   },
                 }}
               />
-            );
-          }}
-        />
+            ))} */}
+          </ProjectsWrapper>
+        </InfiniteScroll>
       ) : (
+        // <ListSection
+        //   shouldShuffle={true}
+        //   maxCols={3}
+        //   items={filteredProjects}
+        //   responsive={[
+        //     {
+        //       breakpoint: 1200,
+        //       items: 2,
+        //     },
+        //     {
+        //       breakpoint: 870,
+        //       items: 1,
+        //     },
+        //   ]}
+        //   renderItem={(project: any) => {
+        //     return (
+        //       <Card
+        //         {...{
+        //           potDetail,
+        //           projects,
+        //           projectId: project.project_id,
+        //           allowDonate: publicRoundOpen && project.project_id !== context.accountId,
+        //           payoutDetails: (payouts || []).find((payout: Payout) => payout.project_id === project.project_id) || {
+        //             donorCount: 0,
+        //             amount: "0",
+        //             totalAmount: "0",
+        //           },
+        //         }}
+        //       />
+        //     );
+        //   }}
+        // />
         <div>No projects</div>
       )}
     </Container>

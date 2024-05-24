@@ -36,6 +36,9 @@ const Card = (props: any) => {
 
   const projectId = props.project.registrant_id || props.projectId;
   const profile = Social.getr(`${projectId}/profile`) as any;
+
+  console.log(projectId, profile);
+
   const allowDonate = _allowDonate ?? true;
 
   if (profile === null) return <CardSkeleton />;
