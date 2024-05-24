@@ -29,8 +29,8 @@ const PotSDK = {
     // TODO: paginate
     return Near.view(potId, "get_matching_pool_donations", {});
   },
-  asyncGetMatchingPoolDonations: (potId) => {
-    return Near.asyncView(potId, "get_matching_pool_donations", {});
+  asyncGetMatchingPoolDonations: (potId, args) => {
+    return Near.asyncView(potId, "get_matching_pool_donations", args || {});
   },
   getPublicRoundDonations: (potId, args) => {
     return Near.view(potId, "get_public_round_donations", {

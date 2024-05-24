@@ -2,6 +2,7 @@ import { Social, createDebounce, useEffect, useState } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import Card from "@app/components/Card/Card";
 import FilterDropdown from "@app/components/Inputs/FilterDropdown/FilterDropdown";
+import useModals from "@app/hooks/useModals";
 import getProjects from "@app/services/getProjects";
 import { Project } from "@app/types";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
@@ -14,6 +15,7 @@ import tagsList from "./tagsList";
 
 const AllProjects = () => {
   const projectsData = getProjects();
+  const Modals = useModals();
 
   const [totalDonation, setTotalDonation] = useState(0);
   const [totalDonated, setTotalDonated] = useState("0");
@@ -121,6 +123,7 @@ const AllProjects = () => {
 
   return (
     <Container>
+      <Modals />
       <Header>
         <Title>
           All projects

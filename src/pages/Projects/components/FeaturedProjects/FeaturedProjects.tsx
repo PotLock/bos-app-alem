@@ -1,20 +1,15 @@
-import { useEffect, useMemo, useState } from "alem";
+import { State } from "alem";
 import Card from "@app/components/Card/Card";
+import useModals from "@app/hooks/useModals";
 import getProjects from "@app/services/getProjects";
-import { Project } from "@app/types";
 import CardSkeleton from "../CardSkeleton";
 import { ContainerHeader, Header, OnBottom, ProjectList, Title } from "./styles";
 
 const FeaturedProjects = () => {
-  const projectsData = getProjects();
-  const [projects, setProjects] = useState<Project[]>([]);
+  State.init({});
+  const Modals = useModals();
 
-  useEffect(() => {
-    if (projectsData) {
-      const { featuredProjects } = projectsData;
-      setProjects(featuredProjects);
-    }
-  }, [projectsData]);
+  const { featuredProjects: projects } = getProjects();
 
   const LoadingCards = () => (
     <>
@@ -24,24 +19,20 @@ const FeaturedProjects = () => {
     </>
   );
 
-  const projectCards = useMemo(
-    () => (
-      <>
-        {projects.map((project: any) => {
-          return <Card key={project.registrant_id} projectId={project.registrant_id} />;
-        })}
-      </>
-    ),
-    [projects],
-  );
+  const projectCards = projects
+    ? projects.map((project: any) => {
+        return <Card key={project.registrant_id} projectId={project.registrant_id} />;
+      })
+    : [];
 
   return (
     <ContainerHeader>
+      <Modals />
       <Header>
         <Title>Featured projects</Title>
       </Header>
 
-      <ProjectList>{projects.length === 0 || !projectsData ? <LoadingCards /> : <>{projectCards}</>}</ProjectList>
+      <ProjectList>{projects.length === 0 || !projects ? <LoadingCards /> : <>{projectCards}</>}</ProjectList>
       <OnBottom></OnBottom>
     </ContainerHeader>
   );

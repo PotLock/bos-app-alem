@@ -1,5 +1,6 @@
 import { Big, useParams, useCache, useMemo } from "alem";
 import PotSDK from "@app/SDK/pot";
+import useModals from "@app/hooks/useModals";
 import { PotDetail } from "@app/types";
 import Tabs from "../Profile/components/Tabs";
 import Header from "./components/Header/Header";
@@ -44,46 +45,23 @@ const Pot = () => {
     // default to home tab
   }
 
-  // Get total public donations
-  const allDonationsPaginated = useCache(() => {
-    const limit = 480; // number of donations to fetch per req
-
-    const donationsCount = potDetail.public_donations_count;
-    const paginations = [...Array(Math.ceil(donationsCount / limit)).keys()];
-
-    try {
-      const allDonations = paginations.map((index) =>
-        PotSDK.asyncGetPublicRoundDonations(potId, {
-          from_index: index * limit,
-          limit: limit,
-        }),
-      );
-
-      return Promise.all(allDonations);
-    } catch (error) {
-      console.error(`error getting public donations`, error);
-      return Promise.all([]);
-    }
-  }, "pot-public-donations");
-
-  const allDonations = allDonationsPaginated ? allDonationsPaginated.flat() : null;
-
   const options = navOptions(potId || "", potDetail);
 
   const SelectedNavComponent = useMemo(() => {
     return options.find((option: any) => option.id === nav).source;
   }, []);
 
+  const Modals = useModals();
+
   return (
     <Wrapper>
-      <HeaderStatus potDetail={potDetail} />
-      <Header potDetail={potDetail} allDonations={allDonations} />
+      <Modals />
+      <HeaderStatus />
+      <Header />
 
       <Tabs nav={nav} navOptions={options} />
 
-      <BodyContainer>
-        {SelectedNavComponent && <SelectedNavComponent allDonations={allDonations} potDetail={potDetail} />}
-      </BodyContainer>
+      <BodyContainer>{SelectedNavComponent && <SelectedNavComponent potDetail={potDetail} />}</BodyContainer>
     </Wrapper>
   );
 };

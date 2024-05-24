@@ -1,9 +1,9 @@
 import { useEffect, useParams, useState } from "alem";
 import Pagination from "@app/components/Pagination/Pagination";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import nearToUsd from "@app/modules/nearToUsd";
 import _address from "@app/utils/_address";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import nearToUsd from "@app/utils/nearToUsd";
 import { Container, NoResult, TrRow } from "./styles";
 
 type Props = { sponsors: any; sortedDonations: any; filter: string; currentTab: string };

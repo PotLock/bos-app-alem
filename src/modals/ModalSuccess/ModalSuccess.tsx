@@ -48,7 +48,7 @@ const ModalSuccess = () => {
   });
 
   const onClose = () => {
-    _setSuccessfulDonation(null);
+    if (_setSuccessfulDonation) _setSuccessfulDonation(null);
     const location = getLocation();
     delete params.transactionHashes;
 
@@ -135,7 +135,7 @@ const ModalSuccess = () => {
               : "";
 
           if (recipientId) {
-            if (methodName === "donate") {
+            if (methodName === "donate" && (result.project_id || result.recipient_id)) {
               setSuccessfulDonation((prev: any) => ({
                 ...prev,
                 [recipientId]: { ...result, potId: receiver_id },

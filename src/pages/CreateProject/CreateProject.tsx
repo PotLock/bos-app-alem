@@ -5,8 +5,8 @@ import Header from "./components/Header/Header";
 
 const CreateProject = () => {
   const { tab } = useParams();
-  const registeration = ListsSDK.getRegistration(null, context.accountId);
-  const edit = tab === "editproject" || registeration;
+  // const registeration = ListsSDK.getRegistration(null, context.accountId);
+  const edit = tab === "editproject";
 
   return (
     <>

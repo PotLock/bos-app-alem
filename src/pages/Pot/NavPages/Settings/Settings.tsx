@@ -1,6 +1,7 @@
-import { OverlayTrigger, Tooltip, context, useParams, useState } from "alem";
+import { OverlayTrigger, Tooltip, context, useEffect, useParams, useState } from "alem";
 import PotSDK from "@app/SDK/pot";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
+import { getConfig } from "@app/services/getPotData";
 import { PotDetail } from "@app/types";
 import _address from "@app/utils/_address";
 import hrefWithParams from "@app/utils/hrefWithParams";
@@ -8,14 +9,25 @@ import ConfigForm from "../ConfigForm/ConfigForm";
 import getFields from "./getFields";
 import { Admins, AdminsWrapper, Container, Detail, PrviewContainer, Title } from "./styles";
 
-const Settings = ({ potDetail }: { potDetail: PotDetail }) => {
-  const { owner, admins } = potDetail;
-
+const Settings = () => {
   const { potId } = useParams();
   const [editSettings, setEditSettings] = useState(false);
+  const [potDetail, setPotDetail] = useState<null | PotDetail>(null);
   const userIsAdminOrGreater = PotSDK.isUserPotAdminOrGreater(potId, context.accountId);
 
+  useEffect(() => {
+    if (!potDetail)
+      getConfig({
+        potId,
+        updateState: setPotDetail,
+      });
+  }, []);
+
+  if (potDetail === null) return <div className="spinner-border text-secondary" role="status" />;
+
   const fields = getFields(potId, potDetail);
+
+  const { owner, admins } = potDetail;
 
   const AdminsTooltip = () => (
     <AdminsWrapper>
