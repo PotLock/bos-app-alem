@@ -270,7 +270,6 @@ const ModalDonation = () => {
           {...donationModalProps}
           {...state}
           accountId={accountId}
-          potId={potId}
           referrerId={referrerId}
           updateState={State.update}
           ftBalance={ftBalance}

@@ -1,9 +1,7 @@
-import { context, useParams, State, state } from "alem";
-import PotSDK from "@app/SDK/pot";
+import { useParams, State, state, useEffect } from "alem";
 import ArrowDown from "@app/assets/svgs/ArrowDown";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
-import { PotDetail } from "@app/types";
-import calculatePayouts from "@app/utils/calculatePayouts";
+import { getConfig, getDonations, getFlaggedAccounts, getPayout } from "@app/services/getPotData";
 import yoctosToNear from "@app/utils/yoctosToNear";
 import FlaggedAccounts from "../../components/FlaggedAccounts/FlaggedAccounts";
 import PayoutsChallenges from "../../components/PayoutsChallenges/PayoutsChallenges";
@@ -25,67 +23,59 @@ import {
   WarningText,
 } from "./styles";
 
-const Payouts = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonations: any }) => {
+const Payouts = () => {
   const { potId } = useParams();
 
   State.init({
-    allPayouts: null,
+    potDetail: null,
+    allDonations: null,
+    allPayouts: null, // array
+    allPayoutsDetails: null, // obj
     filteredPayouts: null,
     flaggedAddresses: null,
   });
 
-  const { allPayouts, filteredPayouts, flaggedAddresses } = state;
+  const { allPayouts, filteredPayouts, flaggedAddresses, potDetail, allDonations } = state;
 
-  if (!flaggedAddresses) {
-    PotSDK.getFlaggedAccounts(potDetail, potId)
-      .then((data) => {
-        const listOfFlagged: any = [];
-        data.forEach((adminFlaggedAcc: any) => {
-          const addresses = Object.keys(adminFlaggedAcc.potFlaggedAcc);
-          listOfFlagged.push(...addresses);
-        });
-        State.update({ flaggedAddresses: listOfFlagged });
-      })
-      .catch((err) => console.log("error getting the flagged accounts ", err));
-  }
+  useEffect(() => {
+    if (!potDetail)
+      getConfig({
+        potId,
+        updateState: (potDetail) => State.update({ potDetail }),
+      });
+    if (!allDonations && potDetail)
+      getDonations({
+        potDetail,
+        potId,
+        updateState: (allDonations) => State.update({ allDonations }),
+      });
+    if (!flaggedAddresses && potDetail)
+      getFlaggedAccounts({
+        potDetail,
+        potId,
+        updateState: (flaggedAddresses) => State.update({ flaggedAddresses }),
+        type: "list",
+      });
+  }, [potDetail]);
 
-  if (!allPayouts && allDonations && potDetail && flaggedAddresses) {
-    calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses).then((calculatedPayouts: any) => {
-      if (potDetail.payouts.length) {
-        // handle these payouts, which don't contain all the info needed
-        // pot payouts contain id, project_id, amount & paid_at
-        // loop through potDetail payouts and synthesize the two sets of payouts, so projectId and matchingAmount are taken from potDetail payouts, and donorCount and totalAmount are taken from calculatedPayouts
-        const synthesizedPayouts = potDetail.payouts.map((payout) => {
-          const { project_id, amount } = payout;
-          const { totalAmount, donorCount } = calculatedPayouts[project_id];
-          return {
-            projectId: project_id,
-            totalAmount,
-            matchingAmount: amount,
-            donorCount,
-          };
-        });
-        State.update({ allPayouts: synthesizedPayouts, filteredPayouts: synthesizedPayouts });
-      } else {
-        // calculate estimated payouts
-        const allPayouts = Object.entries(calculatedPayouts).map(
-          ([projectId, { totalAmount, matchingAmount, donorCount }]: any) => {
-            return {
-              projectId,
-              totalAmount,
-              matchingAmount,
-              donorCount,
-            };
-          },
-        ); // TODO: refactor to use PotsSDK (note that this is duplicated in Pots/Projects.jsx)
-        allPayouts.sort((a, b) => {
-          // sort by matching pool allocation, highest to lowest
-          return b.matchingAmount - a.matchingAmount;
-        });
-        State.update({ allPayouts, filteredPayouts: allPayouts });
-      }
+  useEffect(() => {
+    console.log({
+      potDetail,
+      flaggedAddresses,
+      allDonations,
     });
-  }
+
+    if (potDetail && flaggedAddresses && allDonations && !allPayouts) {
+      getPayout({
+        allDonations,
+        flaggedAddresses,
+        potDetail,
+        potId,
+        withTotalAmount: true,
+        updateState: (payouts) => State.update({ allPayouts: payouts, filteredPayouts: payouts }),
+      });
+    }
+  }, [potDetail, allDonations, flaggedAddresses]);
 
   const searchPayouts = (searchTerm: string) => {
     // filter payouts that match the search term (donor_id, project_id)
@@ -96,7 +86,7 @@ const Payouts = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonatio
     });
     filteredPayouts.sort((a: any, b: any) => {
       // sort by matching pool allocation, highest to lowest
-      return b.matchingAmount - a.matchingAmount;
+      return b.amount - a.amount;
     });
     return filteredPayouts;
   };
@@ -105,7 +95,7 @@ const Payouts = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonatio
 
   return (
     <Container>
-      <FlaggedAccounts potDetail={potDetail} />
+      <FlaggedAccounts />
       <PayoutsChallenges />
 
       {!potDetail.all_paid_out && (
@@ -162,7 +152,7 @@ const Payouts = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonatio
           <Row style={{ padding: "12px" }}>No payouts to display</Row>
         ) : (
           filteredPayouts.map((payout: any, index: number) => {
-            const { projectId, donorCount, matchingAmount, totalAmount } = payout;
+            const { project_id, donorCount, amount, totalAmount } = payout;
 
             return (
               <Row key={index}>
@@ -173,12 +163,12 @@ const Payouts = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonatio
                       width: "24px",
                     }}
                     className="profile-image"
-                    accountId={projectId}
+                    accountId={project_id}
                   />
-                  <a href={`?tab=project&projectId=${projectId}`} target={"_blank"}>
-                    {projectId.length > MAX_ACCOUNT_ID_DISPLAY_LENGTH
-                      ? projectId.slice(0, MAX_ACCOUNT_ID_DISPLAY_LENGTH) + "..."
-                      : projectId}
+                  <a href={`?tab=project&projectId=${project_id}`} target={"_blank"}>
+                    {project_id.length > MAX_ACCOUNT_ID_DISPLAY_LENGTH
+                      ? project_id.slice(0, MAX_ACCOUNT_ID_DISPLAY_LENGTH) + "..."
+                      : project_id}
                   </a>
                 </RowItem>
                 {/* Total Raised */}
@@ -197,7 +187,7 @@ const Payouts = ({ potDetail, allDonations }: { potDetail: PotDetail; allDonatio
                 {/* Matching Pool Allocation */}
                 <RowItem>
                   <RowText>
-                    {yoctosToNear(matchingAmount, true)} <span>Allocated</span>
+                    {yoctosToNear(amount, true)} <span>Allocated</span>
                   </RowText>
                 </RowItem>
                 <ArrowDown />

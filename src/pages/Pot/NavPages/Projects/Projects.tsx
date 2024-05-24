@@ -1,40 +1,21 @@
 import { useState, Social, context, useParams, createDebounce, useEffect } from "alem";
-import PotSDK from "@app/SDK/pot";
 import Card from "@app/components/Card/Card";
 import ListSection from "@app/pages/Projects/components/ListSection";
-import calculatePayouts from "@app/utils/calculatePayouts";
+import { getConfig, getDonations, getFlaggedAccounts, getPayout, getPotProjects } from "@app/services/getPotData";
+import { FlaggedAddress, Payout, PotApplication, PotDetail, PotDonation } from "@app/types";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
 import { Centralized, Container, SearchBar, Title } from "./styles";
 
-type Props = {
-  potDetail: any;
-  allDonations: any;
-};
-
-const Projects = (props: Props) => {
-  const [filteredProjects, setFilteredProjects] = useState([]);
-  const [projects, setProjects] = useState<any>(null);
-  const [flaggedAddresses, setFlaggedAddresses] = useState<null | []>(null);
-  const [payouts, setPayouts] = useState<any>(null);
-
-  // get projects
+const Projects = () => {
   const { potId } = useParams();
 
-  const { potDetail, allDonations } = props;
-
-  if (!projects) {
-    PotSDK.asyncGetApprovedApplications(potId)
-      .then((projects: any) => {
-        setProjects(projects);
-        setFilteredProjects(projects);
-      })
-      .catch((err: any) => {
-        console.log("error fetching projects ", err);
-        setProjects([]);
-        setFilteredProjects([]);
-      });
-  }
+  const [projects, setProjects] = useState<PotApplication[] | null>(null);
+  const [filteredProjects, setFilteredProjects] = useState<PotApplication[]>([]);
+  const [donations, setDonations] = useState<PotDonation[] | null>(null);
+  const [flaggedAddresses, setFlaggedAddresses] = useState<FlaggedAddress[] | null>(null);
+  const [payouts, setPayouts] = useState<Payout[] | null>(null);
+  const [potDetail, setPotDetail] = useState<PotDetail | null>(null);
 
   const Loading = () => (
     <Centralized>
@@ -42,44 +23,61 @@ const Projects = (props: Props) => {
     </Centralized>
   );
 
-  if (!projects) return <Loading />;
+  // get projects
+  useEffect(() => {
+    if (!projects)
+      getPotProjects({
+        potId,
+        updateState: (projects: PotApplication[]) => {
+          setFilteredProjects(projects);
+          setProjects(projects);
+        },
+        isApprpved: true,
+      });
+    if (!potDetail)
+      getConfig({
+        potId,
+        updateState: setPotDetail,
+      });
+  }, []);
 
-  const { public_round_start_ms, public_round_end_ms, referral_fee_public_round_basis_points } = potDetail;
+  useEffect(() => {
+    if (potDetail) {
+      if (!flaggedAddresses)
+        getFlaggedAccounts({
+          potId,
+          potDetail,
+          type: "list",
+          updateState: setFlaggedAddresses,
+        });
+      if (!donations)
+        getDonations({
+          potId,
+          potDetail,
+          updateState: setDonations,
+        });
+    }
+  }, [potDetail]);
+
+  useEffect(() => {
+    if (potDetail && flaggedAddresses && donations && !payouts) {
+      getPayout({
+        allDonations: donations,
+        flaggedAddresses,
+        potDetail,
+        potId,
+        withTotalAmount: true,
+        updateState: setPayouts,
+      });
+    }
+  }, [potDetail, flaggedAddresses, donations]);
+
+  if (potDetail === null || projects === null) return <Loading />;
+
+  const { public_round_start_ms, public_round_end_ms } = potDetail;
 
   const now = Date.now();
   const publicRoundOpen = now >= public_round_start_ms && now < public_round_end_ms;
-
-  if (!flaggedAddresses) {
-    PotSDK.getFlaggedAccounts(potDetail, potId)
-      .then((data) => {
-        const listOfFlagged: any = [];
-        data.forEach((adminFlaggedAcc: any) => {
-          const addresses = Object.keys(adminFlaggedAcc.potFlaggedAcc);
-          listOfFlagged.push(...addresses);
-        });
-        setFlaggedAddresses(listOfFlagged);
-      })
-      .catch((err) => console.log("error getting the flagged accounts ", err));
-  }
-
-  useEffect(() => {
-    if (!payouts) {
-      if (allDonations.length && flaggedAddresses)
-        calculatePayouts(allDonations, potDetail.matching_pool_balance, flaggedAddresses)
-          .then((payouts: any) => {
-            setPayouts(payouts ?? []);
-          })
-          .catch((err) => {
-            console.log("error while calculating payouts ", err);
-            setPayouts([]);
-          });
-      else if (allDonations.length === 0 && flaggedAddresses?.length === 0) {
-        setPayouts([]);
-      }
-    }
-  }, [allDonations, flaggedAddresses]);
-
-  if (!flaggedAddresses || !payouts) return <Loading />;
 
   const searchByWords = (searchTerm: string) => {
     if (projects.length) {
@@ -146,10 +144,9 @@ const Projects = (props: Props) => {
                   projects,
                   projectId: project.project_id,
                   allowDonate: publicRoundOpen && project.project_id !== context.accountId,
-                  potRferralFeeBasisPoints: referral_fee_public_round_basis_points,
-                  payoutDetails: payouts[project.project_id] || {
+                  payoutDetails: (payouts || []).find((payout: Payout) => payout.project_id === project.project_id) || {
                     donorCount: 0,
-                    matchingAmount: "0",
+                    amount: "0",
                     totalAmount: "0",
                   },
                 }}

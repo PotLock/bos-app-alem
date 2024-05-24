@@ -1,11 +1,10 @@
 import { Social, useState } from "alem";
 import Image from "@app/components/mob.near/Image";
-import ProfileImage from "@app/components/mob.near/ProfileImage";
 import constants from "@app/constants";
+import nearToUsd from "@app/modules/nearToUsd";
 import _address from "@app/utils/_address";
 import formatWithCommas from "@app/utils/formatWithCommas";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import nearToUsd from "@app/utils/nearToUsd";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import { Container, Row } from "./styles";
 

@@ -1,7 +1,12 @@
 import { Big, Near } from "alem";
 import constants from "@app/constants";
+import { CalculatedPayout } from "@app/types";
 
-const calculatePayouts = (allPotDonations: any, totalMatchingPool: any, blacklistedAccounts: any) => {
+const calculatePayouts = (
+  allPotDonations: any,
+  totalMatchingPool: any,
+  blacklistedAccounts: any,
+): Promise<Record<string, CalculatedPayout>> => {
   const { NADABOT_CONTRACT_ID } = constants;
 
   // * QF/CLR logic taken from https://github.com/gitcoinco/quadratic-funding/blob/master/quadratic-funding/clr.py *

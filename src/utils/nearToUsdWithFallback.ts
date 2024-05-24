@@ -1,5 +1,5 @@
+import nearToUsd from "../modules/nearToUsd";
 import formatWithCommas from "./formatWithCommas";
-import nearToUsd from "./nearToUsd";
 
 const nearToUsdWithFallback = (amountNear: number, abbreviate?: boolean) => {
   return nearToUsd

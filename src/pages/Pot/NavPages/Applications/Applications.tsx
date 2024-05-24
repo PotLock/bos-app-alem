@@ -1,10 +1,9 @@
 import { Social, State, context, state, useParams, Tooltip, OverlayTrigger, useEffect } from "alem";
-import PotSDK from "@app/SDK/pot";
 import Button from "@app/components/Button";
 import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
 import ToastContainer from "@app/components/ToastNotification/getToastContainer";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
-import { PotDetail } from "@app/types";
+import { getConfig, getPotProjects } from "@app/services/getPotData";
 import _address from "@app/utils/_address";
 import daysAgo from "@app/utils/daysAgo";
 import getTransactionsFromHashes from "@app/utils/getTransactionsFromHashes";
@@ -22,12 +21,13 @@ import {
   Status,
 } from "./styles";
 
-const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
+const Applications = () => {
   const accountId = context.accountId;
   const { potId, transactionHashes } = useParams();
 
   State.init({
     newStatus: "",
+    potDetail: null,
     projectId: "",
     searchTerm: "",
     allApplications: null,
@@ -39,27 +39,48 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
     },
   });
 
-  const { newStatus, projectId, searchTerm, allApplications, filteredApplications, filterVal, toastContent } = state;
-
-  const applications = PotSDK.getApplications(potId);
+  const {
+    newStatus,
+    projectId,
+    searchTerm,
+    allApplications,
+    filteredApplications,
+    filterVal,
+    toastContent,
+    potDetail,
+  } = state;
 
   const getApplicationCount = (sortVal: string) => {
-    if (!applications) return;
-    return applications?.filter((application: any) => {
+    if (!allApplications) return;
+    return allApplications?.filter((application: any) => {
       if (sortVal === "All") return true;
       return application.status === sortVal;
     })?.length;
   };
 
-  if (applications && !allApplications) {
-    applications.reverse();
-    State.update({
-      filteredApplications: applications,
-      allApplications: applications,
-    });
-  }
+  useEffect(() => {
+    if (!potDetail)
+      getConfig({
+        potId,
+        updateState: (potDetail) =>
+          State.update({
+            potDetail,
+          }),
+      });
+    if (!allApplications)
+      getPotProjects({
+        potId,
+        isApprpved: false,
+        updateState: (applications) =>
+          State.update({
+            allApplications: applications,
+            filteredApplications: applications,
+          }),
+      });
+  }, []);
 
-  if (!allApplications) return <div className="spinner-border text-secondary" role="status" />;
+  if (allApplications === null || potDetail === null)
+    return <div className="spinner-border text-secondary" role="status" />;
 
   const { owner, admins, chef } = potDetail;
 

@@ -48,14 +48,16 @@ const Tabs = ({ navOptions, nav }: Props) => {
     }
   `;
 
+  const Link = styled("Link")``;
+
   return (
     <NavOptionsContainer>
       {navOptions.map((option: any) => {
         const selected = option.id == getSelectedNavOption().id;
         return option.label ? (
-          <a className={`nav-option ${selected && "selected"} ${option.disabled && "disabled"}`} href={option.href}>
+          <Link className={`nav-option ${selected && "selected"} ${option.disabled && "disabled"}`} to={option.href}>
             {option.label}
-          </a>
+          </Link>
         ) : (
           ""
         );

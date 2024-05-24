@@ -94,9 +94,7 @@ const CreateForm = (props: { edit: boolean }) => {
     }
   }, [policy]);
 
-  const registeredProject = useMemo(() => {
-    return ListsSDK.getRegistration(null, state.isDao ? state.daoAddress : context.accountId);
-  }, [state.isDao, state.daoAddress]);
+  const registeredProject = ListsSDK.getRegistration(null, state.isDao ? state.daoAddress : context.accountId);
 
   const proposals: any = checkDao
     ? Near.view(state.daoAddress, "get_proposals", {

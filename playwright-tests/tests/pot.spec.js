@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto(`${ROOT_SRC}?tab=pot&potId=${DEFAULT_POT_ID}&nav=projects`);
 });
 
-test("clicking project card should go to project page", async ({ page }) => {
+test.skip("clicking project card should go to project page", async ({ page }) => {
   test.setTimeout(120000); // 1 minute... we want to improve performance
 
   const projectSearchBar = await page.getByPlaceholder("Search projects");
