@@ -1,5 +1,4 @@
 import { Social, createDebounce, useEffect, useState } from "alem";
-import DonateSDK from "@app/SDK/donate";
 import Card from "@app/components/Card/Card";
 import FilterDropdown from "@app/components/Inputs/FilterDropdown/FilterDropdown";
 import useModals from "@app/hooks/useModals";
@@ -7,7 +6,6 @@ import getProjects from "@app/services/getProjects";
 import { Project } from "@app/types";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
 import getTeamMembersFromSocialProfileData from "@app/utils/getTeamMembersFromSocialProfileData";
-import yoctosToUsd from "@app/utils/yoctosToUsd";
 import ListSection from "../ListSection";
 import SearchBar from "../SearchBar/SearchBar";
 import { ProjectsContainer, FilterWrapper, Title, Container, Header } from "./styles";
@@ -17,8 +15,6 @@ const AllProjects = () => {
   const projectsData = getProjects();
   const Modals = useModals();
 
-  const [totalDonation, setTotalDonation] = useState(0);
-  const [totalDonated, setTotalDonated] = useState("0");
   const [projects, setProjects] = useState<any>([]);
   const [filteredProjects, setFilteredProjects] = useState<any>([]);
   const [sort, setSort] = useState("Sort");
@@ -34,13 +30,6 @@ const AllProjects = () => {
 
   if (!projects) {
     return "";
-  }
-
-  const donateConfig: any = DonateSDK.getConfig();
-  if (donateConfig && !totalDonated && !totalDonation) {
-    const lastDonationAmount = yoctosToUsd(donateConfig.net_donations_amount);
-    setTotalDonated(lastDonationAmount);
-    setTotalDonation(donateConfig.total_donations_count);
   }
 
   const handleSortChange = (sortType: string) => {
