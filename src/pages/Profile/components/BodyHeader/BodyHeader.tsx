@@ -79,12 +79,11 @@ const BodyHeader = ({ profile, accountId, projectId }: Props) => {
                 style={{ marginLeft: "auto" }}
                 href={hrefWithParams(`?tab=editproject&projectId=${projectId}`)}
               >
-                edit profile
+                Edit profile
               </Button>
             )}
             {accountId === context.accountId && !projectId && (
               <Button varient="tonal" style={{ marginLeft: "auto" }} href={hrefWithParams(`?tab=editprofile`)}>
-                {" "}
                 Edit profile
               </Button>
             )}

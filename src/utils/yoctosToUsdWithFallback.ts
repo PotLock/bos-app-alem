@@ -1,6 +1,6 @@
 import { Big } from "alem";
+import nearToUsd from "../modules/nearToUsd";
 import formatWithCommas from "./formatWithCommas";
-import nearToUsd from "./nearToUsd";
 
 const yoctosToUsdWithFallback = (amountYoctos: string, abbreviate?: boolean) => {
   return nearToUsd

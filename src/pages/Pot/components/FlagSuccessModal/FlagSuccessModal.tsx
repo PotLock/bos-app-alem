@@ -1,4 +1,3 @@
-import React from "react";
 import ModalOverlay from "@app/modals/ModalOverlay";
 import { Container } from "./styles";
 
@@ -15,7 +14,7 @@ const FlagSuccessModal = (props: any) => {
           />
         </svg>
         <div className="title">
-          <span> {successFlag.address} </span> has been flagged
+          <span> {successFlag.account} </span> has been flagged
         </div>
         <div className="reason">{successFlag.reason}</div>
       </Container>

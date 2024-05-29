@@ -1,6 +1,6 @@
 import NearIcon from "@app/assets/svgs/near-icon";
 import Select from "@app/components/Inputs/Select/Select";
-import nearToUsd from "@app/utils/nearToUsd";
+import nearToUsd from "@app/modules/nearToUsd";
 import { Container, DropdownWrapper, PotDenomination } from "./styles";
 
 const AmountInput = (props: any) => {
@@ -17,10 +17,15 @@ const AmountInput = (props: any) => {
           },
           onChange: ({ value }: any) => {
             const tokenBalance = parseFloat(getTokenBalance(value));
+
             updateState({
               selectedDenomination: denominationOptions.find((option: any) => option.value === value),
               amountError:
-                tokenBalance > parseFloat(amount) ? "" : "You don’t have enough balance to complete this transaction.",
+                tokenBalance !== null
+                  ? tokenBalance > parseFloat(amount)
+                    ? ""
+                    : "You don’t have enough balance to complete this transaction."
+                  : "",
             });
           },
           containerStyles: {
@@ -44,7 +49,7 @@ const AmountInput = (props: any) => {
     </DropdownWrapper>
   );
   const { value, amount, HandleAmoutChange, donationType, denominationOptions, selectedDenomination } = props;
-  const _value = value || amount || 0;
+  const _value = value || amount || "";
 
   return (
     <Container>

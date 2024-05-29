@@ -49,6 +49,19 @@ export const SearchBar = styled.div`
   }
 `;
 
+export const ProjectsWrapper = styled.div`
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  @media only screen and (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media only screen and (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+`;
+
 export const Centralized = styled.div`
   display: flex;
   justify-content: center;

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Card = styled.a`
+export const Card = styled("Link")`
   display: flex;
   flex-direction: column;
   min-width: 320px;

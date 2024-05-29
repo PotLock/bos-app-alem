@@ -111,30 +111,6 @@ export const DonationsInfoItem = styled.div`
   align-items: center;
 `;
 
-export const DonationButton = styled.button`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 24px;
-  background: #fef6ee;
-  overflow: hidden;
-  box-shadow: 0px -2.700000047683716px 0px #4a4a4a inset;
-  border-radius: 6px;
-  border: 1px solid #4a4a4a;
-  gap: 8px;
-  display: inline-flex;
-  text-align: center;
-  color: #2e2e2e;
-  font-size: 14px;
-  line-height: 16px;
-  font-weight: 600;
-
-  &:hover {
-    text-decoration: none;
-    cursor: pointer;
-  }
-`;
-
 export const Amount = styled.div`
   font-size: 17px;
   font-weight: 600;

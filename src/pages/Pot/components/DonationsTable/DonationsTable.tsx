@@ -6,17 +6,23 @@ import ProfileImage from "@app/components/mob.near/ProfileImage";
 import _address from "@app/utils/_address";
 import calcNetDonationAmount from "@app/utils/calcNetDonationAmount";
 import getTimePassed from "@app/utils/getTimePassed";
+import getTransactionsFromHashes from "@app/utils/getTransactionsFromHashes";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import FlagModal from "../FlagModal/FlagModal";
 import FlagSuccessModal from "../FlagSuccessModal/FlagSuccessModal";
 import FlagBtn from "./FlagBtn";
 import { Container, FlagTooltipWrapper, SearchBar, SearchBarContainer, SearchIcon, TrRow } from "./styles";
 
+type FlagSuccess = {
+  account: string;
+  reason: string;
+};
+
 const DonationsTable = (props: any) => {
   const accountId = context.accountId;
 
   const { filteredDonations, filter, handleSearch, sortDonation, currentFilter, potDetail } = props;
-  const { potId } = useParams();
+  const { potId, transactionHashes } = useParams();
 
   const { admins, owner, chef, all_paid_out } = potDetail;
 
@@ -24,7 +30,7 @@ const DonationsTable = (props: any) => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [flagAddress, setFlagAddress] = useState(null);
-  const [successFlag, setSuccessFlag] = useState<any>(null);
+  const [successFlag, setSuccessFlag] = useState<FlagSuccess | null>(null);
   const [updateFlaggedAddresses, setUpdateFlaggedAddresses] = useState(false);
   const [flaggedAddresses, setFlaggedAddresses] = useState([]);
   const perPage = 30;
@@ -41,6 +47,37 @@ const DonationsTable = (props: any) => {
 
   const potAdmins = [owner, chef, ...admins];
   const hasAuthority = potAdmins.includes(accountId) && !all_paid_out;
+
+  // Handle flag success for extention wallet
+  useEffect(() => {
+    if (accountId && transactionHashes) {
+      getTransactionsFromHashes(transactionHashes, accountId).then((trxs) => {
+        const transaction = trxs[0].body.result.transaction;
+
+        const methodName = transaction.actions[0].FunctionCall.method_name;
+        const signer_id = transaction.signer_id;
+        const receiver_id = transaction.receiver_id;
+
+        const { data } = JSON.parse(Buffer.from(transaction.actions[0].FunctionCall.args, "base64").toString("utf-8"));
+
+        if (methodName === "set" && receiver_id === "social.near" && data) {
+          try {
+            const pLBlacklistedAccounts = JSON.parse(data[signer_id].profile.pLBlacklistedAccounts);
+            const pLBlacklistedAccountsForPot = pLBlacklistedAccounts[potId];
+            const allPotFlaggedAccounts = Object.keys(pLBlacklistedAccountsForPot);
+            const account = allPotFlaggedAccounts[allPotFlaggedAccounts.length - 1];
+            const reason = pLBlacklistedAccountsForPot[account];
+            setSuccessFlag({
+              account,
+              reason,
+            });
+          } catch (err) {
+            console.log("error parsing flag transaction ", err);
+          }
+        }
+      });
+    }
+  }, []);
 
   const checkIfIsFlagged = (address: string) => flaggedAddresses.find((obj: any) => obj.potFlaggedAcc[address]);
 
@@ -106,17 +143,7 @@ const DonationsTable = (props: any) => {
     <Container>
       <div className="transcation">
         <div className="header">
-          <div
-            className="address"
-            onClick={() => {
-              setSuccessFlag({
-                address: "re.near",
-                reason: "test tEST Tetset",
-              });
-            }}
-          >
-            Donor
-          </div>
+          <div className="address">Donor</div>
           <div className="address">Project</div>
           <div className="sort price" onClick={() => sortDonation("price")}>
             Amount
@@ -202,7 +229,7 @@ const DonationsTable = (props: any) => {
           perPage: perPage,
         }}
       />
-      {flagAddress != null && (
+      {flagAddress && (
         <FlagModal
           {...{
             flagAddress: flagAddress,
@@ -211,7 +238,7 @@ const DonationsTable = (props: any) => {
           }}
         />
       )}
-      {successFlag != null && (
+      {accountId && successFlag && (
         <FlagSuccessModal
           {...{
             successFlag: successFlag,

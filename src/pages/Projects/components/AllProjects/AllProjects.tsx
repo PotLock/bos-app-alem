@@ -2,6 +2,7 @@ import { Social, createDebounce, useEffect, useState } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import Card from "@app/components/Card/Card";
 import FilterDropdown from "@app/components/Inputs/FilterDropdown/FilterDropdown";
+import useModals from "@app/hooks/useModals";
 import getProjects from "@app/services/getProjects";
 import { Project } from "@app/types";
 import getTagsFromSocialProfileData from "@app/utils/getTagsFromSocialProfileData";
@@ -14,6 +15,7 @@ import tagsList from "./tagsList";
 
 const AllProjects = () => {
   const projectsData = getProjects();
+  const Modals = useModals();
 
   const [totalDonation, setTotalDonation] = useState(0);
   const [totalDonated, setTotalDonated] = useState("0");
@@ -24,8 +26,9 @@ const AllProjects = () => {
   useEffect(() => {
     if (projects.length === 0 && projectsData) {
       const { allProjects, approvedProjects } = projectsData;
+      const shuffledProjects = [...approvedProjects].sort(() => Math.random() - 0.5);
       setProjects(allProjects);
-      setFilteredProjects(approvedProjects);
+      setFilteredProjects(shuffledProjects);
     }
   }, [projectsData]);
 
@@ -120,6 +123,7 @@ const AllProjects = () => {
 
   return (
     <Container>
+      <Modals />
       <Header>
         <Title>
           All projects
@@ -156,9 +160,9 @@ const AllProjects = () => {
       <ProjectsContainer>
         {filteredProjects.length ? (
           <ListSection
-            shouldShuffle
+            // shouldShuffle
             items={filteredProjects}
-            renderItem={(project: Project) => <Card projectId={project.registrant_id} />}
+            renderItem={(project: Project) => <Card key={project.registrant_id} projectId={project.registrant_id} />}
           />
         ) : (
           <div style={{ alignSelf: "flex-start", margin: "24px 0px" }}>No results</div>

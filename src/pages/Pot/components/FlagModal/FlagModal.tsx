@@ -1,4 +1,4 @@
-import { Big, Near, context, useState } from "alem";
+import { Big, Near, context, useState, useParams } from "alem";
 import BannerBg from "@app/assets/svgs/banner-bg";
 import Button from "@app/components/Button";
 import TextArea from "@app/components/Inputs/TextArea/TextArea";
@@ -10,10 +10,12 @@ const FlagModal = (props: any) => {
   const SOCIAL_CONTRACT_ID = "social.near";
   const accountId = context.accountId || "";
 
+  const { potId } = useParams();
+
   const [reason, setReason] = useState("");
   const [reasonErr, setReasonErr] = useState("");
 
-  const { onClose, flagAddress, potId, setSuccessFlag } = props;
+  const { onClose, flagAddress, setSuccessFlag } = props;
 
   const onCancel = () => {
     onClose();
@@ -93,7 +95,7 @@ const FlagModal = (props: any) => {
   };
 
   return (
-    <ModalOverlay onOverlayClick={onCancel}>
+    <ModalOverlay contentStyle={{ padding: "0px" }} onOverlayClick={onCancel}>
       <Container>
         <div>
           <Banner>
@@ -156,9 +158,9 @@ const FlagModal = (props: any) => {
             <div>Flagging this account will remove their donations when calculating payouts for this pot</div>
           </InfoCard>
           <ButtonsWrapper>
-            <button className="cancel" onClick={onCancel}>
+            <Button varient="plain" onClick={onCancel}>
               Cancel
-            </button>
+            </Button>
             <Button isDisabled={!reason || !!reasonErr} onClick={handleFlag}>
               Confirm
             </Button>

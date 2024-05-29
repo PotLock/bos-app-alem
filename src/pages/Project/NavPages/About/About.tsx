@@ -30,7 +30,9 @@ const About = ({ projectId, accountId }: Props) => {
       }, [])
     : [];
 
-  const githubRepos = profile.plGithubRepos ? JSON.parse(profile.plGithubRepos) : [];
+  const githubRepos = (profile.plGithubRepos ? JSON.parse(profile.plGithubRepos) : []).map((url: string) =>
+    url.replace("github.com/github.com/", "github.com/"),
+  );
 
   function convertToGitHubURL(path: string) {
     const prefix = "https://github.com/";
@@ -39,7 +41,7 @@ const About = ({ projectId, accountId }: Props) => {
       return `https://${path}`;
     }
     // If the path does not contain "github.com/", assume it's a repository path and prepend the prefix
-    return `${prefix}${path}`;
+    return path;
   }
 
   const Github = () =>

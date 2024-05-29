@@ -2,9 +2,9 @@ import { Near, Social, context } from "alem";
 import Button from "@app/components/Button";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import constants from "@app/constants";
+import nearToUsd from "@app/modules/nearToUsd";
 import _address from "@app/utils/_address";
 import hrefWithParams from "@app/utils/hrefWithParams";
-import nearToUsd from "@app/utils/nearToUsd";
 import AmountInput from "../AmountInput/AmountInput";
 import Alert from "../Banners/Alert";
 import VerifyInfo from "../Banners/VerifyInfo";
@@ -53,7 +53,7 @@ const FormPot = ({
     if (amount === ".") amount = "0.";
     updateState({ amount, amountError: "" });
     // error if amount is greater than balance
-    if (amount > ftBalance) {
+    if (amount > ftBalance && ftBalance) {
       updateState({ amountError: "You don’t have enough balance to complete this transaction." });
     } else if (parseFloat(amount) < 0.1) {
       updateState({ amountError: "Minimum donation is 0.1 NEAR" });
@@ -86,6 +86,8 @@ const FormPot = ({
 
     let totalAmount = 0;
     Object.values(updatedProjects).forEach((amount: any) => (totalAmount += parseFloat(amount)));
+
+    console.log("ftBalance", ftBalance);
 
     if (totalAmount > ftBalance && ftBalance !== null) {
       updateState({ amountError: "You don’t have enough balance to complete this transaction." });

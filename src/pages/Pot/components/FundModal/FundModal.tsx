@@ -1,4 +1,5 @@
 import { State, state, useParams, Big, Social, Near, context } from "alem";
+import PotSDK from "@app/SDK/pot";
 import Button from "@app/components/Button";
 import CheckBox from "@app/components/Inputs/Checkbox/Checkbox";
 import Text from "@app/components/Inputs/Text/Text";
@@ -6,20 +7,24 @@ import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
 import constants from "@app/constants";
 import ModalOverlay from "@app/modals/ModalOverlay";
-import { PotDetail } from "@app/types";
+import { PotDetail, PotDonation } from "@app/types";
 import _address from "@app/utils/_address";
 import doesUserHaveDaoFunctionCallProposalPermissions from "@app/utils/doesUserHaveDaoFunctionCallProposalPermissions";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import yoctosToNear from "@app/utils/yoctosToNear";
+import { ExtendedFundDonation } from "../SuccessFundModal/SuccessFundModal";
 import { FeeText, Label, ModalTitle, Row, TextBold, UserChipLink } from "./styles";
 
 type Props = {
   potDetail: PotDetail;
   onClose: () => void;
+  setFundDonation: (fundDonation: ExtendedFundDonation) => void;
 };
 
-const FundModal = ({ potDetail, onClose }: Props) => {
+const FundModal = ({ potDetail, onClose, setFundDonation }: Props) => {
   const { referrerId, potId } = useParams();
+
+  const accountId = context.accountId;
 
   const { MAX_DONATION_MESSAGE_LENGTH, SUPPORTED_FTS, ONE_TGAS } = constants;
 
@@ -80,6 +85,29 @@ const FundModal = ({ potDetail, onClose }: Props) => {
     ? (matchingPoolDonationAmountNear * referral_fee_matching_pool_basis_points) / 10_000 || 0
     : 0;
 
+  const handleSuccess = (afterTs: number) => {
+    const donateSuccess = setInterval(() => {
+      PotSDK.asyncGetDonationsForDonor(potId, accountId).then((donations: PotDonation[]) => {
+        const fundDonation = donations.find((donation) => donation.donated_at > afterTs && !donation.project_id);
+        if (fundDonation) {
+          setFundDonation({
+            ...fundDonation,
+            potId,
+            potDetail,
+          });
+          clearInterval(donateSuccess);
+          onClose();
+        }
+      });
+    }, 1000);
+
+    // Clear the interval after 60 seconds
+    setTimeout(() => {
+      onClose();
+      clearInterval(donateSuccess);
+    }, 60000);
+  };
+
   const handleMatchingPoolDonation = () => {
     const args: any = {
       message: matchingPoolDonationMessage,
@@ -139,8 +167,7 @@ const FundModal = ({ potDetail, onClose }: Props) => {
     }
 
     Near.call(transactions);
-    // NB: we won't get here if user used a web wallet, as it will redirect to the wallet
-    // <---- EXTENSION WALLET HANDLING ----> // TODO: implement
+    handleSuccess(Date.now());
   };
 
   const disabled =
@@ -179,7 +206,7 @@ const FundModal = ({ potDetail, onClose }: Props) => {
                 if (!policy) {
                   State.update({ daoAddressError: "Invalid DAO address" });
                 }
-                if (!doesUserHaveDaoFunctionCallProposalPermissions(context.accountId || "", policy)) {
+                if (!doesUserHaveDaoFunctionCallProposalPermissions(accountId || "", policy)) {
                   State.update({
                     daoAddressError: "Your account does not have permission to create proposals",
                   });

@@ -60,8 +60,8 @@ const ProfileImage = (profileImgProps: Props) => {
       accountId,
     });
   }
-  const fallbackUrl = props.fallbackUrl;
-
+  const fallbackUrl =
+    props.fallbackUrl ?? "https://ipfs.near.social/ipfs/bafkreiccpup6f2kihv7bhlkfi4omttbjpawnsns667gti7jbhqvdnj4vsm";
   const imageProps = {
     image,
     alt: title,

@@ -1,11 +1,12 @@
-import { Social, State, context, state, useParams, Tooltip, OverlayTrigger } from "alem";
-import PotSDK from "@app/SDK/pot";
+import { Social, State, context, state, useParams, Tooltip, OverlayTrigger, useEffect } from "alem";
 import Button from "@app/components/Button";
 import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
+import ToastContainer from "@app/components/ToastNotification/getToastContainer";
 import ProfileImage from "@app/components/mob.near/ProfileImage";
-import { PotDetail } from "@app/types";
+import { getConfig, getPotProjects } from "@app/services/getPotData";
 import _address from "@app/utils/_address";
 import daysAgo from "@app/utils/daysAgo";
+import getTransactionsFromHashes from "@app/utils/getTransactionsFromHashes";
 import hrefWithParams from "@app/utils/hrefWithParams";
 import ApplicationReviewModal from "../../components/ApplicationReviewModal/ApplicationReviewModal";
 import APPLICATIONS_FILTERS_TAGS from "./APPLICATIONS_FILTERS_TAGS";
@@ -20,44 +21,104 @@ import {
   Status,
 } from "./styles";
 
-const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
-  const { potId } = useParams();
+const Applications = () => {
+  const accountId = context.accountId;
+  const { potId, transactionHashes } = useParams();
 
   State.init({
     newStatus: "",
+    potDetail: null,
     projectId: "",
     searchTerm: "",
     allApplications: null,
     filteredApplications: [],
     filterVal: "ALL",
+    toastContent: {
+      title: "",
+      description: "",
+    },
   });
 
-  const { newStatus, projectId, searchTerm, allApplications, filteredApplications, filterVal } = state;
-
-  const applications = PotSDK.getApplications(potId);
+  const {
+    newStatus,
+    projectId,
+    searchTerm,
+    allApplications,
+    filteredApplications,
+    filterVal,
+    toastContent,
+    potDetail,
+  } = state;
 
   const getApplicationCount = (sortVal: string) => {
-    if (!applications) return;
-    return applications?.filter((application: any) => {
+    if (!allApplications) return;
+    return allApplications?.filter((application: any) => {
       if (sortVal === "All") return true;
       return application.status === sortVal;
     })?.length;
   };
 
-  if (applications && !allApplications) {
-    applications.reverse();
-    State.update({
-      filteredApplications: applications,
-      allApplications: applications,
-    });
-  }
+  useEffect(() => {
+    if (!potDetail)
+      getConfig({
+        potId,
+        updateState: (potDetail) =>
+          State.update({
+            potDetail,
+          }),
+      });
+    if (!allApplications)
+      getPotProjects({
+        potId,
+        isApprpved: false,
+        updateState: (applications) =>
+          State.update({
+            allApplications: applications,
+            filteredApplications: applications,
+          }),
+      });
+  }, []);
 
-  if (!allApplications) return <div className="spinner-border text-secondary" role="status" />;
+  if (allApplications === null || potDetail === null)
+    return <div className="spinner-border text-secondary" role="status" />;
 
   const { owner, admins, chef } = potDetail;
 
-  const isChefOrGreater =
-    context.accountId === chef || admins.includes(context.accountId || "") || context.accountId === owner;
+  const toast = (newStatus: string) => {
+    State.update({
+      toastContent: {
+        title: "Updated Successfully!",
+        description: `Application status has been successfully updated to ${newStatus}.`,
+      },
+    });
+    setTimeout(() => {
+      State.update({
+        toastContent: {
+          title: "",
+          description: "",
+        },
+      });
+    }, 7000);
+  };
+
+  // Handle update application status for web wallet
+  useEffect(() => {
+    if (accountId && transactionHashes) {
+      getTransactionsFromHashes(transactionHashes, accountId).then((trxs) => {
+        const transaction = trxs[0].body.result.transaction;
+
+        const methodName = transaction.actions[0].FunctionCall.method_name;
+        const successVal = trxs[0].body.result.status?.SuccessValue;
+        const result = JSON.parse(Buffer.from(successVal, "base64").toString("utf-8"));
+
+        if (methodName === "chef_set_application_status" && result) {
+          toast(result.status);
+        }
+      });
+    }
+  }, []);
+
+  const isChefOrGreater = accountId === chef || admins.includes(accountId || "") || accountId === owner;
 
   const handleApproveApplication = (projectId: string) => {
     State.update({ newStatus: "Approved", projectId });
@@ -197,7 +258,7 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
                 <input type="checkbox" className="toggle-check" />
                 <div className="header">
                   <div className="header-info">
-                    <ProfileImage profile={profile} style={{}} className="profile-image" />
+                    <ProfileImage profile={profile} accountId={project_id} style={{}} className="profile-image" />
                     {profile?.name && <div className="name">{_address(profile?.name, 10)}</div>}
 
                     <OverlayTrigger placement="top" overlay={<Tooltip>{project_id}</Tooltip>}>
@@ -270,7 +331,10 @@ const Applications = ({ potDetail }: { potDetail: PotDetail }) => {
           <div style={{ padding: "1rem" }}>No applications to display</div>
         )}
       </ApplicationsWrapper>
-      {projectId && <ApplicationReviewModal projectId={projectId} newStatus={newStatus} onClose={handleCloseModal} />}
+      {projectId && (
+        <ApplicationReviewModal toast={toast} projectId={projectId} newStatus={newStatus} onClose={handleCloseModal} />
+      )}
+      <ToastContainer toastContent={toastContent} />
     </Container>
   );
 };

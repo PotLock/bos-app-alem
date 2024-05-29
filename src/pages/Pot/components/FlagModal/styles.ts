@@ -97,11 +97,6 @@ export const ButtonsWrapper = styled.div`
   gap: 1.5rem;
   grid-template-columns: repeat(2, 1fr);
   button {
-    font-weight: 500;
-  }
-  .cancel {
-    border: none;
-    background: none;
-    color: #dd3345;
+    width: 100%;
   }
 `;

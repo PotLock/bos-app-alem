@@ -1,7 +1,7 @@
 import { Big, asyncFetch, useCache } from "alem";
 import formatWithCommas from "./formatWithCommas";
 
-const nearToUsd = useCache(
+const nearUsd = useCache(
   () =>
     asyncFetch("https://api.coingecko.com/api/v3/simple/price?ids=near&vs_currencies=usd").then((res) => {
       if (res.ok) {
@@ -12,7 +12,7 @@ const nearToUsd = useCache(
 );
 
 const yoctosToUsd = (amount: number | string) => {
-  return nearToUsd ? "~$" + formatWithCommas(new Big(amount).mul(nearToUsd).div(1e24).toFixed(2)) : "0";
+  return nearUsd ? "~$" + formatWithCommas(new Big(amount).mul(nearUsd).div(1e24).toFixed(2)) : "0";
 };
 
 export default yoctosToUsd;
