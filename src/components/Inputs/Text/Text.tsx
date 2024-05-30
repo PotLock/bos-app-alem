@@ -10,6 +10,7 @@ type Props = {
   onBlur?: (value: any) => void;
   validate?: () => void;
   error?: string;
+  defaultValue?: string;
   preInputChildren?: any;
   postInputChildren?: any;
   disabled?: boolean;
@@ -22,7 +23,7 @@ type Props = {
 const Text = (props: Props) => {
   const label = props.label ?? "";
   const placeholder = props.placeholder ?? "";
-  const value = props.value ?? "";
+  const value = props.value;
   const onChange = props.onChange ?? (() => {});
   const onBlur = props.onBlur ?? (() => {});
   const validate = props.validate ?? (() => {});
@@ -35,8 +36,9 @@ const Text = (props: Props) => {
         {props.preInputChildren && props.preInputChildren}
         <Input
           type="text"
+          defaultValue={props.defaultValue || ""}
           placeholder={placeholder}
-          value={value}
+          {...(value !== undefined && { value })}
           onChange={({ target: { value } }) => onChange(value)}
           onBlur={(value) => {
             validate();
