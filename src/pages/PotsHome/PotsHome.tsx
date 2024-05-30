@@ -18,23 +18,18 @@ const PotsHome = () => {
   // Get all pots config
   if (!pots) {
     PotFactorySDK.asyncGetPots().then((pots: Pot[]) => {
-      pots.forEach(({ id }) => {
-        PotSDK.asyncGetConfig(id).then((potConfig: PotDetail) =>
-          setPots((prevPot: any) => ({
-            ...prevPot,
-            [id]: { ...potConfig, id },
-          })),
-        );
+      const configsPromises = pots.map(({ id }) => PotSDK.asyncGetConfig(id));
+      Promise.all(configsPromises).then((configs) => {
+        const potDetails = configs.map((config: PotDetail, idx: number) => ({
+          ...config,
+          id: pots[idx].id,
+        }));
+        setPots(potDetails);
       });
     });
   }
 
   const compareFunction = (pots: PotDetail[]) => {
-    // sort pots(round status)
-    const listOfPots: any = {};
-
-    const states = Object.keys(potsSort);
-
     pots.forEach((pot) => {
       Object.keys(potsSort).some((type) => {
         const { check, items } = potsSort[type];
@@ -139,22 +134,29 @@ const PotsHome = () => {
 
         {filteredRounds.length === 0 && <div>No pots</div>}
 
-        <ListSection
-          items={filteredRounds}
-          renderItem={(pot: any) => <PotCard potId={pot.id} key={pot.id} />}
-          maxCols={3}
-          responsive={[
-            {
-              breakpoint: 1114,
-              items: 2,
-            },
-            {
-              breakpoint: 768,
-              items: 1,
-            },
-          ]}
-        />
-
+        {pots === null ? (
+          <div className="m-auto">
+            <div className="spinner-border text-secondary" role="status" />
+          </div>
+        ) : filteredRounds.length > 0 ? (
+          <ListSection
+            items={filteredRounds}
+            renderItem={(pot: any) => <PotCard potId={pot.id} key={pot.id} />}
+            maxCols={3}
+            responsive={[
+              {
+                breakpoint: 1114,
+                items: 2,
+              },
+              {
+                breakpoint: 768,
+                items: 1,
+              },
+            ]}
+          />
+        ) : (
+          <div>No pots</div>
+        )}
         <Line />
         <Title>
           Completed Pots <span>{completedRounds.length}</span>
