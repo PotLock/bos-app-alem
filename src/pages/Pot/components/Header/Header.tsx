@@ -15,6 +15,7 @@ import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import ChallengeModal from "../ChallengeModal/ChallengeModal";
 import FundModal from "../FundModal/FundModal";
 import NewApplicationModal from "../NewApplicationModal/NewApplicationModal";
+import PayoutsModal from "../PayoutsModal/PayoutsModal";
 import PoolAllocationTable from "../PoolAllocationTable/PoolAllocationTable";
 import SuccessFundModal, { ExtendedFundDonation } from "../SuccessFundModal/SuccessFundModal";
 import { ButtonsWrapper, Container, Description, Fund, HeaderWrapper, Referral, Title } from "./styles";
@@ -42,6 +43,7 @@ const Header = () => {
   const [flaggedAddresses, setFlaggedAddresses] = useState(null);
   const [potDetail, setPotDetail] = useState<null | PotDetail>(null);
   const [allDonations, setAlldonations] = useState<null | PotDonation[]>(null);
+  const [payoutsToProcess, setPayoutsToProcess] = useState<any>(null);
   // set fund mathcing pool success
   const [fundDonation, setFundDonation] = useState<null | ExtendedFundDonation>(null);
 
@@ -165,13 +167,7 @@ const Header = () => {
   const handleSetPayouts = () => {
     if (allDonations && flaggedAddresses !== null) {
       calculatePayouts(allDonations, matching_pool_balance, flaggedAddresses).then((calculatedPayouts: any) => {
-        const payouts = Object.entries(calculatedPayouts)
-          .map(([projectId, { matchingAmount }]: any) => ({
-            project_id: projectId,
-            amount: matchingAmount,
-          }))
-          .filter((payout) => payout.amount !== "0");
-        PotSDK.chefSetPayouts(potId, payouts);
+        setPayoutsToProcess(calculatedPayouts);
       });
     } else {
       console.log("error fetching donations or flagged addresses");
@@ -292,6 +288,10 @@ const Header = () => {
             setFundDonation(null);
           }}
         />
+      )}
+      {/* Admin process Payout */}
+      {payoutsToProcess && (
+        <PayoutsModal setPayoutsToProcess={setPayoutsToProcess} potId={potId} originalPayouts={payoutsToProcess} />
       )}
     </Container>
   );

@@ -1,6 +1,6 @@
 import { Storage } from "alem";
 import PotSDK from "@app/SDK/pot";
-import { FlaggedAddress, Payout, PotApplication, PotDetail, PotDonation, CalculatedPayout } from "@app/types";
+import { FlaggedAddress, Payout, PotApplication, PotDetail, PotDonation } from "@app/types";
 import calculatePayouts from "@app/utils/calculatePayouts";
 
 // type UpdateState = (newValues: Partial<ProjectsState>) => void;
@@ -51,26 +51,26 @@ function isEqual(obj1: any, obj2: any) {
   return true;
 }
 
-function isObjectEqual(obj1: CalculatedPayout, obj2: CalculatedPayout): boolean {
-  return obj1.project_id === obj2.project_id && obj1.amount === obj2.amount;
-}
+// function isObjectEqual(obj1: CalculatedPayout, obj2: CalculatedPayout): boolean {
+//   return obj1.project_id === obj2.project_id && obj1.amount === obj2.amount;
+// }
 
-function areListsEqual(list1: CalculatedPayout[], list2: CalculatedPayout[]): boolean {
-  // Check if both lists have the same length
-  if (list1.length !== list2.length) {
-    return false;
-  }
+// function areListsEqual(list1: CalculatedPayout[], list2: CalculatedPayout[]): boolean {
+//   // Check if both lists have the same length
+//   if (list1.length !== list2.length) {
+//     return false;
+//   }
 
-  // Check if all objects in the lists are equal
-  for (let i = 0; i < list1.length; i++) {
-    if (!isObjectEqual(list1[i], list2[i])) {
-      return false;
-    }
-  }
+//   // Check if all objects in the lists are equal
+//   for (let i = 0; i < list1.length; i++) {
+//     if (!isObjectEqual(list1[i], list2[i])) {
+//       return false;
+//     }
+//   }
 
-  // If no differences are found, return true
-  return true;
-}
+//   // If no differences are found, return true
+//   return true;
+// }
 
 const getPotData = (potId: string, property: string) => Storage.get(`${potId}-${property}`);
 
@@ -200,7 +200,7 @@ export const getPayout = ({
 
 // get matched donations
 export const asyncGetPublicDonations = (potDetail: PotDetail, potId: string) => {
-  const limit = 480; // number of donations to fetch per req
+  const limit = 450; // number of donations to fetch per req
 
   const donationsCount = potDetail.public_donations_count;
   const paginations = [...Array(Math.ceil(donationsCount / limit)).keys()];
