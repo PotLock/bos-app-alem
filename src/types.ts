@@ -132,7 +132,7 @@ export type Payout = {
 
 export type CalculatedPayout = {
   project_id: string;
-  amount: number;
+  matchingAmount: string;
   donorCount: number;
   totalAmount: string;
 };
