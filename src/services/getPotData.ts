@@ -200,7 +200,7 @@ export const getPayout = ({
 
 // get matched donations
 export const asyncGetPublicDonations = (potDetail: PotDetail, potId: string) => {
-  const limit = 450; // number of donations to fetch per req
+  const limit = 350; // number of donations to fetch per req
 
   const donationsCount = potDetail.public_donations_count;
   const paginations = [...Array(Math.ceil(donationsCount / limit)).keys()];
