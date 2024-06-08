@@ -1,7 +1,4 @@
-import { useCache, useMemo, useState } from "alem";
-import DonateSDK from "@app/SDK/donate";
-import PotSDK from "@app/SDK/pot";
-import PotFactorySDK from "@app/SDK/potfactory";
+import { useEffect, useMemo, useState } from "alem";
 import Dropdown from "@app/components/Inputs/Dropdown/Dropdown";
 import calcNetDonationAmount from "@app/utils/calcNetDonationAmount";
 import filterByDate from "@app/utils/filterByDate";
@@ -9,6 +6,7 @@ import DonorsCards from "./components/DonorsCards/DonorsCards";
 import DonorsLeaderboard from "./components/DonorsLeaderboard/DonorsLeaderboard";
 import DonorsTrx from "./components/DonorsTrx/DonorsTrx";
 import { Container, Filter, LoadingWrapper, Tabs } from "./styles";
+import { filterOptions, getDirectDoonations, getSponsors } from "./utils";
 
 const Leaderboard = () => {
   const Loading = () => <LoadingWrapper>Loading...</LoadingWrapper>;
@@ -17,72 +15,34 @@ const Leaderboard = () => {
   const [title, setTitle] = useState<any>("");
   const [filter, setFilter] = useState("");
   const [allDonationsFetched, setAllDonationsFetched] = useState(false);
-  const [fetchDonationsError, setFetchDonationsError] = useState("");
+  const [directDonations, setDirectDonations] = useState<null | []>(null);
+  const [allSponsors, setAllSponsors] = useState<null | []>(null);
 
-  const direct_donations_count = useMemo(() => {
-    const data = DonateSDK.getConfig();
-    return data.total_donations_count;
+  useEffect(() => {
+    if (!directDonations) getDirectDoonations(setDirectDonations);
+    if (!allSponsors) getSponsors(setAllSponsors);
   }, []);
 
-  const getSponsorshipDonations = (potId: string) => PotSDK.asyncGetMatchingPoolDonations(potId);
-
-  // Get Sponsorship Donations
-  const allSponsors = useCache(() => {
-    return PotFactorySDK.asyncGetPots()
-      .then((pots: any) => {
-        if (pots) {
-          const sponsors = pots.map(({ id }: any) => getSponsorshipDonations(id));
-          return Promise.all(sponsors).then((allSponsors) => {
-            const sumUpSponsors = allSponsors.flat().reduce((accumulator: any, currentDonation: any) => {
-              accumulator[currentDonation.donor_id] = {
-                amount: (accumulator[currentDonation.donor_id].amount || 0) + calcNetDonationAmount(currentDonation),
-                ...currentDonation,
-              };
-              return accumulator;
-            }, {});
-
-            return Object.values(sumUpSponsors);
-          });
-        } else return [];
-      })
-      .catch((err: any) => {
-        console.log("error fetching pots ", err);
-
-        return [];
-      });
-  }, "sponsors-funding");
-
-  // filter Sponsorship Donations by time
   const sponsors = useMemo(() => {
     if (allSponsors) {
       let sponsors = allSponsors.filter((donation: any) => filterByDate(filter, donation));
-      sponsors = allSponsors.sort((a: any, b: any) => b.amount - a.amount);
-      return sponsors;
+
+      sponsors = sponsors.reduce((accumulator: any, currentDonation: any) => {
+        accumulator[currentDonation.donor_id] = {
+          amount: (accumulator[currentDonation.donor_id].amount || 0) + calcNetDonationAmount(currentDonation),
+          ...currentDonation,
+        };
+        return accumulator;
+      }, {});
+
+      return Object.values(sponsors).sort((a: any, b: any) => b.amount - a.amount);
     }
   }, [allSponsors, filter]);
 
-  // Get Direct Donations
-  const allDonationsPaginated = useCache(() => {
-    const limit = 900; // number of donations to fetch per req
-
-    const paginations = [...Array(Math.ceil(direct_donations_count / limit)).keys()];
-
-    try {
-      const allDonations = paginations.map((index) => DonateSDK.asyncGetDonations(limit * index, limit));
-
-      return Promise.all(allDonations);
-    } catch (error: any) {
-      console.error(`error getting direct donations`, error);
-      setFetchDonationsError(error);
-      return Promise.all([]);
-    }
-  }, "direct-donations");
-
   //   Filter direct donations by time filter
   const [allDonations, sortedDonations] = useMemo(() => {
-    if (allDonationsPaginated) {
-      let donations = allDonationsPaginated.flat();
-      donations = donations.filter((donation: any) => filterByDate(filter, donation));
+    if (directDonations) {
+      const donations = directDonations.filter((donation: any) => filterByDate(filter, donation));
       const totalsByDonor: any = donations.reduce((accumulator: any, currentDonation: any) => {
         accumulator[currentDonation.donor_id] = {
           amount:
@@ -98,15 +58,7 @@ const Leaderboard = () => {
     } else {
       return [[], []];
     }
-  }, [allDonationsPaginated, filter]);
-
-  const filterOptions = [
-    { text: "All Time", value: "all" },
-    { text: "1Y", value: "year" },
-    { text: "1M", value: "month" },
-    { text: "1W", value: "week" },
-    { text: "24H", value: "day" },
-  ];
+  }, [directDonations, filter]);
 
   const MenuItem = ({ count, children, className }: any) => (
     <div className={`menu-item ${className || ""}`}>
@@ -124,7 +76,7 @@ const Leaderboard = () => {
     {
       label: "Sponsors Leaderboard",
       val: "sponsors",
-      count: sponsors.length,
+      count: sponsors?.length || 0,
     },
     {
       label: "Donor Feed",
@@ -151,12 +103,7 @@ const Leaderboard = () => {
 
   return (
     <Container>
-      {fetchDonationsError ? (
-        <div>
-          <h1>Error fetching donations</h1>
-          <p>{fetchDonationsError}</p>
-        </div>
-      ) : !allDonationsFetched ? (
+      {!allDonationsFetched ? (
         <Loading />
       ) : (
         <>
