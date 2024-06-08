@@ -80,7 +80,9 @@ const DonorsCards = (props: { currentTab: string; sortedDonations: any; sponsors
     },
   ];
 
-  return <div className="cards">{leaderboard.map((donor) => (donor.id ? <Card donor={donor} /> : ""))}</div>;
+  return (
+    <div className="cards">{leaderboard.map((donor) => (donor.id ? <Card key={donor.id} donor={donor} /> : ""))}</div>
+  );
 };
 
 export default DonorsCards;
