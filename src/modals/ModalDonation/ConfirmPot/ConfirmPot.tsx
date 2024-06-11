@@ -78,8 +78,8 @@ const ConfirmPot = ({
           }
         })
         .catch((err: any) => {
-          console.log(err);
-          onClose();
+          console.error("error fetching user's donations ", err);
+          // onClose();
         });
       // Clear the interval after 30 seconds
       setTimeout(() => {
