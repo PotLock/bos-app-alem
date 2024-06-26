@@ -5,6 +5,7 @@ export const Container = styled.div`
   flex-direction: column;
   gap: 1rem;
   position: relative;
+  overflow-x: scroll;
   height: 80vh;
 `;
 
@@ -20,6 +21,7 @@ export const PayoutsView = styled.div`
   flex-direction: column;
   max-height: 100%;
   overflow-y: scroll;
+  font-size: 12px;
 `;
 
 export const PayoutItem = styled.div`
@@ -27,8 +29,8 @@ export const PayoutItem = styled.div`
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
-  .id {
-    width: 172px;
+  > div {
+    width: 140px;
   }
 `;
 
@@ -54,5 +56,21 @@ export const ExitIcon = styled.div`
   svg {
     cursor: pointer;
     width: 18px;
+  }
+`;
+export const TableHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding-right: 1rem;
+  font-display: 500;
+  > div {
+    width: 140px;
+    display: flex;
+    align-items: center;
+  }
+  > div:not(:first-of-type) {
+    justify-content: center;
+    text-align: center;
   }
 `;

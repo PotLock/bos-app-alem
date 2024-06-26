@@ -8,7 +8,6 @@ const calculatePayouts = (
   blacklistedAccounts: any,
 ): Promise<Record<string, CalculatedPayout>> => {
   const { NADABOT_CONTRACT_ID } = constants;
-
   // * QF/CLR logic taken from https://github.com/gitcoinco/quadratic-funding/blob/master/quadratic-funding/clr.py *
   return new Promise((resolve, reject) => {
     // console.log("Calculting payouts; ignoring blacklisted donors &/or projects: ", blacklistedAccounts.join(", "));
