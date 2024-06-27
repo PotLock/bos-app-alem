@@ -7,7 +7,7 @@ type Props = {
   overlayStyle?: React.CSSProperties;
 };
 
-const ModalOverlay = ({ children, onOverlayClick, contentStyle }: Props) => {
+const ModalOverlay = ({ children, onOverlayClick, contentStyle, overlayStyle }: Props) => {
   const ModalOverlay = styled.div`
     position: fixed;
     padding: 0 10px;
@@ -46,7 +46,7 @@ const ModalOverlay = ({ children, onOverlayClick, contentStyle }: Props) => {
   `;
 
   return (
-    <ModalOverlay style={contentStyle}>
+    <ModalOverlay style={overlayStyle}>
       <Screen onClick={onOverlayClick} />
       <ModalContent style={contentStyle}>{children}</ModalContent>
     </ModalOverlay>
