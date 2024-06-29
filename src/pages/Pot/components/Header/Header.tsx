@@ -242,7 +242,8 @@ const Header = () => {
               {existingChallengeForUser ? "Update challenge" : "Challenge payouts"}
             </Button>
           )}
-          {canPayoutsBeSet && <Button onClick={handleSetPayouts}> Set Payouts </Button>}
+          <Button onClick={handleSetPayouts}> Set Payouts </Button>
+          {/* {canPayoutsBeSet && <Button onClick={handleSetPayouts}> Set Payouts </Button>} */}
           {canPayoutsBeProcessed && <Button onClick={handleProcessPayouts}>Process Payouts</Button>}
         </ButtonsWrapper>
         <Referral>
