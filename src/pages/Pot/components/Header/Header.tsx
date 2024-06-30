@@ -44,6 +44,7 @@ const Header = () => {
   const [potDetail, setPotDetail] = useState<null | PotDetail>(null);
   const [allDonations, setAlldonations] = useState<null | PotDonation[]>(null);
   const [payoutsToProcess, setPayoutsToProcess] = useState<any>(null);
+
   // set fund mathcing pool success
   const [fundDonation, setFundDonation] = useState<null | ExtendedFundDonation>(null);
 

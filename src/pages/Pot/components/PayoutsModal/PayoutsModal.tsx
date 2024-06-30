@@ -1,4 +1,4 @@
-import { Big, useMemo, useState } from "alem";
+import { Big, useMemo, useState, Tooltip, OverlayTrigger } from "alem";
 import PotSDK from "@app/SDK/pot";
 import Button from "@app/components/Button";
 import Text from "@app/components/Inputs/Text/Text";
@@ -6,6 +6,7 @@ import Alert from "@app/modals/ModalDonation/Banners/Alert";
 import ModalOverlay from "@app/modals/ModalOverlay";
 import { CalculatedPayout } from "@app/types";
 import _address from "@app/utils/_address";
+import { payoutDescription } from "./payoutDescription";
 import { ButtonWrapper, Container, PayoutItem, PayoutsView, Title, Total, ExitIcon, TableHeader } from "./styles";
 
 const PayoutsModal = ({
@@ -17,6 +18,8 @@ const PayoutsModal = ({
   setPayoutsToProcess: (payouts: null) => void;
   potId: string;
 }) => {
+  console.log("originalPayouts", originalPayouts);
+
   const [payouts, setPayouts] = useState(originalPayouts);
   const [assigendWeights, setAssignedWeights] = useState<Record<string, number>>({});
   const [qfWeight, setQfWeight] = useState("100");
@@ -191,13 +194,15 @@ const PayoutsModal = ({
           />
         </div>
         <TableHeader>
-          <div>Project</div>
-          <div>Actual QF</div>
-          <div>QF Override</div>
-          <div>QF Weight Adjusted</div>
-          <div>Assigned Weight (%)</div>
-          <div>Assigned Weight Calculation</div>
-          <div>Final Calculation</div>
+          {payoutDescription.map(({ title, description }) =>
+            description ? (
+              <OverlayTrigger key={title} placement="top" overlay={description ? <Tooltip>{description}</Tooltip> : ""}>
+                <div> {title}</div>
+              </OverlayTrigger>
+            ) : (
+              <div key={title}> {title}</div>
+            ),
+          )}
         </TableHeader>
         <PayoutsView>
           {payoutsList.map(({ project_id, amount }, idx) => {
