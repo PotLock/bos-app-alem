@@ -22,7 +22,7 @@ export const payoutDescription = [
   },
   {
     title: "Assigned Weight Calculation",
-    description: "Assigned Weight Calculation",
+    description: "this calculates based on assigned weights, how much judge weight is worked and pot amount",
   },
   {
     title: "Final Calculation",

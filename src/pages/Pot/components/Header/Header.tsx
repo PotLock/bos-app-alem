@@ -44,6 +44,7 @@ const Header = () => {
   const [potDetail, setPotDetail] = useState<null | PotDetail>(null);
   const [allDonations, setAlldonations] = useState<null | PotDonation[]>(null);
   const [payoutsToProcess, setPayoutsToProcess] = useState<any>(null);
+
   // set fund mathcing pool success
   const [fundDonation, setFundDonation] = useState<null | ExtendedFundDonation>(null);
 
@@ -242,8 +243,7 @@ const Header = () => {
               {existingChallengeForUser ? "Update challenge" : "Challenge payouts"}
             </Button>
           )}
-          <Button onClick={handleSetPayouts}> Set Payouts </Button>
-          {/* {canPayoutsBeSet && <Button onClick={handleSetPayouts}> Set Payouts </Button>} */}
+          {canPayoutsBeSet && <Button onClick={handleSetPayouts}> Set Payouts </Button>}
           {canPayoutsBeProcessed && <Button onClick={handleProcessPayouts}>Process Payouts</Button>}
         </ButtonsWrapper>
         <Referral>

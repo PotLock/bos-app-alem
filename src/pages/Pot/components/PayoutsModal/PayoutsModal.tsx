@@ -6,7 +6,7 @@ import Alert from "@app/modals/ModalDonation/Banners/Alert";
 import ModalOverlay from "@app/modals/ModalOverlay";
 import { CalculatedPayout } from "@app/types";
 import _address from "@app/utils/_address";
-import { payoutDescription } from "./PayoutDescription";
+import { payoutDescription } from "./payoutDescription";
 import { ButtonWrapper, Container, PayoutItem, PayoutsView, Title, Total, ExitIcon, TableHeader } from "./styles";
 
 const PayoutsModal = ({
@@ -194,11 +194,15 @@ const PayoutsModal = ({
           />
         </div>
         <TableHeader>
-          {payoutDescription.map(({ title, description }) => (
-            <OverlayTrigger key={title} placement="top" overlay={description ? <Tooltip>{description}</Tooltip> : ""}>
-              <div> {title}</div>
-            </OverlayTrigger>
-          ))}
+          {payoutDescription.map(({ title, description }) =>
+            description ? (
+              <OverlayTrigger key={title} placement="top" overlay={description ? <Tooltip>{description}</Tooltip> : ""}>
+                <div> {title}</div>
+              </OverlayTrigger>
+            ) : (
+              <div key={title}> {title}</div>
+            ),
+          )}
         </TableHeader>
         <PayoutsView>
           {payoutsList.map(({ project_id, amount }, idx) => {
