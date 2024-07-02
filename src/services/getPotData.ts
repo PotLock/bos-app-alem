@@ -234,12 +234,17 @@ export const getDonations = ({
   if (donations) updateState(donations);
 
   if (potDetail.public_donations_count !== donations?.length) {
-    asyncGetPublicDonations(potDetail, potId).then((paginatedDonations) => {
-      const currentDonations = paginatedDonations ? paginatedDonations.flat() : [];
-      currentDonations.reverse();
-      setPotData(potId, "donations", currentDonations);
-      updateState(currentDonations);
-    });
+    asyncGetPublicDonations(potDetail, potId)
+      .then((paginatedDonations) => {
+        const currentDonations = paginatedDonations ? paginatedDonations.flat() : [];
+        currentDonations.reverse();
+        setPotData(potId, "donations", currentDonations);
+        updateState(currentDonations);
+      })
+      .catch((err) => {
+        console.error("error fetching donations ", err);
+        updateState([]);
+      });
   }
 };
 
@@ -287,7 +292,10 @@ export const getFlaggedAccounts = ({
         }
       }
     })
-    .catch((err) => console.log("error getting the flagged accounts ", err));
+    .catch((err) => {
+      console.error("error getting the flagged accounts ", err);
+      updateState([]);
+    });
 };
 
 export const getSponsorships = ({ potId, updateState }: { potId: string; updateState: UpdateState }) => {
