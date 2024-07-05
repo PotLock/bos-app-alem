@@ -237,7 +237,7 @@ const Header = () => {
               {registrationApprovedOrNoRegistryProvider ? "Apply to pot" : `Project Registration ${registryStatus}`}
             </Button>
           )}
-          {now > public_round_end_ms && now < cooldown_end_ms && (
+          {now > public_round_end_ms && now < cooldown_end_ms && !!_cooldown_end_ms && (
             <Button varient="tonal" onClick={() => setShowChallengePayoutsModal(true)}>
               {existingChallengeForUser ? "Update challenge" : "Challenge payouts"}
             </Button>
