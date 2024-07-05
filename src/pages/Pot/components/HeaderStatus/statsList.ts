@@ -6,11 +6,12 @@ const statsList = (potDetail: PotDetail) => {
     application_end_ms,
     public_round_start_ms,
     public_round_end_ms,
-    cooldown_end_ms,
+    cooldown_end_ms: _cooldown_end_ms,
     all_paid_out,
   } = potDetail;
 
   const now = Date.now();
+  const cooldown_end_ms = _cooldown_end_ms ?? now + 1000;
 
   const stats = [
     {
@@ -31,11 +32,11 @@ const statsList = (potDetail: PotDetail) => {
     },
     {
       label: "Challenge period",
-      daysLeft: cooldown_end_ms,
+      daysLeft: _cooldown_end_ms,
       started: now >= public_round_end_ms,
-      completed: now > cooldown_end_ms && !!cooldown_end_ms,
+      completed: now > cooldown_end_ms && !!_cooldown_end_ms,
       progress:
-        now > cooldown_end_ms && !!cooldown_end_ms
+        now > cooldown_end_ms && !!_cooldown_end_ms
           ? 1
           : (cooldown_end_ms - now) / (public_round_end_ms - cooldown_end_ms),
     },
