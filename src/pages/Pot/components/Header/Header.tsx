@@ -146,10 +146,9 @@ const Header = () => {
 
   const now = Date.now();
 
-  const cooldown_end_ms = _cooldown_end_ms ?? now + 1;
+  const cooldown_end_ms = _cooldown_end_ms ?? now + 1000;
 
   const publicRoundOpen = now >= public_round_start_ms && now < public_round_end_ms;
-  const publicRoundEnded = now > public_round_end_ms;
 
   const applicationOpen = now >= application_start_ms && now < application_end_ms;
 
@@ -161,7 +160,7 @@ const Header = () => {
 
   const canPayoutsBeProcessed = userIsAdminOrGreater && now >= cooldown_end_ms && !all_paid_out;
 
-  const canPayoutsBeSet = userIsChefOrGreater && !all_paid_out && publicRoundEnded;
+  const canPayoutsBeSet = userIsChefOrGreater && !all_paid_out && now > cooldown_end_ms;
 
   const payoutsChallenges = PotSDK.getPayoutsChallenges(potId);
 
