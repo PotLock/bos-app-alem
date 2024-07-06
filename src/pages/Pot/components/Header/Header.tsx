@@ -160,7 +160,7 @@ const Header = () => {
 
   const canPayoutsBeProcessed = userIsAdminOrGreater && now >= cooldown_end_ms && !all_paid_out;
 
-  const canPayoutsBeSet = userIsChefOrGreater && !all_paid_out && now > cooldown_end_ms;
+  const canPayoutsBeSet = userIsChefOrGreater && !all_paid_out && (now > cooldown_end_ms || !_cooldown_end_ms);
 
   const payoutsChallenges = PotSDK.getPayoutsChallenges(potId);
 
