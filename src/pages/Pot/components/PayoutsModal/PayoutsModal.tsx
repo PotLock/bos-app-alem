@@ -1,4 +1,4 @@
-import { Big, useMemo, useState, Tooltip, OverlayTrigger } from "alem";
+import { Big, useMemo, useState, Tooltip, OverlayTrigger, context, Near } from "alem";
 import PotSDK from "@app/SDK/pot";
 import Button from "@app/components/Button";
 import Text from "@app/components/Inputs/Text/Text";
@@ -18,8 +18,6 @@ const PayoutsModal = ({
   setPayoutsToProcess: (payouts: null) => void;
   potId: string;
 }) => {
-  console.log("originalPayouts", originalPayouts);
-
   const [payouts, setPayouts] = useState(originalPayouts);
   const [assigendWeights, setAssignedWeights] = useState<Record<string, number>>({});
   const [qfWeight, setQfWeight] = useState("100");
@@ -36,13 +34,6 @@ const PayoutsModal = ({
     });
     return sum.toString();
   };
-  // payouts.reduce(
-  //   (acc: any, payout: any) =>
-  //     Big(acc)
-  //       .plus(new Big(payout.matchingAmount || payout.amount))
-  //       .toString(),
-  //   0,
-  // );
 
   const [originalTotalAmountYoctos, originalPayoutList] = useMemo(() => {
     const totalAmount = sumAmount(Object.values(originalPayouts));
@@ -79,18 +70,30 @@ const PayoutsModal = ({
   };
 
   // get the final amount and the list of assigned weights calculations
-  const [finalPayoutList, finalAmountNear, sumAssignedWeightsCalc, remainder] = useMemo(() => {
+  const [finalPayoutList, finalAmountNear, sumAssignedWeightsCalc, remainder, post] = useMemo(() => {
     let finalAmount = Big(0);
     let sumAssignedWeightsCalc = 0;
+    let post = `Pot Id: ${potId}\\n\\nTotal Pot: 11149.11\\n\\nQF Weight:${qfWeight}%\\n\\nJudges Weights:${jdgWeight}%\\n\\n| Project | Actual QF | QF Override | QF Weight Adjusted | Assigned Weight (%) | Assigned Weight Calculation | Final Calculation |\\n| --- | --- | --- | --- | --- | --- | --- |\\n`;
 
-    const payoutList = Object.entries(payouts).map(([projectId, { matchingAmount }]: any) => {
+    const payoutList = Object.entries(payouts).map(([projectId, { matchingAmount }], idx: any) => {
       const qfWeightCalc = Big(matchingAmount).mul(parseFloat(qfWeight) / 100);
-
       const jdWeightCalc = Big(originalTotalAmountYoctos)
         .mul((assigendWeights[projectId] || 0) * parseFloat(jdgWeight))
         .div(10e4);
       const projectFinalAmount = qfWeightCalc.add(jdWeightCalc);
       finalAmount = finalAmount.plus(projectFinalAmount);
+
+      // post calculation
+      const nearAmount = payoutsList[idx].amount;
+      const qfWeightCalcNear = parseFloat(nearAmount) * (parseFloat(qfWeight) / 100);
+      const jdWeightCalcNear =
+        (parseFloat(originalTotalAmount) * (assigendWeights[projectId] || 0) * parseFloat(jdgWeight)) / 10000;
+
+      const finalAmountNear = qfWeightCalcNear + jdWeightCalcNear;
+
+      post += `| ${projectId} | ${originalPayoutList[idx].amount} | ${nearAmount} | ${qfWeightCalcNear} | ${
+        assigendWeights[projectId] || "0.00"
+      }%  | ${jdWeightCalcNear} | ${finalAmountNear} |\\n`;
 
       return {
         project_id: projectId,
@@ -103,7 +106,7 @@ const PayoutsModal = ({
     else setError("");
     const remainder = calcNear(remainderYoctos.toString());
 
-    return [payoutList, calcNear(finalAmount.toString()), sumAssignedWeightsCalc, remainder];
+    return [payoutList, calcNear(finalAmount.toString()), sumAssignedWeightsCalc, remainder, post];
   }, [assigendWeights, payoutsList, qfWeight, jdgWeight]);
 
   const handlePayout = () => {
@@ -117,11 +120,40 @@ const PayoutsModal = ({
 
     yoctos = sumAmount(payoutsArr);
 
-    console.log("check if the original amount equal to the new one", Big(yoctos).cmp(Big(originalTotalAmountYoctos)));
-
     PotSDK.chefSetPayouts(potId, payoutsArr);
-  };
 
+    const payoutTrx = {
+      contractName: potId,
+      methodName: "chef_set_payouts",
+      args: { payouts: payoutsArr },
+      deposit: "1",
+      gas: "300000000000000",
+    };
+
+    const SOCIAL_CONTRACT_ID = "social.near";
+    const socialArgs = {
+      data: {
+        [context.accountId || ""]: {
+          post: {
+            main: `{\"type\":\"md\",\"text\":\"${post}\"}`,
+          },
+          index: {
+            post: '{"key":"main","value":{"type":"md"}}',
+          },
+        },
+      },
+    };
+    const socialTransaction: any = {
+      contractName: SOCIAL_CONTRACT_ID,
+      methodName: "set",
+      args: socialArgs,
+    };
+
+    let depositFloat = JSON.stringify(socialArgs).length * 0.00015;
+    socialTransaction.deposit = Big(depositFloat).mul(Big(10).pow(24));
+
+    Near.call([socialTransaction, payoutTrx]);
+  };
   const sumWeight = Object.values(assigendWeights)
     .filter((value) => !isNaN(value))
     .reduce((total, num) => total + num, 0);
@@ -144,12 +176,6 @@ const PayoutsModal = ({
           </svg>
         </ExitIcon>
         <Title>{potId}</Title>
-        {/* <Total>
-          <div className="original">Total amount</div>
-          <div className="amount">
-            {totalAmount} / <span>{originalTotalAmount} N</span>
-          </div>
-        </Total> */}
         <Total>
           <div className="original">Remainder</div>
           <div className="amount">{remainder} N</div>
