@@ -6,7 +6,7 @@ export const Container = styled.div`
   gap: 1rem;
   position: relative;
   overflow-x: scroll;
-  height: 80vh;
+  height: 100%;
 `;
 
 export const Title = styled.div`
