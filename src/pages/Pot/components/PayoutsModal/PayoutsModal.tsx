@@ -2,6 +2,7 @@ import { Big, useMemo, useState, Tooltip, OverlayTrigger, context, Near } from "
 import PotSDK from "@app/SDK/pot";
 import Button from "@app/components/Button";
 import Text from "@app/components/Inputs/Text/Text";
+import TextArea from "@app/components/Inputs/TextArea/TextArea";
 import Alert from "@app/modals/ModalDonation/Banners/Alert";
 import ModalOverlay from "@app/modals/ModalOverlay";
 import { CalculatedPayout } from "@app/types";
@@ -23,6 +24,7 @@ const PayoutsModal = ({
   const [qfWeight, setQfWeight] = useState("100");
   const [jdgWeight, setJdgWeight] = useState("0");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const calcNear = (amount: string) => Big(amount).div(Big(10).pow(24)).toNumber().toFixed(2);
   const calcYoctos = (amount: string) => new Big(amount).mul(new Big(10).pow(24)).toString();
@@ -73,6 +75,7 @@ const PayoutsModal = ({
   const [finalPayoutList, finalAmountNear, sumAssignedWeightsCalc, remainder, post] = useMemo(() => {
     let finalAmount = Big(0);
     let sumAssignedWeightsCalc = 0;
+
     let post = `Pot Id: ${potId}\\n\\nTotal Pot: 11149.11\\n\\nQF Weight:${qfWeight}%\\n\\nJudges Weights:${jdgWeight}%\\n\\n| Project | Actual QF | QF Override | QF Weight Adjusted | Assigned Weight (%) | Assigned Weight Calculation | Final Calculation |\\n| --- | --- | --- | --- | --- | --- | --- |\\n`;
 
     const payoutList = Object.entries(payouts).map(([projectId, { matchingAmount }], idx: any) => {
@@ -110,6 +113,8 @@ const PayoutsModal = ({
   }, [assigendWeights, payoutsList, qfWeight, jdgWeight]);
 
   const handlePayout = () => {
+    const notes = `${message}\\n${post}`;
+
     let payoutsArr = finalPayoutList.filter((payout) => payout.amount !== "0");
 
     let yoctos = sumAmount(payoutsArr);
@@ -135,7 +140,7 @@ const PayoutsModal = ({
       data: {
         [context.accountId || ""]: {
           post: {
-            main: `{\"type\":\"md\",\"text\":\"${post}\"}`,
+            main: `{\"type\":\"md\",\"text\":\"${notes}\"}`,
           },
           index: {
             post: '{"key":"main","value":{"type":"md"}}',
@@ -219,6 +224,7 @@ const PayoutsModal = ({
             value={jdgWeight}
           />
         </div>
+        <TextArea label="message" onChange={(value: any) => setMessage(value)} value={message} placeholder="Notes" />
         <TableHeader>
           {payoutDescription.map(({ title, description }) =>
             description ? (
