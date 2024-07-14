@@ -12,7 +12,6 @@ const Pots = () => {
   const POT_STATUS = ["Approved", "pending"];
 
   const [potIds, setPotIds] = useState<any>(null); // ids[] of pots that approved project
-  // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (pots && !potIds) {
