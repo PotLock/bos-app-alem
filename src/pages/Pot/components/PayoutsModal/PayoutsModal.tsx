@@ -66,7 +66,7 @@ const PayoutsModal = ({
       ...payouts,
       [projectId]: {
         ...payouts[projectId],
-        matchingAmount: calcYoctos(amount),
+        matchingAmount: calcYoctos(amount || "0"),
       },
     });
   };
@@ -209,8 +209,8 @@ const PayoutsModal = ({
             label="QF Weight"
             percent={true}
             onChange={(value) => {
-              setQfWeight(value);
-              setJdgWeight((100 - parseFloat(value)).toString());
+              setQfWeight(value || "0");
+              setJdgWeight((100 - parseFloat(value || "0")).toString());
             }}
             value={qfWeight}
           />
@@ -218,8 +218,8 @@ const PayoutsModal = ({
             label="Judges Weights"
             percent={true}
             onChange={(value) => {
-              setJdgWeight(value);
-              setQfWeight((100 - parseFloat(value)).toString());
+              setJdgWeight(value || "0");
+              setQfWeight((100 - parseFloat(value || "0")).toString());
             }}
             value={jdgWeight}
           />
@@ -259,7 +259,7 @@ const PayoutsModal = ({
                   onChange={(value) =>
                     setAssignedWeights({
                       ...assigendWeights,
-                      [project_id]: parseFloat(value),
+                      [project_id]: parseFloat(value || "0"),
                     })
                   }
                   percent={true}
