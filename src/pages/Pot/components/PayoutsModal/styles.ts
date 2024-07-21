@@ -7,6 +7,13 @@ export const Container = styled.div`
   position: relative;
   overflow-x: scroll;
   height: 100%;
+  .post-btn {
+    background: rgb(46, 46, 46);
+    border-radius: 6px;
+    padding: 12px 16px;
+    border: none;
+    color: white;
+  }
 `;
 
 export const Title = styled.div`
