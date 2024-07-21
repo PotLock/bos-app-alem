@@ -158,7 +158,7 @@ const Header = () => {
     context.accountId && `&referrerId=${context.accountId}`
   }`;
 
-  const canPayoutsBeProcessed = userIsAdminOrGreater && now >= cooldown_end_ms && !all_paid_out;
+  const canPayoutsBeProcessed = userIsAdminOrGreater && cooldown_end_ms && !all_paid_out;
 
   const canPayoutsBeSet = userIsChefOrGreater && !all_paid_out && (now > cooldown_end_ms || !_cooldown_end_ms);
 
@@ -242,8 +242,16 @@ const Header = () => {
               {existingChallengeForUser ? "Update challenge" : "Challenge payouts"}
             </Button>
           )}
-          {canPayoutsBeSet && <Button onClick={handleSetPayouts}> Set Payouts </Button>}
-          {canPayoutsBeProcessed && <Button onClick={handleProcessPayouts}>Process Payouts</Button>}
+          {canPayoutsBeSet && (
+            <Button key={"set-payout-btn"} onClick={handleSetPayouts}>
+              Set Payouts
+            </Button>
+          )}
+          {canPayoutsBeProcessed && (
+            <Button key={"process-payout-btn"} onClick={handleProcessPayouts}>
+              Process Payouts
+            </Button>
+          )}
         </ButtonsWrapper>
         <Referral>
           <CopyIcon textToCopy={potLink} />
