@@ -13,11 +13,13 @@ type Props = {
   stopPropagation?: boolean;
   style?: React.CSSProperties;
   target?: TargetValue;
+  key?: string;
   iconSrc?: string;
   children: string | React.ReactNode;
 };
 
 const Button = ({
+  key,
   type,
   varient,
   name,
@@ -45,6 +47,7 @@ const Button = ({
         style: style ?? {},
         target: target,
         ...(href ? { href } : {}),
+        ...(key ? { key } : {}),
         ...(name ? { name } : {}),
       }}
     >
