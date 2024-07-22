@@ -114,7 +114,7 @@ const PayoutsModal = ({
         project_id,
         amount,
       }));
-
+    payoutsArr.sort((a, b) => Big(b.amount).minus(a.amount).toNumber());
     let yoctos = sumAmount(payoutsArr);
 
     const remainder = Big(originalTotalAmountYoctos).minus(yoctos);
