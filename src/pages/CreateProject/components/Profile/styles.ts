@@ -25,9 +25,19 @@ export const BackgroundImage = styled.div`
     line-height: 142%;
   }
   .btn-change-bg {
+    z-index: 10;
     position: absolute;
     bottom: 1.5rem;
     right: 1.5rem;
+    background: white;
+    box-shadow: rgba(0, 0, 0, 0.22) 0px 0px 0px 1px inset, rgba(15, 15, 15, 0.15) 0px -1px 0px 0px inset,
+      rgba(5, 5, 5, 0.08) 0px 1px 2px -0.5px;
+    padding: 9px 16px;
+    display: flex;
+    gap: 8px;
+    border-radius: 6px;
+    transition: 200ms ease-in-out;
+    width: fit-content;
     cursor: pointer;
     svg {
       width: 18px;

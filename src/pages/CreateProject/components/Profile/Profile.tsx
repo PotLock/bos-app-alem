@@ -1,6 +1,5 @@
 import { Files, State, state } from "alem";
 import CameraIcon from "@app/assets/svgs/CameraIcon";
-import Button from "@app/components/Button";
 import Image from "@app/components/mob.near/Image";
 import constants from "@app/constants";
 import uploadFileUpdateState from "../../utils/uploadFileUpdateState";
@@ -35,45 +34,30 @@ const Profile = () => {
     <Container>
       <BackgroundImage>
         <Image image={backgroundImage} alt="profile background" fallbackUrl={IPFS_BASE_URL + fallbackImg} />
-        <Button type="standard" varient="outline" customClassName="btn-change-bg">
+        <Files
+          multiple={false}
+          accepts={["image/*"]}
+          minFileSize={1}
+          className="btn-change-bg"
+          clickable
+          onChange={handleBgChange}
+        >
           <CameraIcon />
           <span> Add cover photo</span>
-          <Files
-            multiple={false}
-            accepts={["image/*"]}
-            minFileSize={1}
-            style={{
-              zIndex: 1,
-              top: 0,
-              width: "100%",
-              height: "100%",
-              position: "absolute",
-            }}
-            clickable
-            onChange={handleBgChange}
-          />
-        </Button>
+        </Files>
       </BackgroundImage>
       <ProfileImage>
         <Image className="profile-image" image={profileImage} fallbackUrl={IPFS_BASE_URL + fallbackImg} />
-        <button className="btn-change-img">
+        <Files
+          multiple={false}
+          accepts={["image/*"]}
+          minFileSize={1}
+          className="btn-change-img"
+          clickable
+          onChange={handleImgChange}
+        >
           <CameraIcon />
-          <Files
-            multiple={false}
-            accepts={["image/*"]}
-            minFileSize={1}
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              zIndex: 1,
-              left: 0,
-              top: 0,
-            }}
-            clickable
-            onChange={handleImgChange}
-          ></Files>
-        </button>
+        </Files>
       </ProfileImage>
     </Container>
   );
