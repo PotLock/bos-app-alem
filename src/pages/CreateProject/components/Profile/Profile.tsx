@@ -4,7 +4,7 @@ import Button from "@app/components/Button";
 import Image from "@app/components/mob.near/Image";
 import constants from "@app/constants";
 import uploadFileUpdateState from "../../utils/uploadFileUpdateState";
-import { Container, BackgroundImage, ProfileImage } from "./styles";
+import { Container, BackgroundImage, ProfileImage, FileLabel } from "./styles";
 
 const Profile = () => {
   const { IPFS_BASE_URL } = constants;
@@ -14,13 +14,28 @@ const Profile = () => {
   const fallbackImg = "bafkreidsqk5rg6mdcdrfpedadeqejfwlfan75tjrybxu6cnlwzs4qizjdq";
 
   const handleBgChange = (files: any) => {
+    console.log("Files:", files);
+
     if (files) {
       uploadFileUpdateState(files[0], (res: any) => {
         const ipfs_cid = res.body.cid;
+        console.log("PIFS:", ipfs_cid);
         State.update({ backgroundImage: { ipfs_cid } });
       });
     }
   };
+
+  // const handleBgChange = (files: any) => {
+  //   console.log("Files:", files);
+
+  //   if (files) {
+  //     // uploadFileUpdateState(files[0], (res: any) => {
+  //     //   const ipfs_cid = res.body.cid;
+  //     //   console.log("PIFS:", ipfs_cid);
+  //     //   State.update({ backgroundImage: { ipfs_cid } });
+  //     // });
+  //   }
+  // };
 
   const handleImgChange = (files: any) => {
     if (files) {
@@ -43,7 +58,7 @@ const Profile = () => {
             accepts={["image/*"]}
             minFileSize={1}
             style={{
-              zIndex: 1,
+              // zIndex: 1,
               top: 0,
               width: "100%",
               height: "100%",
@@ -53,6 +68,22 @@ const Profile = () => {
             onChange={handleBgChange}
           />
         </Button>
+        <Files
+          multiple={false}
+          accepts={["image/*"]}
+          minFileSize={1}
+          className="btn btn-outline-primary"
+          style={{
+            top: 0,
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+          }}
+          clickable
+          onChange={handleBgChange}
+        >
+          Upload BG Test
+        </Files>
       </BackgroundImage>
       <ProfileImage>
         <Image className="profile-image" image={profileImage} fallbackUrl={IPFS_BASE_URL + fallbackImg} />
