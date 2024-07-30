@@ -16,7 +16,6 @@ const Profile = () => {
     if (files) {
       uploadFileUpdateState(files[0], (res: any) => {
         const ipfs_cid = res.body.cid;
-        console.log("PIFS:", ipfs_cid);
         State.update({ backgroundImage: { ipfs_cid } });
       });
     }
