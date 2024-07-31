@@ -14,6 +14,7 @@ export const BackgroundImage = styled.div`
   width: 100%;
   border-radius: 6px;
   background: var(--Neutral-200);
+  caret-color: transparent;
   img {
     width: 100%;
     height: 100%;
@@ -64,6 +65,7 @@ export const ProfileImage = styled.div`
   border-radius: 50%;
   background: var(--Neutral-200);
   box-shadow: 0px 0px 0px 3px #fff, 0px 0px 0px 1px rgba(199, 199, 199, 0.22) inset;
+  caret-color: transparent;
   img {
     border-radius: 50%;
     width: 100%;
