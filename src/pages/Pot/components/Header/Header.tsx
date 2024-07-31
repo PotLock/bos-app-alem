@@ -44,6 +44,7 @@ const Header = () => {
   const [potDetail, setPotDetail] = useState<null | PotDetail>(null);
   const [allDonations, setAlldonations] = useState<null | PotDonation[]>(null);
   const [payoutsToProcess, setPayoutsToProcess] = useState<any>(null);
+
   // set fund mathcing pool success
   const [fundDonation, setFundDonation] = useState<null | ExtendedFundDonation>(null);
 
@@ -145,10 +146,9 @@ const Header = () => {
 
   const now = Date.now();
 
-  const cooldown_end_ms = _cooldown_end_ms ?? now + 1;
+  const cooldown_end_ms = _cooldown_end_ms ?? now + 1000;
 
   const publicRoundOpen = now >= public_round_start_ms && now < public_round_end_ms;
-  const publicRoundEnded = now > public_round_end_ms;
 
   const applicationOpen = now >= application_start_ms && now < application_end_ms;
 
@@ -158,9 +158,9 @@ const Header = () => {
     context.accountId && `&referrerId=${context.accountId}`
   }`;
 
-  const canPayoutsBeProcessed = userIsAdminOrGreater && now >= cooldown_end_ms && !all_paid_out;
+  const canPayoutsBeProcessed = userIsAdminOrGreater && cooldown_end_ms && !all_paid_out;
 
-  const canPayoutsBeSet = userIsChefOrGreater && !all_paid_out && publicRoundEnded;
+  const canPayoutsBeSet = userIsChefOrGreater && !all_paid_out && (now > cooldown_end_ms || !_cooldown_end_ms);
 
   const payoutsChallenges = PotSDK.getPayoutsChallenges(potId);
 
@@ -237,13 +237,21 @@ const Header = () => {
               {registrationApprovedOrNoRegistryProvider ? "Apply to pot" : `Project Registration ${registryStatus}`}
             </Button>
           )}
-          {now > public_round_end_ms && now < cooldown_end_ms && (
+          {now > public_round_end_ms && now < cooldown_end_ms && !!_cooldown_end_ms && (
             <Button varient="tonal" onClick={() => setShowChallengePayoutsModal(true)}>
               {existingChallengeForUser ? "Update challenge" : "Challenge payouts"}
             </Button>
           )}
-          {canPayoutsBeSet && <Button onClick={handleSetPayouts}> Set Payouts </Button>}
-          {canPayoutsBeProcessed && <Button onClick={handleProcessPayouts}>Process Payouts</Button>}
+          {canPayoutsBeSet && (
+            <Button key={"set-payout-btn"} onClick={handleSetPayouts}>
+              Set Payouts
+            </Button>
+          )}
+          {canPayoutsBeProcessed && (
+            <Button key={"process-payout-btn"} onClick={handleProcessPayouts}>
+              Process Payouts
+            </Button>
+          )}
         </ButtonsWrapper>
         <Referral>
           <CopyIcon textToCopy={potLink} />

@@ -8,11 +8,10 @@ const calculatePayouts = (
   blacklistedAccounts: any,
 ): Promise<Record<string, CalculatedPayout>> => {
   const { NADABOT_CONTRACT_ID } = constants;
-
   // * QF/CLR logic taken from https://github.com/gitcoinco/quadratic-funding/blob/master/quadratic-funding/clr.py *
   return new Promise((resolve, reject) => {
-    // console.log("Calculting payouts; ignoring blacklisted donors &/or projects: ", blacklistedAccounts.join(", "));
-    // console.log("totalMatchingPool: ", totalMatchingPool);
+    console.log("Calculting payouts; ignoring blacklisted donors &/or projects: ", blacklistedAccounts.join(", "));
+    console.log("totalMatchingPool: ", totalMatchingPool);
     // first, flatten the list of donations into a list of contributions
     const projectContributions: any = [];
     const allDonors = new Set();
@@ -26,7 +25,7 @@ const calculatePayouts = (
       projectContributions.push(val);
       allDonors.add(d.donor_id);
     }
-    // console.log("all donors: ", allDonors);
+    console.log("all donors: ", allDonors);
     // fetch human scores for all donors
     const limit = 100;
     let curIndex = 0;
@@ -55,7 +54,7 @@ const calculatePayouts = (
         console.error("error fetching human scores. Continuing anyway: ", e);
       })
       .finally(() => {
-        // console.log("human scores: ", humanScores);
+        console.log("human scores: ", humanScores);
         // take the flattened list of contributions and aggregate
         // the amounts contributed by each user to each project.
         // create a dictionary where each key is a projectId and its value
@@ -64,7 +63,7 @@ const calculatePayouts = (
         const contributions: any = {};
         for (const [proj, user, amount] of projectContributions) {
           if (!humanScores[user] || !humanScores[user].is_human) {
-            // console.log("skipping non-human: ", user);
+            console.log("skipping non-human: ", user);
             continue;
           }
           if (!contributions[proj]) {
@@ -72,7 +71,7 @@ const calculatePayouts = (
           }
           contributions[proj][user] = Big(contributions[proj][user] || 0).plus(amount);
         }
-        // console.log("contributions: ", contributions);
+        console.log("contributions: ", contributions);
         // calculate the total overlapping contribution amounts between pairs of users for each project.
         // create a nested dictionary where the outer keys are userIds and the inner keys are also userIds,
         // and the inner values are the total overlap between these two users' contributions.
@@ -124,7 +123,7 @@ const calculatePayouts = (
             matching_amount_str: tot.toFixed(0),
           });
         }
-        // console.log("totals before: ", totals);
+        console.log("totals before: ", totals);
         // if we reach saturation, we need to normalize
         if (bigtot.gte(totalPot)) {
           // console.log("NORMALIZING");
@@ -155,7 +154,7 @@ const calculatePayouts = (
             totals[i].matching_amount_str = Big(totals[i].matching_amount_str).plus(additionalAllocation).toFixed(0);
           }
 
-          // console.log("CALCULATING TOTALS AFTER RESIDUAL DISTRIBUTION");
+          console.log("CALCULATING TOTALS AFTER RESIDUAL DISTRIBUTION");
           totalAllocatedBeforeRounding = Big(0); // Initialize the accumulator as a Big object
           for (const t of totals) {
             const currentMatchingAmount = Big(t.matching_amount_str);
@@ -220,7 +219,7 @@ const calculatePayouts = (
               totalAllocatedBeforeRounding = totalAllocatedBeforeRounding.plus(currentMatchingAmount);
             }
             residual = totalPot.minus(totalAllocatedBeforeRounding);
-            // console.log("Residual after final adjustment: ", residual.toFixed(0));
+            console.log("Residual after final adjustment: ", residual.toFixed(0));
           }
         }
 
