@@ -1,4 +1,4 @@
-import { useEffect, useState } from "alem";
+import { asyncFetch, useEffect, useState } from "alem";
 import DonateSDK from "@app/SDK/donate";
 import yoctosToUsdWithFallback from "@app/utils/yoctosToUsdWithFallback";
 import { Stats, StatsSubTitle, StatsTitle } from "./styles";
@@ -10,6 +10,33 @@ const DonationStats = () => {
   const [donations, setDonations] = useState<string | null>(null);
 
   const data = DonateSDK.getConfig();
+
+  const getDonations = () => {
+    asyncFetch("https://dev.potlock.io/api/v1/stats", {
+      method: "GET",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+        "Allow-Origin": "*",
+      },
+    })
+      .then((statesResponse) => {
+        console.log("States response:", statesResponse);
+        if (statesResponse.ok) {
+          return statesResponse.json().then((states) => {
+            const lastDonationAmount = states.total_payouts_usd;
+
+            setDonations(states?.total_donors_count);
+            setDonated(yoctosToUsdWithFallback(lastDonationAmount, true));
+          });
+        }
+        // throw new Error("Failed to fetch states");
+      })
+      .catch((error) => {
+        console.error("Error fetching states:", error);
+      });
+  };
+
   useEffect(() => {
     if (!donated) {
       const lastDonationAmount = data.net_donations_amount
@@ -20,6 +47,7 @@ const DonationStats = () => {
       setDonated(lastDonationAmount);
       setDonations(totalDonations);
     }
+    getDonations();
   }, [data, donated]);
 
   // const { donated, donations } = useDonationsInfo();
