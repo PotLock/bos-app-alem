@@ -22,7 +22,7 @@ const getSocialData = () => {
       name: state.name,
       plCategories: JSON.stringify(state.categories),
       description: state.description,
-      plPublicGoodReason: state.publicGoodReason,
+      plPublicGoodReason: state.categories.includes("Public Good") ? state.publicGoodReason : null,
       plSmartContracts: formattedSmartContracts ? JSON.stringify(formattedSmartContracts) : null,
       plGithubRepos: JSON.stringify(
         Object.values(state.githubRepos)

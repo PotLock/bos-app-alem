@@ -71,8 +71,8 @@ const CreateForm = (props: { edit: boolean }) => {
     policy == null
       ? false
       : policy
-      ? doesUserHaveDaoFunctionCallProposalPermissions(context.accountId, policy)
-      : projectId === context.accountId;
+        ? doesUserHaveDaoFunctionCallProposalPermissions(context.accountId, policy)
+        : projectId === context.accountId;
 
   useEffect(() => {
     if (state.isDao && state.daoAddress) {
@@ -98,9 +98,9 @@ const CreateForm = (props: { edit: boolean }) => {
 
   const proposals: any = checkDao
     ? Near.view(state.daoAddress, "get_proposals", {
-        from_index: 0,
-        limit: 1000,
-      })
+      from_index: 0,
+      limit: 1000,
+    })
     : null;
 
   const proposalInProgress = useMemo(() => {
@@ -270,8 +270,8 @@ const CreateForm = (props: { edit: boolean }) => {
                     error: state.isDao
                       ? state.daoAddressError
                       : !isNamedAccount(projectId)
-                      ? "Require a name account for proejct registration"
-                      : "",
+                        ? "Require a name account for proejct registration"
+                        : "",
                   }}
                 />
               </Row>
@@ -336,27 +336,29 @@ const CreateForm = (props: { edit: boolean }) => {
                     error: state.descriptionError,
                   }}
                 />
+                {state.categories.includes("Public Good") && (
+                  <TextArea
+                    {...{
+                      label: "Why do you consider yourself a public good? *",
+                      placeholder: "Type description",
+                      value: state.publicGoodReason,
+                      onChange: (publicGoodReason: any) => State.update({ publicGoodReason }),
+                      maxCharacters: 500,
+                      validate: () => {
+                        if (state.publicGoodReason.length > 500) {
+                          State.update({
+                            publicGoodReasonError: "Response must be less than 500 characters",
+                          });
+                          return;
+                        }
 
-                <TextArea
-                  {...{
-                    label: "Why do you consider yourself a public good? *",
-                    placeholder: "Type description",
-                    value: state.publicGoodReason,
-                    onChange: (publicGoodReason: any) => State.update({ publicGoodReason }),
-                    maxCharacters: 500,
-                    validate: () => {
-                      if (state.publicGoodReason.length > 500) {
-                        State.update({
-                          publicGoodReasonError: "Response must be less than 500 characters",
-                        });
-                        return;
-                      }
+                        State.update({ publicGoodReasonError: "" });
+                      },
+                      error: state.publicGoodReasonError,
+                    }}
+                  />
+                )}
 
-                      State.update({ publicGoodReasonError: "" });
-                    },
-                    error: state.publicGoodReasonError,
-                  }}
-                />
               </Row>
             </Section>
             {/* SMART CONTRACT */}
@@ -423,8 +425,8 @@ const CreateForm = (props: { edit: boolean }) => {
                             chain == "NEAR"
                               ? validateNearAddress(contractAddress)
                               : isEvm
-                              ? validateEVMAddress(contractAddress)
-                              : true; // TODO: validate non-EVM, non-NEAR addresses
+                                ? validateEVMAddress(contractAddress)
+                                : true; // TODO: validate non-EVM, non-NEAR addresses
                           // if invalid, set the error as the 3rd element of the array
                           if (!isValid) {
                             State.update({
@@ -702,8 +704,8 @@ const CreateForm = (props: { edit: boolean }) => {
                       ? "Add proposal to update project"
                       : "Update your project"
                     : state.isDao
-                    ? "Add proposal to create project"
-                    : "Create new project"}
+                      ? "Add proposal to create project"
+                      : "Create new project"}
                 </Button>
               </BtnWrapper>
             </Section>

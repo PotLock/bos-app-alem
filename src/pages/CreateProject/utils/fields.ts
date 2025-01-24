@@ -30,6 +30,7 @@ export const CATEGORY_MAPPINGS: any = {
   CLIMATE: "Climate",
   PUBLIC_GOOD: "Public Good",
   DE_SCI: "DeSci",
+  DE_FI: "DeFi",
   OPEN_SOURCE: "Open Source",
   COMMUNITY: "Community",
   EDUCATION: "Education",
